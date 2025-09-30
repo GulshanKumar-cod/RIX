@@ -305,9 +305,8 @@ const PortfolioIntelligence = () => {
 
   if (companies.length === 0) {
     return (
-      <div style={{ color: "#ccc", padding: "2rem" }}>
-        No portfolio intelligence available. Add startups to your portfolio
-        first.
+      <div style={{ color: "#ccc"}}>
+        No portfolio intelligence available. Add startups to your portfolio first.
       </div>
     );
   }
