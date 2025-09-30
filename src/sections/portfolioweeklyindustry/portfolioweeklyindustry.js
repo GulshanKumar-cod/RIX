@@ -162,7 +162,7 @@ const PortfolioWeeklyIndustry = () => {
       </div> */}
 
 
-      <h3 className={styles.headingH3}>Top Industries</h3>
+      {/* <h3 className={styles.headingH3}>Top Industries</h3> */}
       <hr className="mb-5" />
 
       {/* Cards */}
