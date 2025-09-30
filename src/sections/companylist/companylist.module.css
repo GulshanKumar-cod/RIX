@@ -1123,6 +1123,7 @@ margin-top: 30px;
 @media (max-width: 600px) {
   .tabButtonContainer {
     flex-direction: row;
+    justify-content: center;
     gap: 14px;
   }
 }
