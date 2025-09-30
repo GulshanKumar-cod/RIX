@@ -20,7 +20,7 @@ export default function CompanyListPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const currentTab = searchParams.get("tab") || "search";
+  const currentTab = searchParams.get("tab") || "weekly";
 
   const setTabInURL = (tab) => {
     const params = new URLSearchParams(searchParams);
