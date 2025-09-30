@@ -1,0 +1,12 @@
+/* Import only the Bootstrap CSS you need */
+@import "bootstrap/dist/css/bootstrap.css";
+
+/* Optional: Add your custom overrides below */
+.container {
+  max-width: 1400px;
+}
+
+/* Fix for Bootstrap 5.3+ dark mode */
+:root {
+  --bs-body-bg: #ffffff;
+}
