@@ -1,0 +1,137 @@
+.carouselContainer {
+  width: 100%;
+  padding: 10px;
+  /* border-radius: 12px; */
+}
+
+/* .gradient-background{
+  background: linear-gradient(to right, #fcf6f5, #f9d7e0); 
+} */
+
+.heading {
+  padding: 15px;
+  text-align: center;
+  font-size: 1rem; 
+  font-weight: bold;
+  /* margin-bottom: 20px; */
+}
+
+.scrollableContainer {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 10px 0;
+}
+
+.columnsContainer {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.carouselCard {
+  flex: 0 0 320px; 
+  margin: 0 15px; 
+  background: transparent;
+  color: white; 
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  border: 0.5px solid rgb(68 68 68 / 20%);
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* .carouselCard:hover {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+} */
+
+
+.companyName {
+  font-size: 1.3rem;
+  font-weight: bold;
+  /* color: white; */
+  margin-bottom: 10px;
+}
+
+.companyCountry {
+  font-size: 1rem; 
+  /* color: white; */
+  margin-bottom: 10px;
+}
+
+.industryFocus,
+.technologiesDeveloped,
+.topInventor {
+  margin-top: 20px;
+}
+
+.industryFocus h4,
+.technologiesDeveloped h4,
+.topInventor h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: bold;
+  /* color: white; */
+  border-bottom: 0.25px solid rgb(24, 52, 221); 
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.industryFocus p,
+.technologiesDeveloped p,
+.topInventor p {
+  margin: 5px 0;
+  font-size: 1rem; 
+  /* color: white; */
+}
+
+.carouselData  {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: inline-block;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+  .carouselCard {
+    flex: 0 0 280px; 
+    padding: 15px;
+    margin: 0 10px;
+  }
+
+  .heading {
+    font-size: 1.4rem; 
+    padding: 10px;
+  }
+
+  .companyName {
+    font-size: 1rem;
+    /* color: white; */
+  }
+
+  .companyCountry {
+    font-size: 0.7rem; 
+    /* color: white; */
+  }
+
+  .industryFocus h4,
+  .technologiesDeveloped h4,
+  .topInventor h4 {
+    font-size: 0.7rem; 
+    /* color: white; */
+  }
+
+  .industryFocus p,
+  .technologiesDeveloped p,
+  .topInventor p {
+    font-size: 0.7rem; 
+    /* color: white; */
+  }
+
+  .heading{
+    font-size: 0.7rem;
+  }
+}

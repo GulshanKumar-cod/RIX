@@ -1,0 +1,590 @@
+/* Background */
+.landingContainer {
+  min-height: 100vh;
+  background: #0a0a0a; /* solid black */
+  color: #fff;
+  font-family: "Inter", sans-serif;
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+/* Hero Section */
+.heroSection {
+  /* max-width: 850px; */
+  margin: auto;
+  margin-top: 100px;
+}
+
+/* Tagline pill */
+.tagline {
+  display: inline-block;
+  padding: 8px 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 30px;
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 30px;
+  color: #e5e7eb;
+}
+
+/* Title */
+.title {
+  font-size: 6rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 25px;
+}
+
+.lineGray {
+  background: linear-gradient(90deg, #f3f4f6, #9ca3af);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradientText {
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Subtitle */
+.subtitle {
+  font-size: 1.5rem;
+  color: #d1d5db;
+  margin-bottom: 40px;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.startButton {
+  padding: 14px 32px;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  border: none;
+  border-radius: 999px; /* full rounded like screenshot */
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  transition: 0.3s;
+}
+
+.startButton:hover {
+  opacity: 0.85;
+}
+
+.searchInput {
+  padding: 14px 20px;
+  border-radius: 999px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  width: 220px;
+  background: #fff;
+  color: #000;
+}
+
+/* ================= Core Capabilities Section ================= */
+.capabilitiesSection {
+  padding: 150px 20px;
+  width: 100%;
+  margin: auto;
+}
+
+.capabilitiesHeader {
+  margin-bottom: 60px;
+}
+
+.capIcon {
+  font-size: 40px;
+  margin-bottom: 15px;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  display: inline-block;
+  padding: 15px;
+  border-radius: 16px;
+}
+
+.capTitle {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+  background: linear-gradient(90deg, #f3f4f6, #9ca3af);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.capSubtitle {
+  font-size: 1.5rem;
+  color: #d1d5db;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Card Container */
+.cardsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 95px;
+}
+
+.card {
+  background: transparent; 
+  padding: 28px 24px;
+  border-radius: 16px;
+  flex: 1 1 320px;
+  max-width: 360px;
+  text-align: left;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Header Row */
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.cardIcon {
+  font-size: 28px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: white;
+}
+
+.cardTopText {
+  text-align: right;
+}
+
+.cardLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #00c6ff;
+  margin: 0;
+}
+
+.cardMetric {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin: 2px 0 0;
+}
+
+/* Title + Text */
+.cardTitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.cardText {
+  font-size: 15px;
+  color: #9ca3af;
+  line-height: 1.6;
+}
+
+/* ================= Trusted at Scale Section ================= */
+.trustedSection {
+  padding: 20px 20px;
+  text-align: center;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.trustedTitle {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.trustedSubtitle {
+  font-size: 1.5rem;
+  color: #d1d5db;
+  margin-bottom: 70px;
+}
+
+.trustedCards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.trustedCard {
+  flex: 1 1 250px;
+  max-width: 280px;
+  background: transparent;
+  padding: 35px 25px;
+  border-radius: 16px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trustedCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.trustedNumber {
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 12px;
+}
+
+.trustedHeading {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.trustedText {
+  font-size: 0.95rem;
+  color: #9ca3af;
+}
+
+.trustedBottom {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  font-size: 1rem;
+  color: #00c6ff;
+  font-weight: 500;
+}
+
+/* ================= Workflow Section ================= */
+.workflowSection {
+  padding: 150px 20px;
+  text-align: center;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.workflowTitle {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.workflowSubtitle {
+  font-size: 1.5rem;
+  color: #d1d5db;
+  margin-bottom: 70px;
+}
+
+.workflowSteps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 60px;
+}
+
+.workflowStep {
+  flex: 1 1 280px;
+  max-width: 320px;
+  text-align: center;
+}
+
+.workflowIcon {
+  font-size: 28px;
+  width: 65px;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: white;
+  box-shadow: 0 6px 20px rgba(0, 114, 255, 0.4);
+}
+
+.workflowStepTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.workflowText {
+  font-size: 0.95rem;
+  color: #9ca3af;
+  line-height: 1.6;
+}
+
+/* ================= Innovators Section ================= */
+.innovatorsSection {
+  padding: 20px 20px;
+  text-align: center;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.innovatorsTitle {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.innovatorsSubtitle {
+  font-size: 1.5rem;
+  color: #d1d5db;
+  margin-bottom: 70px;
+}
+
+.innovatorsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+.innovatorCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 30px 25px;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.innovatorCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.innovatorIcon {
+  font-size: 20px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(0, 198, 255, 0.1);
+  color: #00c6ff;
+  margin-bottom: 15px;
+}
+
+.innovatorTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.innovatorText {
+  font-size: 0.95rem;
+  color: #9ca3af;
+  line-height: 1.6;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .innovatorsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================= CTA Section ================= */
+.ctaSection {
+  padding: 120px 20px;
+  text-align: center;
+  max-width: 900px;
+  margin: auto;
+}
+
+.ctaTitle {
+  font-size: 4rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.ctaSubtitle {
+  font-size: 1.5rem;
+  color: #d1d5db;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.ctaButton {
+  padding: 16px 40px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.ctaButton:hover {
+  opacity: 0.85;
+}
+
+
+/* ================= Responsive Styling ================= */
+@media (max-width: 1024px) {
+  .title {
+    font-size: 4rem;
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+    width: 80%;
+  }
+
+  .capTitle,
+  .trustedTitle,
+  .workflowTitle,
+  .ctaTitle,
+  .innovatorsTitle {
+    font-size: 3rem;
+  }
+
+  .capSubtitle,
+  .trustedSubtitle,
+  .workflowSubtitle,
+  .ctaSubtitle,
+  .innovatorsSubtitle {
+    font-size: 1.2rem;
+  }
+
+  .cardsContainer,
+  .trustedCards,
+  .workflowSteps {
+    gap: 40px;
+  }
+
+  .card,
+  .trustedCard,
+  .workflowStep {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    width: 90%;
+  }
+
+  .capTitle,
+  .trustedTitle,
+  .workflowTitle,
+  .ctaTitle,
+  .innovatorsTitle {
+    font-size: 2.5rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .startButton,
+  .searchInput {
+    width: 100%;
+    font-size: 15px;
+  }
+
+  .capabilitiesSection,
+  .workflowSection,
+  .ctaSection,
+  .trustedSection,
+  .innovatorsSection {
+    padding: 80px 20px;
+  }
+
+  .trustedBottom {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2.2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    width: 100%;
+  }
+
+  .capTitle,
+  .trustedTitle,
+  .workflowTitle,
+  .ctaTitle,
+  .innovatorsTitle {
+    font-size: 2rem;
+  }
+
+  .ctaButton {
+    font-size: 1rem;
+    padding: 14px 30px;
+  }
+
+  .searchInput {
+    font-size: 14px;
+    padding: 12px 16px;
+  }
+
+  .startButton {
+    font-size: 14px;
+    padding: 12px 24px;
+  }
+
+  .cardText,
+  .workflowText,
+  .trustedText,
+  .innovatorText {
+    font-size: 0.9rem;
+  }
+
+  .cardTitle,
+  .workflowStepTitle,
+  .trustedHeading,
+  .innovatorTitle {
+    font-size: 1rem;
+  }
+}

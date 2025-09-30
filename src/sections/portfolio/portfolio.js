@@ -1,0 +1,61 @@
+'use client';
+
+import React, { useState } from 'react';
+import PortfolioStartup from '../portfoliostartup/portfoliostartup';
+import PortfolioIntelligence from '../portfoliointelligence/portfoliointelligence';
+import styles from "../companylist/companylist.module.css";
+import PortfolioSuggestions from '../portfoliosuggestions/portfoliosuggestions';
+
+
+const Portfolio = () => {
+  const [activeTab, setActiveTab] = useState('startup');
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'startup':
+        return <PortfolioStartup />;
+      case 'intelligence':
+        return <PortfolioIntelligence />;
+        case 'suggestions':
+          return <PortfolioSuggestions />;
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className={styles.bodyCompany}>
+      <div className={styles.companyContainer}>
+        <div className={styles.pagePadding}>
+      {/* Tabs */}
+      <div className={styles.tabButtonContainer}>
+        <button
+          onClick={() => setActiveTab('startup')}
+          className={`tab-button ${activeTab === 'startup' ? 'active-tab' : ''}`}
+        >
+         My Lens
+        </button>
+        <button
+          onClick={() => setActiveTab('intelligence')}
+          className={`tab-button ${activeTab === 'intelligence' ? 'active-tab' : ''}`}
+        >
+        Intelligence
+        </button>
+        <button
+          onClick={() => setActiveTab('suggestions')}
+          className={`tab-button ${activeTab === 'suggestions' ? 'active-tab' : ''}`}
+        >
+        Recommendation
+        </button>
+      </div>
+
+      <div>
+        {renderTabContent()}
+      </div>
+    </div>
+    </div>
+    </div>
+  );
+};
+
+export default Portfolio;
