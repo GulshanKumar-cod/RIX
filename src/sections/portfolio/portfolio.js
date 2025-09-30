@@ -31,19 +31,19 @@ const Portfolio = () => {
       <div className={styles.tabButtonContainer}>
         <button
           onClick={() => setActiveTab('startup')}
-          className={`tab-button ${activeTab === 'startup' ? 'active-tab' : ''}`}
+          className={`tab-button ${activeTab === 'startup' ? 'active-tab active-tab-second' : ''}`}
         >
          My Lens
         </button>
         <button
           onClick={() => setActiveTab('intelligence')}
-          className={`tab-button ${activeTab === 'intelligence' ? 'active-tab' : ''}`}
+          className={`tab-button ${activeTab === 'intelligence' ? 'active-tab active-tab-second' : ''}`}
         >
         Intelligence
         </button>
         <button
           onClick={() => setActiveTab('suggestions')}
-          className={`tab-button ${activeTab === 'suggestions' ? 'active-tab' : ''}`}
+          className={`tab-button ${activeTab === 'suggestions' ? 'active-tab active-tab-second' : ''}`}
         >
         Recommendation
         </button>

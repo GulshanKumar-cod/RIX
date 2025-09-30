@@ -43,6 +43,16 @@
   box-shadow: 0 0 6px rgba(0,0,0,0.3) inset;
 }
 
+.tab-button.active-tab-second{
+border: 1px solid;
+   border-color: #4da6ff;
+  box-shadow: 0px 0px 12px rgba(77, 166, 255, 0.3);
+  border-radius: 10px;
+  background: #111; 
+  width: fit-content;
+
+}
+
 /* Layout */
 .signals-container {
   font-family: "DM Sans", sans-serif;

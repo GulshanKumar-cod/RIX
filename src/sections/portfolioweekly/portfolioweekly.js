@@ -29,24 +29,27 @@ return (
         <div className={styles.pagePadding}>
       {/* Tabs */}
       <div className={styles.tabButtonContainer}>
-        <button
-          onClick={() => setActiveTab('industry')}
-          className={`tab-button ${activeTab === 'industry' ? 'active-tab' : ''}`}
-        >
-         Industry
-        </button>
-        <button
-          onClick={() => setActiveTab('technologies')}
-          className={`tab-button ${activeTab === 'technologies' ? 'active-tab' : ''}`}
-        >
-        Technologies
-        </button>
-        <button
-          onClick={() => setActiveTab('country')}
-          className={`tab-button ${activeTab === 'country' ? 'active-tab' : ''}`}
-        >
-        Country
-        </button>
+      <button
+  onClick={() => setActiveTab('industry')}
+  className={`tab-button ${activeTab === 'industry' ? 'active-tab active-tab-second' : ''}`}
+>
+  Industry
+</button>
+
+<button
+  onClick={() => setActiveTab('technologies')}
+  className={`tab-button ${activeTab === 'technologies' ? 'active-tab active-tab-second' : ''}`}
+>
+  Technologies
+</button>
+
+<button
+  onClick={() => setActiveTab('country')}
+  className={`tab-button ${activeTab === 'country' ? 'active-tab active-tab-second' : ''}`}
+>
+  Country
+</button>
+
       </div>
 
       <div>
