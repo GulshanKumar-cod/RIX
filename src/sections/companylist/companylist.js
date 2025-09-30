@@ -29,31 +29,32 @@ export default function CompanyListPage() {
   };
 
   const tabs = [
+    { id: "weekly", label: "AI Discovery" },
+     { id: "portfolio", label: "Portfolio" },
     { id: "search", label: "Search" },
-    { id: "portfolio", label: "Portfolio" },
     // { id: "intelligence", label: "Portfolio Intelligence" },
     { id: "alerts", label: "Signals" },
     // { id: "reports", label: "Reports" },
-    { id: "weekly", label: "AI Discovery" },
     // { id: "engagement", label: "Engagement" },
   ];
 
   const renderTabContent = useMemo(() => {
     switch (currentTab) {
+      case "weekly":
+        return <PortfolioWeekly />;
+         case "portfolio":
+        return <Portfolio />;
       case "search":
         return <PortfolioSearch />;
       //   case "portfolio":
       //     return <PortfolioStartup />;
       //   case "intelligence":
       //     return <PortfolioIntelligence />;
-      case "portfolio":
-        return <Portfolio />;
       case "alerts":
         return <PortfolioSignals />;
       // case "reports":
       //   return <PortfolioReport />;
-      case "weekly":
-        return <PortfolioWeekly />;
+      
       // case "engagement":
       //   return <PortfolioEngagement />;
       default:
