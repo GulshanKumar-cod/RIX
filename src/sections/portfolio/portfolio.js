@@ -33,7 +33,7 @@ const Portfolio = () => {
           onClick={() => setActiveTab('startup')}
           className={`tab-button ${activeTab === 'startup' ? 'active-tab' : ''}`}
         >
-         My Portfolio 
+         My Lens
         </button>
         <button
           onClick={() => setActiveTab('intelligence')}
@@ -45,11 +45,10 @@ const Portfolio = () => {
           onClick={() => setActiveTab('suggestions')}
           className={`tab-button ${activeTab === 'suggestions' ? 'active-tab' : ''}`}
         >
-        AI Suggestions
+        Recommendation
         </button>
       </div>
 
-      {/* Tab Content */}
       <div>
         {renderTabContent()}
       </div>

@@ -30,7 +30,7 @@ export default function CompanyListPage() {
 
   const tabs = [
     { id: "weekly", label: "AI Discovery" },
-     { id: "portfolio", label: "Portfolio" },
+     { id: "portfolio", label: "Lens" },
     { id: "search", label: "Search" },
     // { id: "intelligence", label: "Portfolio Intelligence" },
     { id: "alerts", label: "Signals" },
