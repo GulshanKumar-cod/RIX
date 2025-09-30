@@ -140,7 +140,7 @@ const PortfolioWeeklyIndustry = () => {
     <div>
       {/* <div className={styles.pagePadding}> */}
       {/* Header */}
-      <div className={styles.weeklyHeader}>
+      {/* <div className={styles.weeklyHeader}>
         <h3 className={styles.headingH3} style={{marginTop: "1rem", marginBottom: "0rem"}}>Weekly Trends</h3>
 
         <div className={styles.weeklyControls}>
@@ -159,11 +159,11 @@ const PortfolioWeeklyIndustry = () => {
             Refresh
           </button>
         </div>
-      </div>
+      </div> */}
 
+
+      <h3 className={styles.headingH3}>Top Industries</h3>
       <hr className="mb-5" />
-
-      <h4 className={styles.weeklySubheading}>Top Industries</h4>
 
       {/* Cards */}
       <div className={styles.weeklyGrid}>
