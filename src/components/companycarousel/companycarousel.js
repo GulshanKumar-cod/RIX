@@ -132,7 +132,7 @@ const absIntegerChange = Math.abs(parseFloat(randomChange)).toFixed(0);
                           fontSize: "0.8rem"
                       }}
                     >
-                      {absIntegerChange} developments.
+                      {absIntegerChange} new developments.
                     </div>
                   </div>
 
