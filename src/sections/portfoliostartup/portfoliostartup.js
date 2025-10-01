@@ -78,7 +78,7 @@ const PortfolioStartup = () => {
 
       {/* Company Table */}
       <div style={{ overflowX: "auto" }}>
-        <table
+        <table className={styles.portfolioTable}
           style={{
             width: "100%",
             borderCollapse: "collapse",

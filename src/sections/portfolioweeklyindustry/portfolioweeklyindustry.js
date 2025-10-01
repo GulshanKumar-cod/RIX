@@ -70,71 +70,9 @@ const industries = [
   },
 ];
 
-const weeks = [
-  "Aug 18 – Aug 24, 2025",
-  "Aug 25 – Aug 31, 2025",
-  "Sep 01 – Sep 07, 2025",
-];
-
-const sampleData = [
-  {
-    companyName: "Tesla",
-    country: "USA",
-    industry1: "EV & Battery Tech",
-    industry2: "Autonomous Vehicles",
-    technologiesCount: 120,
-    topInventor: "Elon Musk",
-  },
-  {
-    companyName: "Samsung",
-    country: "South Korea",
-    industry1: "Semiconductors",
-    industry2: "Consumer Electronics",
-    technologiesCount: 95,
-    topInventor: "Kim Min-Soo",
-  },
-  {
-    companyName: "Siemens",
-    country: "Germany",
-    industry1: "Industrial Automation",
-    industry2: "Energy Tech",
-    technologiesCount: 80,
-    topInventor: "Johann Bauer",
-  },
-  {
-    companyName: "Sony",
-    country: "Japan",
-    industry1: "Electronics",
-    industry2: "Entertainment",
-    technologiesCount: 65,
-    topInventor: "Hiroshi Tanaka",
-  },
-  {
-    companyName: "Nvidia",
-    country: "USA",
-    industry1: "AI & GPUs",
-    industry2: "Autonomous Driving",
-    technologiesCount: 110,
-    topInventor: "Jensen Huang",
-  },
-  {
-    companyName: "Ola Electric",
-    country: "India",
-    industry1: "EV Manufacturing",
-    industry2: "Mobility Solutions",
-    technologiesCount: 40,
-    topInventor: "Bhavish Aggarwal",
-  },
-];
-
 const PortfolioWeeklyIndustry = () => {
-  const [selectedWeek, setSelectedWeek] = useState(weeks[1]);
   const [refreshKey, setRefreshKey] = useState(0);
-
-  const handleRefresh = () => {
-    setRefreshKey((prev) => prev + 1);
-    console.log("Refreshed data for:", selectedWeek);
-  };
+  const [selectedView, setSelectedView] = useState("weekly");
 
   return (
     <div>
@@ -161,15 +99,54 @@ const PortfolioWeeklyIndustry = () => {
         </div>
       </div> */}
 
-
       {/* <h3 className={styles.headingH3}>Top Industries</h3> */}
       <hr className="mb-5" />
+
+      {/* Filter Toggle for Weekly / Monthly */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          marginBottom: "1.5rem",
+          flexWrap: "wrap",
+          gap: "0.5rem",
+        }}
+      >
+        <label
+          htmlFor="dataToggle"
+          style={{ color: "#fff", marginRight: "0.5rem", fontSize: "0.8rem" }}
+        >
+          View:
+        </label>
+        <select
+          id="dataToggle"
+          value={selectedView}
+          onChange={(e) => setSelectedView(e.target.value)}
+          style={{
+            padding: "6px 12px",
+            borderRadius: "6px",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            backgroundColor: "#1a2332",
+            color: "#fff",
+            fontSize: "14px",
+            cursor: "pointer",
+            fontSize: "0.8rem",
+          }}
+        >
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+      </div>
 
       {/* Cards */}
       <div className={styles.weeklyGrid}>
         {industries.map((ind, idx) => {
           const chartData = {
-            labels: ind.history.map((_, i) => `W${i + 1}`),
+            labels:
+              selectedView === "weekly"
+                ? ind.history.map((_, i) => `W${i + 1}`)
+                : ind.history.map((_, i) => `M${i + 1}`),
             datasets: [
               {
                 data: ind.history,
@@ -212,23 +189,23 @@ const PortfolioWeeklyIndustry = () => {
               className={styles.industryCard}
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <span style={{ fontSize: "14px", opacity: 0.7 }}>
+                <span style={{ fontSize: "0.8rem", opacity: 0.7 }}>
                   #{ind.rank}
                 </span>
-                <span
+                {/* <span
                   style={{
                     color: ind.change.startsWith("+") ? "#00ff88" : "#ff4d4d",
                   }}
                 >
                   WoW {ind.change}
-                </span>
+                </span> */}
               </div>
 
               <h4 style={{ margin: "0.5rem 0", fontSize: "18px" }}>
                 {ind.name}
               </h4>
 
-              <p style={{ fontSize: "14px", opacity: 0.8 }}>
+              <p style={{ fontSize: "0.8rem", opacity: 0.8 }}>
                 Active Companies: {ind.patents}
               </p>
 
@@ -247,7 +224,7 @@ const PortfolioWeeklyIndustry = () => {
                       background: "#1e2a3a",
                       padding: "2px 8px",
                       borderRadius: "6px",
-                      fontSize: "12px",
+                      fontSize: "0.8rem",
                     }}
                   >
                     {tag}
@@ -277,11 +254,6 @@ const PortfolioWeeklyIndustry = () => {
             </div>
           );
         })}
-      </div>
-
-      <div style={{ marginTop: "3rem", marginBottom: "3rem" }}>
-        <h4 className={styles.weeklySubheading}>Top Companies</h4>
-        <CompanyCarousel data={sampleData} heading="" />
       </div>
     </div>
   );

@@ -17,7 +17,7 @@
   background: #fff;
   color: #000;
   border: none;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease-in-out;
@@ -84,7 +84,7 @@
   color: #0f172a;
   padding: 4px 10px;
   border-radius: 12px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 500;
 }
 
@@ -95,7 +95,7 @@
 }
 
 .description {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   margin-bottom: 1.2rem;
   color: #cbd5e1;
 }
@@ -159,12 +159,12 @@
   }
 
   .tag {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     padding: 3px 8px;
   }
 
   .innovations {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     margin-bottom: 0.5rem;
   }
 
@@ -175,11 +175,11 @@
 
   .addButton {
     padding: 8px 0;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 
   .filterButton {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     padding: 5px 12px;
   }
 

@@ -2,7 +2,7 @@ import React from 'react'
 
 const PortfolioWeeklyTechnologies = () => {
   return (
-    <div>Section Under Development.</div>
+    <div>Signup to view.</div>
   )
 }
 

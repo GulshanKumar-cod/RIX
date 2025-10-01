@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import PortfolioWeeklyIndustry from '../portfolioweeklyindustry/portfolioweeklyindustry';
 import PortfolioWeeklyTechnologies from '../portfolioweeklytechnologies/portfolioweeklytechnologies';
-import PortfolioWeeklyCountry from '../portfolioweeklycountry/portfolioweeklycountry';
 import styles from "../companylist/companylist.module.css";
+import PortfolioWeeklyCompany from '../portfolioweeklycompany/portfolioweeklycompany';
 
 
 const PortfolioWeekly = () => {
@@ -14,10 +14,10 @@ const renderTabContent = () =>{
     switch (activeTab) {
       case 'industry':
         return <PortfolioWeeklyIndustry/>;
+        case 'company':
+          return <PortfolioWeeklyCompany/>;
         case 'technologies':
           return <PortfolioWeeklyTechnologies/>;
-          case 'country':
-            return <PortfolioWeeklyCountry/>;
       default:
         return null;
     }
@@ -35,6 +35,12 @@ return (
 >
   Industry
 </button>
+<button
+  onClick={() => setActiveTab('company')}
+  className={`tab-button ${activeTab === 'company' ? 'active-tab active-tab-second' : ''}`}
+>
+  Companies
+</button>
 
 <button
   onClick={() => setActiveTab('technologies')}
@@ -43,12 +49,6 @@ return (
   Technologies
 </button>
 
-<button
-  onClick={() => setActiveTab('country')}
-  className={`tab-button ${activeTab === 'country' ? 'active-tab active-tab-second' : ''}`}
->
-  Country
-</button>
 
       </div>
 

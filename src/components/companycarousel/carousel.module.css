@@ -113,25 +113,25 @@
   }
 
   .companyCountry {
-    font-size: 0.7rem; 
+    font-size: 0.8rem; 
     /* color: white; */
   }
 
   .industryFocus h4,
   .technologiesDeveloped h4,
   .topInventor h4 {
-    font-size: 0.7rem; 
+    font-size: 0.8rem; 
     /* color: white; */
   }
 
   .industryFocus p,
   .technologiesDeveloped p,
   .topInventor p {
-    font-size: 0.7rem; 
+    font-size: 0.8rem; 
     /* color: white; */
   }
 
   .heading{
-    font-size: 0.7rem;
+    font-size: 0.8rem;
   }
 }
