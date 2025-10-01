@@ -96,6 +96,7 @@ const PortfolioStartup = () => {
               <th style={thStyle}>Technologies</th>
               <th style={thStyle}>Inventors</th>
               <th style={thStyle}>Increment</th>
+              <th style={thStyle}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -123,6 +124,20 @@ const PortfolioStartup = () => {
                 >
                   {c.increment}%
                 </td>
+                <td style={tdStyle} >
+                 <button
+  onClick={() =>
+    router.push(
+      `https://dyr.incubig.org/company-page/${encodeURIComponent(
+        c.name
+      )}/overview`
+    )
+  }
+>
+  View
+</button>
+
+                      </td>
               </tr>
             ))}
           </tbody>

@@ -920,7 +920,7 @@
 
 .viewButton:hover,
 .viewButton:focus {
-  background-color: #0056b3;
+  background-color: #29411f;
   outline: none;
 }
 
@@ -1067,6 +1067,9 @@
     gap: 12px;
     margin-top: 20px;
     margin-bottom: 20px;
+     align-items: flex-end;    
+  width: 50%;      
+  margin-left: auto; 
   }
 
   .searchInput {
@@ -1102,7 +1105,7 @@
 
   .addPortfolio {
     padding: 5px 10px;
-    font-size: 14px;
+    font-size: 0.8rem;
   }
 
   .cardsGrid {
@@ -1291,6 +1294,10 @@ margin-top: 30px;
 
   .weeklyGrid {
     grid-template-columns: 1fr;
+  }
+
+  .weeklyGrid button{
+    font-size: 0.8rem;
   }
 
   .weeklyRefreshBtn,

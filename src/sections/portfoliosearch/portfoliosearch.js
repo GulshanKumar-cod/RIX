@@ -444,9 +444,17 @@ const PortfolioSearch = () => {
                           </div>
                         </div>
 
-                        <p style={{ marginTop: "15px", fontSize: "0.8rem" }}>
-                        {item.patents} new developments.
-                        </p>
+                       <p
+  style={{
+    marginTop: "15px",
+    fontSize: "0.8rem",
+    color: "#4da6ff", 
+    textShadow: "0 0 0px #4da6ff, 0 0 2px #4da6ff, 0 0 5px #4da6ff",
+  }}
+>
+  {item.patents} new developments.
+</p>
+
 
                         <hr className={styles.divider} />
 

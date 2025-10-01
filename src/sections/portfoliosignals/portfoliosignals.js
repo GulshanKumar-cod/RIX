@@ -209,12 +209,6 @@ const PortfolioSignals = () => {
             {/* Tabs and Dropdown */}
             <div
               className="signals-tabs"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: "1rem",
-              }}
             >
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 {countryOptions.map((tab) => (

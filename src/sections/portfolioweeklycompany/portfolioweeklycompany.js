@@ -70,9 +70,6 @@ const PortfolioWeeklyCompany = () => {
   flexWrap: 'wrap',
   gap: '0.5rem',
 }}>
-  <label htmlFor="dataToggle" style={{ color: '#fff', marginRight: '0.5rem', fontSize: "0.8rem" }}>
-    View:
-  </label>
   <select
     id="dataToggle"
     value={selectedView}

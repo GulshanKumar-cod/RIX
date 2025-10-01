@@ -117,7 +117,7 @@ const PortfolioSuggestions = () => {
   <hr className="mb-5" />
 
     <div className={styles.wrapper}>
-      <div className={styles.filterContainer}>
+      {/* <div className={styles.filterContainer}>
         {filters.map((filter, i) => (
           <button
             key={i}
@@ -129,7 +129,7 @@ const PortfolioSuggestions = () => {
             {filter}
           </button>
         ))}
-      </div>
+      </div> */}
 
       {/* Cards shown inside fixed-height scrollable container */}
       <div className={styles.cardContainer}>

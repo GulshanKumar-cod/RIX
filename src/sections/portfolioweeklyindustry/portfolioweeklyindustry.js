@@ -113,12 +113,6 @@ const PortfolioWeeklyIndustry = () => {
           gap: "0.5rem",
         }}
       >
-        <label
-          htmlFor="dataToggle"
-          style={{ color: "#fff", marginRight: "0.5rem", fontSize: "0.8rem" }}
-        >
-          View:
-        </label>
         <select
           id="dataToggle"
           value={selectedView}
@@ -192,20 +186,21 @@ const PortfolioWeeklyIndustry = () => {
                 <span style={{ fontSize: "0.8rem", opacity: 0.7 }}>
                   #{ind.rank}
                 </span>
-                {/* <span
+                <span
                   style={{
                     color: ind.change.startsWith("+") ? "#00ff88" : "#ff4d4d",
                   }}
                 >
-                  WoW {ind.change}
-                </span> */}
+                {ind.change}
+                </span>
               </div>
 
               <h4 style={{ margin: "0.5rem 0", fontSize: "18px" }}>
                 {ind.name}
               </h4>
 
-              <p style={{ fontSize: "0.8rem", opacity: 0.8 }}>
+              <p style={{ fontSize: "0.8rem", opacity: 0.8,  color: "#4da6ff", 
+    textShadow: "0 0 0px #4da6ff, 0 0 2px #4da6ff, 0 0 5px #4da6ff" }}>
                 Active Companies: {ind.patents}
               </p>
 
