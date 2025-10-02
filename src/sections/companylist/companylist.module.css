@@ -675,7 +675,7 @@
   width: 100%;
   font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 10px;
 }
 
 .searchSuggestionUL {
@@ -1133,7 +1133,7 @@ margin-top: 30px;
   .tabButtonContainer {
     flex-direction: row;
     justify-content: center;
-        gap: 10px;
+        gap: 0px;
         padding: .2rem;
   }
 }
@@ -1176,11 +1176,95 @@ margin-top: 30px;
   margin: 0 auto;
 }
 
+.statsSection{
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.statsCard{
+  flex: 1;
+  min-width: 200px;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background-color: rgba(255,255,255,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.statsLabel{
+  font-family: DM Sans, sans-serif;
+  font-weight: 700; 
+  font-size: 20px;
+  margin: 0;
+}
+
+.statsLoadingBar{
+  height: 30px; 
+  background: #333;
+  margin-top: 10px;
+}
+
+.statsValue{
+  font-family: DM Sans, sans-serif;
+  font-weight: 700; 
+  font-size: 32px; 
+  margin-bottom: 8px;
+}
+
+.performanceSection{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.performanceCard{
+  flex: 1;
+  min-width: 250px; 
+  margin: 0.5rem; 
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.performanceTitle{
+  margin: 0; 
+  font-family: DM Sans, sans-serif;
+  font-weight: 500; 
+}
+
+.performanceList{
+  padding-left: 0rem; 
+  margin-top: 0.5rem;
+}
+
+.performanceNone{
+  color: #6b7280; 
+  font-style: italic;
+}
+
+.performanceItem{
+  font-size: 16px; 
+  font-family: DM Sans, sans-serif; 
+  line-height: 1.7;
+}
+
 @media (max-width: 600px) {
   .chartContainer {
     width: 100%;
     height: 250px; 
   }
+
+  .performanceNone, .performanceItem{
+font-size: 0.8rem; 
+}
+}
+
+@media (max-width: 768px) {
+  .statsLabel{
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+
 }
 
 /* Portfolio Discovery */

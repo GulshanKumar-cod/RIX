@@ -5,6 +5,7 @@ import PortfolioStartup from '../portfoliostartup/portfoliostartup';
 import PortfolioIntelligence from '../portfoliointelligence/portfoliointelligence';
 import styles from "../companylist/companylist.module.css";
 import PortfolioSuggestions from '../portfoliosuggestions/portfoliosuggestions';
+import LensSignals from '../lenssignals/lenssignals';
 
 
 const Portfolio = () => {
@@ -14,6 +15,8 @@ const Portfolio = () => {
     switch (activeTab) {
       case 'startup':
         return <PortfolioStartup />;
+      case 'lenssignals':
+        return <LensSignals/>;
       case 'intelligence':
         return <PortfolioIntelligence />;
         case 'suggestions':
@@ -34,6 +37,12 @@ const Portfolio = () => {
           className={`tab-button ${activeTab === 'startup' ? 'active-tab active-tab-second' : ''}`}
         >
          My Lens
+        </button>
+        <button
+          onClick={() => setActiveTab('lenssignals')}
+          className={`tab-button ${activeTab === 'lenssignals' ? 'active-tab active-tab-second' : ''}`}
+        >
+        Signals
         </button>
         <button
           onClick={() => setActiveTab('intelligence')}

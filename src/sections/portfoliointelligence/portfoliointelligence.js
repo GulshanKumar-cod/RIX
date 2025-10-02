@@ -372,138 +372,87 @@ const PortfolioIntelligence = () => {
       <h3 className={styles.headingH3}>Portfolio Intelligence</h3>
 
       {/* Summary Panel */}
-      <section
-        style={{
-          display: "flex",
-          gap: "1rem",
-          flexWrap: "wrap",
-          marginBottom: "2rem",
-        }}
-      >
-        {[
-          ["Average Score", `${averageScore}%`],
-          ["Companies Shown", companies.length],
-          ["Portfolio Health", portfolioHealthStatus],
-          ["Industries Covered", industryCount],
-        ].map(([label, val], i) => (
-          <div
-            key={i}
-            style={{
-              flex: "1",
-              minWidth: "200px",
-              padding: "1.5rem",
-              borderRadius: "12px",
-              backgroundColor: "rgba(255,255,255,0.05)",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
-            }}
-          >
-            <p
-              style={{
-                fontFamily: "DM Sans, sans-serif",
-                fontWeight: 700,
-                fontSize: "20px",
-                margin: 0,
-              }}
-            >
-              {label}
-            </p>
-            {loading ? (
-              <div
-                style={{
-                  height: "30px",
-                  background: "#333",
-                  marginTop: "10px",
-                }}
-              />
-            ) : (
-              <h2
-                style={{
-                  fontFamily: "DM Sans, sans-serif",
-                  fontWeight: 700,
-                  fontSize: "32px",
-                  marginBottom: "8px",
-                  color:
-                    label === "Portfolio Health"
-                      ? val === "Healthy"
-                        ? "#22c55e"
-                        : val === "Moderate"
-                        ? "#f59e0b"
-                        : "#ef4444"
-                      : "#fff",
-                }}
-              >
-                {val}
-              </h2>
-            )}
-          </div>
-        ))}
-      </section>
+    <section className={styles.statsSection}>
+  {[
+    ["Average Score", `${averageScore}%`],
+    ["Companies Shown", companies.length],
+    ["Portfolio Health", portfolioHealthStatus],
+    ["Industries Covered", industryCount],
+  ].map(([label, val], i) => (
+    <div className={styles.statsCard} key={i}>
+      {loading ? (
+        <div className={styles.statsLoadingBar} />
+      ) : (
+        <h3
+          className={styles.statsValue}
+          style={{
+            color:
+              label === "Portfolio Health"
+                ? val === "Healthy"
+                  ? "#22c55e"
+                  : val === "Moderate"
+                  ? "#f59e0b"
+                  : "#ef4444"
+                : "#fff",
+          }}
+        >
+          {val}
+        </h3>
+      )}
+      <p className={styles.statsLabel}>{label}</p>
+    </div>
+  ))}
+</section>
+
 
       {/* Performance Groups */}
-      <section style={{ display: "flex", flexWrap: "wrap" }}>
-        {[
-          {
-            title: "Strong Performers",
-            list: performanceGroups.strong,
-            borderColor: "#22c55e",
-            titleColor: "#15803d",
-          },
-          {
-            title: "Healthy Performers",
-            list: performanceGroups.moderate,
-            borderColor: "#f59e0b",
-            titleColor: "#b45309",
-          },
-          {
-            title: "Moderate Performers",
-            list: performanceGroups.risk,
-            borderColor: "#ef4444",
-            titleColor: "#b91c1c",
-          },
-        ].map(({ title, list, borderColor, titleColor }, i) => (
-          <div
-            key={i}
-            style={{
-              flex: 1,
-              minWidth: "250px",
-              margin: "0.5rem",
-              padding: "1rem 1.5rem",
-              borderTop: `4px solid ${borderColor}`,
-              borderRadius: "12px",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-            }}
-          >
-            <h3
-              style={{
-                margin: 0,
-                fontFamily: "DM Sans, sans-serif",
-                fontWeight: 500,
-                color: titleColor,
-              }}
-            >
-              {title}
-            </h3>
-            <ul style={{ paddingLeft: "1rem", marginTop: "0.5rem" }}>
-              {list.length === 0 ? (
-                <li style={{ color: "#6b7280", fontStyle: "italic" }}>None</li>
-              ) : (
-                list.map((name, j) => (
-                  <li
-                    key={j}
-                    style={{
-                      fontSize: "16px",
-                      fontFamily: "DM Sans, sans-serif",
-                      lineHeight: "1.7",
-                    }}
-                  >
-                    {toTitleCase(name)}
-                  </li>
-                ))
-              )}
-            </ul>
-          </div>
-        ))}
-      </section>
+    <section className={styles.performanceSection}>
+  {[
+    {
+      title: "Strong Performers",
+      list: performanceGroups.strong,
+      borderColor: "#22c55e",
+      titleColor: "#15803d",
+    },
+    {
+      title: "Healthy Performers",
+      list: performanceGroups.moderate,
+      borderColor: "#f59e0b",
+      titleColor: "#b45309",
+    },
+    {
+      title: "Moderate Performers",
+      list: performanceGroups.risk,
+      borderColor: "#ef4444",
+      titleColor: "#b91c1c",
+    },
+  ].map(({ title, list, borderColor, titleColor }, i) => (
+    <div
+      key={i}
+      className={styles.performanceCard}
+      style={{ borderTop: `4px solid ${borderColor}` }}
+    >
+      <h3
+        className={styles.performanceTitle}
+        style={{ color: titleColor }}
+      >
+        {title}
+      </h3>
+      <ul className={styles.performanceList}>
+        {list.length === 0 ? (
+          <li className={styles.performanceNone}>None</li>
+        ) : (
+          list.map((name, j) => (
+            <li key={j} className={styles.performanceItem}>
+              {toTitleCase(name)}
+            </li>
+          ))
+        )}
+      </ul>
+    </div>
+  ))}
+</section>
+
 
       {/* Trends Section */}
       <section
@@ -526,14 +475,8 @@ const PortfolioIntelligence = () => {
     flexWrap: "wrap", // ✅ ensures wrapping on smaller screens
   }}
 >
-  <h3
-    style={{
-      margin: 0,
-      fontFamily: "DM Sans, sans-serif",
-      fontWeight: 600,
-      fontSize: 20,
-      flexShrink: 0, // ✅ title never squishes
-    }}
+  <h3 className={styles.headingH3}
+   
   >
     Filing Trends
   </h3>
@@ -548,14 +491,6 @@ const PortfolioIntelligence = () => {
       justifyContent: "flex-end", 
     }}
   >
-    <label
-      style={{
-        fontWeight: 600,
-        whiteSpace: "nowrap", 
-      }}
-    >
-      View:
-    </label>
     <select
       value={selectedCompany}
       onChange={(e) => setSelectedCompany(e.target.value)}
@@ -567,6 +502,7 @@ const PortfolioIntelligence = () => {
         border: "1px solid #2b2b2b",
         minWidth: "140px", 
         flex: "0 1 auto", 
+        fontSize: "0.8rem",
       }}
     >
       <option value="all">All Companies</option>
@@ -616,12 +552,7 @@ const PortfolioIntelligence = () => {
           }}
         >
           <h3
-            style={{
-              fontFamily: "DM Sans, sans-serif",
-              fontWeight: "600",
-              fontSize: "24px",
-              marginBottom: "2rem",
-            }}
+           className={styles.headingH3}
           >
             Portfolio Composition
           </h3>
@@ -647,7 +578,7 @@ const PortfolioIntelligence = () => {
                   textAlign: "center",
                 }}
               >
-                <div style={{ fontSize: "14px", marginBottom: "0.5rem" }}>
+                <div style={{ fontSize: "0.8rem", marginBottom: "0.5rem" }}>
                   {label}
                 </div>
                 <div style={{ fontSize: "24px", fontWeight: "700" }}>
@@ -670,12 +601,7 @@ const PortfolioIntelligence = () => {
           }}
         >
           <h3
-            style={{
-              fontFamily: "DM Sans, sans-serif",
-              fontWeight: "600",
-              fontSize: "24px",
-              marginBottom: "2rem",
-            }}
+           className={styles.headingH3}
           >
             Industry Distribution
           </h3>
