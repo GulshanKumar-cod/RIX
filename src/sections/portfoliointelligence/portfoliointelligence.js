@@ -306,7 +306,18 @@ const PortfolioIntelligence = () => {
   if (companies.length === 0) {
     return (
       <div style={{ color: "#ccc"}}>
-        No portfolio intelligence available. Add startups to your portfolio first.
+        <p>No portfolio intelligence available. Add startups to your portfolio first.</p>
+      <button  onClick={() => router.push("/companylist?tab=search")}
+          style={{
+            padding: "8px 16px",
+            backgroundColor: "#0070f3",
+            border: "none",
+            borderRadius: "4px",
+            color: "#fff",
+            cursor: "pointer",
+           marginTop: "1rem",
+           fontSize: "0.8rem"
+          }}>+ Add companies</button>
       </div>
     );
   }

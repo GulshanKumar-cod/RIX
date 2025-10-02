@@ -172,6 +172,25 @@ const LensSignals = () => {
   const topIndustries = Object.entries(industryStats).sort((a, b) => b[1] - a[1]).slice(0, 5);
   const topCompanies = Object.entries(companyStats).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
+  if (companies.length === 0) {
+    return (
+      <div style={{ color: "#ccc" }}>
+        <p>No companies added to your portfolio yet.</p>
+    <button  onClick={() => router.push("/companylist?tab=search")}
+          style={{
+            padding: "8px 16px",
+            backgroundColor: "#0070f3",
+            border: "none",
+            borderRadius: "4px",
+            color: "#fff",
+            cursor: "pointer",
+           marginTop: "1rem",
+           fontSize: "0.8rem"
+          }}>+ Add companies</button>
+      </div>
+    );
+  }
+
   return (
     <div>
           <hr className="mb-3" />
