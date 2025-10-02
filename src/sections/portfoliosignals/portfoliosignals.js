@@ -199,12 +199,12 @@ const PortfolioSignals = () => {
       <div className={styles.companyContainer}>
         <div className={styles.pagePadding}>
           <div className="signals-container">
+
+              <hr className="mb-3" />
             <h3 className={styles.headingH3 }
             >
               Signals
             </h3>
-
-              <hr className="mb-5" />
 
             {/* Tabs and Dropdown */}
             <div

@@ -2,7 +2,12 @@ import React from 'react'
 
 const PortfolioWeeklyTechnologies = () => {
   return (
-    <div>Signup to view.</div>
+    <div>
+         <hr className="mb-3" />
+      
+      Signup to view.
+      
+      </div>
   )
 }
 

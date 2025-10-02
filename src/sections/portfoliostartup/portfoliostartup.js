@@ -72,9 +72,11 @@ const PortfolioStartup = () => {
 
   return (
     <div style={{ color: "#fff" }}>
-      <h3 className={styles.headingH3}>Your Portfolio Startups</h3>
+     
 
-      <hr className="mb-5" />
+      <hr className="mb-3" />
+
+       <h3 className={styles.headingH3}>Your Portfolio Startups</h3>
 
       {/* Company Table */}
       <div style={{ overflowX: "auto" }}>

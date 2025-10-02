@@ -112,9 +112,9 @@ const PortfolioSuggestions = () => {
 
   return (
     <div>
-      <h3 className={styles.headingH3}>Suggested Companies</h3>
 
-  <hr className="mb-5" />
+  <hr className="mb-3" />
+      <h3 className={styles.headingH3}>Suggested Companies</h3>
 
     <div className={styles.wrapper}>
       {/* <div className={styles.filterContainer}>

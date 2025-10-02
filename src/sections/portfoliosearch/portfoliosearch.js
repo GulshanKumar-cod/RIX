@@ -276,9 +276,9 @@ const PortfolioSearch = () => {
     <div className={styles.bodyCompany}>
       <div className={styles.companyContainer}>
         <div className={styles.pagePadding}>
-          <h3 className={styles.headingH3}>Search any company</h3>
 
-          <hr className="mb-5" />
+          <hr className="mb-3" />
+          <h3 className={styles.headingH3}>Search any company</h3>
 
           {/* Search + Filters Row */}
           <div className={styles.searchFilters}>

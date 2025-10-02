@@ -367,9 +367,9 @@ const PortfolioIntelligence = () => {
 
   return (
     <div style={{ color: "#fff" }}>
-      <h3 className={styles.headingH3}>Portfolio Intelligence</h3>
 
-      <hr className="mb-5" />
+      <hr className="mb-3" />
+      <h3 className={styles.headingH3}>Portfolio Intelligence</h3>
 
       {/* Summary Panel */}
       <section
