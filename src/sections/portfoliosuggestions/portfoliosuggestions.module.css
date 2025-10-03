@@ -100,20 +100,46 @@
   color: #cbd5e1;
 }
 
-.addButton {
-  background: #2563eb;
-  color: white;
-  padding: 10px 0;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s ease;
+.cardAction {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
 }
 
-.addButton:hover {
-  background: #1d4ed8;
+.viewButton {
+ background: linear-gradient(90deg, #007bff, #00bfff);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  cursor: pointer;
 }
+
+.viewButton:hover,
+.viewButton:focus {
+  background-color: #29411f;
+  outline: none;
+}
+
+.addPortfolio {
+  background: linear-gradient(90deg, #007bff, #00bfff);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.addPortfolio:hover {
+  opacity: 0.9;
+}
+
+/* .addButton:hover {
+  background: #1d4ed8;
+} */
 
 .headingH3 {
   font-family: DM Sans, sans-serif;

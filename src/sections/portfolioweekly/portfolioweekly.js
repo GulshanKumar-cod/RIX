@@ -13,7 +13,18 @@ const PortfolioWeekly = () => {
 const renderTabContent = () =>{
     switch (activeTab) {
       case 'industry':
-        return <PortfolioWeeklyIndustry/>;
+        return <PortfolioWeeklyIndustry   
+  // refreshKey={refreshKey}
+  // selectedView={selectedView}
+  // displayData={displayData}
+  // expandedCard={expandedCard}
+  // setExpandedCard={setExpandedCard}
+  // increments={increments}
+  // goToCompanyPage={goToCompanyPage}
+  // handleAddCompany={handleAddCompany}
+  // selectedIndustryView={selectedIndustryView}
+  // setSelectedIndustryView={setSelectedIndustryView}
+  />;
         case 'company':
           return <PortfolioWeeklyCompany/>;
         case 'technologies':
