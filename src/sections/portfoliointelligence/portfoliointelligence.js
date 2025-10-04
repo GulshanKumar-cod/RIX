@@ -475,13 +475,13 @@ const PortfolioIntelligence = () => {
       titleColor: "#15803d",
     },
     {
-      title: "Healthy",
+      title: "Moderate",
       list: performanceGroups.moderate,
       borderColor: "#f59e0b",
       titleColor: "#b45309",
     },
     {
-      title: "Moderate",
+      title: "Low",
       list: performanceGroups.risk,
       borderColor: "#ef4444",
       titleColor: "#b91c1c",
