@@ -12,6 +12,7 @@ import {
   Legend,
 } from "chart.js";
 import styles from "../companylist/companylist.module.css";
+import SimpleMap from "@/components/worldmap/worldmap";
 
 ChartJS.register(
   LineElement,
@@ -44,6 +45,7 @@ const PortfolioIntelligence = () => {
   const [apiTrends, setApiTrends] = useState({});
   const [loadingTrends, setLoadingTrends] = useState(false);
   const [yearLabels, setYearLabels] = useState([]);
+  const [selectedView, setSelectedView] = useState('weekly');
 
   const getLastNQuarters = (n = 4) => {
     const quarters = [];
@@ -376,6 +378,18 @@ const PortfolioIntelligence = () => {
     ],
   };
 
+    const sampleData = [
+    ['US', 5000],
+    ['IN', 3000],
+    ['DE', 2500],
+    ['JP', 4000],
+    ['BR', 1800],
+  ];
+
+   const handleCountryClick = (countryCode, value) => {
+    alert(`${countryCode} → ${value} applications`);
+  };
+
   return (
     <div style={{ color: "#fff" }}>
 
@@ -416,23 +430,58 @@ const PortfolioIntelligence = () => {
 </section>
 
 
+ <hr className="mb-2" />
+     
+
+        <div style={{
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: '1.5rem',
+  flexWrap: 'wrap',
+  gap: '0.5rem',
+}}>
+
+
+ <h3 className={styles.headingH3}>Performance</h3>
+
+  <select
+    id="dataToggle"
+    value={selectedView}
+    onChange={(e) => setSelectedView(e.target.value)}
+    style={{
+      padding: '6px 12px',
+      borderRadius: '6px',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      backgroundColor: '#1a2332',
+      color: '#fff',
+      cursor: 'pointer',
+      fontSize: "0.8rem" 
+    }}
+  >
+    <option value="weekly">Weekly</option>
+    <option value="monthly">Monthly</option>
+  </select>
+</div>
+
+
       {/* Performance Groups */}
     <section className={styles.performanceSection}>
   {[
     {
-      title: "Strong Performers",
+      title: "Strong",
       list: performanceGroups.strong,
       borderColor: "#22c55e",
       titleColor: "#15803d",
     },
     {
-      title: "Healthy Performers",
+      title: "Healthy",
       list: performanceGroups.moderate,
       borderColor: "#f59e0b",
       titleColor: "#b45309",
     },
     {
-      title: "Moderate Performers",
+      title: "Moderate",
       list: performanceGroups.risk,
       borderColor: "#ef4444",
       titleColor: "#b91c1c",
@@ -549,6 +598,8 @@ const PortfolioIntelligence = () => {
           marginTop: "2rem",
           flexWrap: "wrap",
           marginBottom: "3rem",
+          borderRadius: "12px",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
         }}
       >
         {/* Portfolio Composition */}
@@ -558,16 +609,15 @@ const PortfolioIntelligence = () => {
             minWidth: "300px",
             backgroundColor: "transparent",
             padding: "1.5rem",
-            borderRadius: "12px",
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+            
           }}
         >
           <h3
            className={styles.headingH3}
           >
-            Portfolio Composition
+            Geographical Distribution
           </h3>
-          <div
+          {/* <div
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
@@ -597,7 +647,18 @@ const PortfolioIntelligence = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
+
+ <SimpleMap
+        data={sampleData}
+        clickHandler={handleCountryClick}
+        // label="Application Distribution 2025"
+         color="blue"
+                backgroundColor="transparent"
+                borderColor="white"
+        suffix="applications"
+      />
+
         </div>
 
         {/* Industry Distribution */}
@@ -607,8 +668,8 @@ const PortfolioIntelligence = () => {
             minWidth: "300px",
             backgroundColor: "transparent",
             padding: "1.5rem",
-            borderRadius: "12px",
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+            // borderRadius: "12px",
+            // boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
           }}
         >
           <h3

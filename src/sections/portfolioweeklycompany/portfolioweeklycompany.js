@@ -80,7 +80,6 @@ const PortfolioWeeklyCompany = () => {
       border: '1px solid rgba(255, 255, 255, 0.2)',
       backgroundColor: '#1a2332',
       color: '#fff',
-      fontSize: '14px',
       cursor: 'pointer',
       fontSize: "0.8rem" 
     }}
