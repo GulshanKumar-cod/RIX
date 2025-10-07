@@ -9,7 +9,7 @@ const Footer = () => {
   return (
      <div className="footer">
       <span className="footerLabel">
-      RIX |{" "}
+        The Future of Research Intelligence - RIX |{" "}
         <a
           href="/"
           className="incubigHyper"

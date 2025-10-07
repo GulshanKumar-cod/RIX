@@ -40,7 +40,7 @@ const PortfolioWeekly = () => {
       AI Discovery
     </h2>
     <p style={{ fontSize: '0.8rem', margin: 0 }}>
-      Explore industries, companies, and technologies powered by AI.
+      Explore industries, companies, and technologies.
     </p>
   </div>
 )}

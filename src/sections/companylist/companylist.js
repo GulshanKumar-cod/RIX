@@ -18,7 +18,7 @@ import PortfolioWeekly from "../portfolioweekly/portfolioweekly";
 import {
   Search,
   Brain,
-  Bell,
+ CircleUserRound ,
   Layers,
   AlignEndHorizontal
 } from "lucide-react";
@@ -81,27 +81,19 @@ export default function CompanyListPage() {
           </div>
 
           <div className={styles.rightSection}>
-            <div className={styles.userInfo}>
+            {/* <div className={styles.userInfo}>
               <div>
-                {/* <p className={styles.welcomeText}>Welcome,</p> */}
+                <p className={styles.welcomeText}>Welcome,</p>
                 <p className={styles.userName}>AL</p>
               </div>
-            </div>
+            </div> */}
             <button
               className={styles.notificationButton}
               aria-label="Notifications"
               title="Notifications"
               onClick={() => alert("No new notifications")}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                width="20"
-              >
-                <path d="M12 24c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6.36-6-.6-.6V11c0-3.07-1.64-5.64-4.5-6.32V4a1.5 1.5 0 0 0-3 0v.68C7.88 5.36 6.24 7.92 6.24 11v6.4l-.6.6A.996.996 0 0 0 6 20h12c.89 0 1.34-1.08.72-1.72z" />
-              </svg>
+               <CircleUserRound size={35} />
             </button>
             {/* <button className={styles.exportButton}>Export Portfolio</button> */}
           </div>
@@ -109,7 +101,7 @@ export default function CompanyListPage() {
       </div>
       <div>
         <div
-          className="tab-container mt-5 mb-3 mobile-bottom-tabs"
+          className="tab-container mt-5 mobile-bottom-tabs"
           role="tablist"
           aria-label="Portfolio Tabs"
         >

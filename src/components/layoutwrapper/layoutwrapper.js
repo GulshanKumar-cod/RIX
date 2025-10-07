@@ -1,3 +1,4 @@
+// layoutwrapper.jsx
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -10,7 +11,11 @@ export default function LayoutWrapper({ children }) {
   return (
     <div className="layout-wrapper">
       <main>{children}</main>
-       {!isLandingPage && <Footer />}
+      {!isLandingPage && (
+        <div className="footer-desktop-only">
+          <Footer />
+        </div>
+      )}
     </div>
   );
 }

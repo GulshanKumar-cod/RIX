@@ -15,10 +15,10 @@ const Portfolio = () => {
     switch (activeTab) {
       case 'startup':
         return <PortfolioStartup />;
+        case 'intelligence':
+          return <PortfolioIntelligence />;
       case 'lenssignals':
         return <LensSignals/>;
-      case 'intelligence':
-        return <PortfolioIntelligence />;
         case 'suggestions':
           return <PortfolioSuggestions />;
       default:
@@ -39,16 +39,16 @@ const Portfolio = () => {
          My Lens
         </button>
         <button
-          onClick={() => setActiveTab('lenssignals')}
-          className={`tab-button ${activeTab === 'lenssignals' ? 'active-tab active-tab-second' : ''}`}
-        >
-        Signals
-        </button>
-        <button
           onClick={() => setActiveTab('intelligence')}
           className={`tab-button ${activeTab === 'intelligence' ? 'active-tab active-tab-second' : ''}`}
         >
         Intelligence
+        </button>
+        <button
+          onClick={() => setActiveTab('lenssignals')}
+          className={`tab-button ${activeTab === 'lenssignals' ? 'active-tab active-tab-second' : ''}`}
+        >
+        Signals
         </button>
         <button
           onClick={() => setActiveTab('suggestions')}

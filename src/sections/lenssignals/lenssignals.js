@@ -94,6 +94,8 @@ const LensSignals = () => {
   const [activeTab, setActiveTab] = useState("");
   const [selectedIndustry, setSelectedIndustry] = useState("");
   const [loading, setLoading] = useState(true);
+  const [selectedCompany, setSelectedCompany] = useState("");
+
 
   useEffect(() => {
     const stored = localStorage.getItem("portfolioStartups");
@@ -143,8 +145,9 @@ const LensSignals = () => {
 
   const filteredSignals = signals.filter((s) => {
     const matchCountry = activeTab ? s.country === activeTab : true;
-    const matchIndustry = selectedIndustry ? s.industry === selectedIndustry : true;
-    return matchCountry && matchIndustry;
+    // const matchIndustry = selectedIndustry ? s.industry === selectedIndustry : true;
+    const matchCompany = selectedCompany ? s.company === selectedCompany : true;
+return matchCountry && matchCompany;
   });
 
   const countryOptions = [...new Set(signals.map((s) => s.country).filter(Boolean))];
@@ -191,6 +194,9 @@ const LensSignals = () => {
     );
   }
 
+  const companyOptions = [...new Set(signals.map((s) => s.company).filter(Boolean))];
+
+
   return (
     <div>
           <hr className="mb-3" />
@@ -210,7 +216,7 @@ const LensSignals = () => {
               ))}
             </div>
 
-            <select
+            {/* <select
               value={selectedIndustry}
               onChange={(e) => setSelectedIndustry(e.target.value)}
               className="industry-dropdown"
@@ -229,7 +235,26 @@ const LensSignals = () => {
                   {industry}
                 </option>
               ))}
-            </select>
+            </select> */}
+            <select
+  value={selectedCompany}
+  onChange={(e) => setSelectedCompany(e.target.value)}
+     className="industry-dropdown"
+              style={{
+                padding: "6px 12px",
+                borderRadius: "6px",
+                background: "#111",
+                color: "#fff",
+                border: "1px solid #333",
+                fontFamily: "DM Sans, sans-serif",
+              }}
+>
+  <option value="">All Companies</option>
+  {companyOptions.map((company, i) => (
+    <option key={i} value={company}>{company}</option>
+  ))}
+</select>
+
           </div>
 
           {/* Layout */}
