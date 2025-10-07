@@ -34,6 +34,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${inter.variable} ${dmSans.variable}`}>
       <body>
         <LayoutWrapper>{children}</LayoutWrapper>
+           <SpeedInsights />
       </body>
     </html>
   );
