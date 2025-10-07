@@ -15,6 +15,13 @@ import PortfolioEngagement from "../portfolioengagement/portfolioengagement";
 import PortfolioSignals from "../portfoliosignals/portfoliosignals";
 import Portfolio from "../portfolio/portfolio";
 import PortfolioWeekly from "../portfolioweekly/portfolioweekly";
+import {
+  Search,
+  Brain,
+  Bell,
+  Layers,
+  AlignEndHorizontal
+} from "lucide-react";
 
 export default function CompanyListPage() {
   const router = useRouter();
@@ -28,15 +35,13 @@ export default function CompanyListPage() {
     router.replace(`?${params.toString()}`);
   };
 
-  const tabs = [
-    { id: "weekly", label: "AI Discovery" },
-     { id: "portfolio", label: "Lens" },
-    { id: "search", label: "Search" },
-    // { id: "intelligence", label: "Portfolio Intelligence" },
-    { id: "alerts", label: "Signals" },
-    // { id: "reports", label: "Reports" },
-    // { id: "engagement", label: "Engagement" },
-  ];
+ const tabs = [
+  { id: "weekly", label: "AI Discovery", icon: Brain },
+  { id: "portfolio", label: "Lens", icon: Layers },
+  { id: "search", label: "Search", icon: Search },
+  { id: "alerts", label: "Signals", icon:  AlignEndHorizontal },
+];
+
 
   const renderTabContent = useMemo(() => {
     switch (currentTab) {
@@ -104,23 +109,31 @@ export default function CompanyListPage() {
       </div>
       <div>
         <div
-          className="tab-container mt-5 mb-3"
+          className="tab-container mt-5 mb-3 mobile-bottom-tabs"
           role="tablist"
           aria-label="Portfolio Tabs"
         >
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              role="tab"
-              className={`tab-button ${
-                currentTab === tab.id ? "active-tab" : ""
-              }`}
-              onClick={() => setTabInURL(tab.id)}
-              aria-selected={currentTab === tab.id}
-            >
-              {tab.label}
-            </button>
-          ))}
+         {tabs.map(({ id, label, icon: Icon }) => (
+  <button
+    key={id}
+    role="tab"
+    className={`tab-button ${currentTab === id ? "active-tab" : ""}`}
+    onClick={() => setTabInURL(id)}
+    aria-selected={currentTab === id}
+    // style={{
+    //   display: "flex",
+    //   flexDirection: "column",
+    //   alignItems: "center",
+    //   fontSize: "0.8rem",
+    //   padding: "0.75rem",
+    //   gap: "0.25rem"
+    // }}
+  >
+    <Icon size={20} />
+    {label}
+  </button>
+))}
+
         </div>
 
         <div className="mt-4">{renderTabContent}</div>

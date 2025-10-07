@@ -4,6 +4,7 @@ import '@/styles/bootstrap_custom.css';
 import './reset.css';
 import './globals.css';
 import LayoutWrapper from '@/components/layoutwrapper/layoutwrapper';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({
   subsets: ['latin'],

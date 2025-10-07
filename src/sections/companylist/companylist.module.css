@@ -1040,6 +1040,7 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding-right: 8px;
+    margin-bottom: 5rem;
   }
 
   .detailRow {
@@ -1117,6 +1118,7 @@
     display: grid;
     grid-template-columns: 1fr;
     overflow-x: unset;
+    margin-bottom: 2rem;
   }
 
   .companyCard {
@@ -1140,6 +1142,7 @@ margin-top: 30px;
     justify-content: center;
         gap: 0px;
         padding: .2rem;
+        margin: 0px;
   }
 }
 
@@ -1185,7 +1188,7 @@ margin-top: 30px;
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 2rem;
+  margin-bottom: 7rem;
 }
 
 .statsCard {
@@ -1379,6 +1382,31 @@ font-size: 0.8rem;
   align-self: flex-end;
 }
 
+.subTabs{
+   display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+}
+
+.subTabButton{
+  flex: 1;
+          border-bottom: 1px solid transparent;
+     font-weight: 400;
+     color:   #fff;
+      font-size: 1rem;
+          cursor: pointer;
+          padding: 0.4rem 0.2rem;
+          transition: 0.2s;
+}
+
+.activeSubTab{
+  border-bottom: 1px solid rgba(0,191,255,0.4);
+  font-weight: 600;
+  color: #00bfff;
+}
+
 /* 📱 Responsive Design */
 @media (max-width: 1024px) {
   .weeklyGrid {
@@ -1414,6 +1442,12 @@ font-size: 0.8rem;
     width: 100%;
     align-self: stretch;
   }
+}
+
+@media (max-width: 768px) {
+.subTabButton{
+  font-size: 0.8rem;
+}
 }
 
 /* Portfolio Engagement  */
@@ -1522,5 +1556,9 @@ font-size: 0.8rem;
   .th,
   .td {
     padding: 10px 12px;
+  }
+
+  .weeklyGrid{
+    margin-bottom: 8rem;
   }
 }

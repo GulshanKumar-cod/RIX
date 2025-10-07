@@ -30,7 +30,7 @@ export default function LandingPage() {
             className={styles.startButton}
             onClick={() => router.push("/companylist")}
           >
-            Request a Demo
+          Get Early Access
           </button>
           {/* <input
             type="text"
