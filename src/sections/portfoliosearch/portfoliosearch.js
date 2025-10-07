@@ -280,14 +280,14 @@ const PortfolioSearch = () => {
       <div className={styles.companyContainer}>
         <div className={styles.pagePadding}>
 
-<div style={{ marginBottom: '1.5rem', marginTop: "1.5rem" }}>
+{/* <div style={{ marginBottom: '1.5rem', marginTop: "1.5rem" }}>
     <h2 style={{ color: '#fff', fontSize: '1.5rem', fontWeight: 600, marginBottom: '0.5rem' }}>
      Search
     </h2>
     <p style={{ fontSize: '0.8rem', margin: 0 }}>
       Access comprehensive research data.
     </p>
-  </div>
+  </div> */}
 
           <hr className="mb-3" />
           {/* <h3 className={styles.headingH3}>Search any company</h3> */}

@@ -87,7 +87,7 @@ const PortfolioStartup = () => {
 
       <hr className="mb-3" />
 
-       <h3 className={styles.headingH3}>Your Portfolio Startups</h3>
+       <h3 className={styles.headingH3}>Your Portfolio</h3>
 
       {/* Company Table */}
       <div style={{ overflowX: "auto" }}>

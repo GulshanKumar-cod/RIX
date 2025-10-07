@@ -30,6 +30,20 @@ const Portfolio = () => {
     <div className={styles.bodyCompany}>
       <div className={styles.companyContainer}>
         <div className={styles.pagePadding}>
+
+
+    {/* Heading and Subtext */}
+  <div style={{ marginBottom: '1.5rem', marginTop: "1.5rem" }}>
+    <h2 style={{ color: '#fff', fontSize: '1.5rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+     Lens
+    </h2>
+    <p style={{ fontSize: '0.8rem', margin: 0 }}>
+     Add, monitor, Get intelligence.
+    </p>
+  </div>
+
+
+
       {/* Tabs */}
       <div className={styles.tabButtonContainer}>
         <button

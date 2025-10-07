@@ -205,7 +205,7 @@ const PortfolioSignals = () => {
      Signals
     </h2>
     <p style={{ fontSize: '0.8rem', margin: 0 }}>
-      Discover the applications driving innovation.
+      Your global innovation feed.
     </p>
   </div>
 
