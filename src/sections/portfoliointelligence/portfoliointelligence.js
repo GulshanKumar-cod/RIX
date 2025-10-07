@@ -12,6 +12,7 @@ import {
   Legend,
 } from "chart.js";
 import styles from "../companylist/companylist.module.css";
+import SimpleMap from "@/components/worldmap/worldmap";
 
 ChartJS.register(
   LineElement,
@@ -44,6 +45,7 @@ const PortfolioIntelligence = () => {
   const [apiTrends, setApiTrends] = useState({});
   const [loadingTrends, setLoadingTrends] = useState(false);
   const [yearLabels, setYearLabels] = useState([]);
+  const [selectedView, setSelectedView] = useState('weekly');
 
   const getLastNQuarters = (n = 4) => {
     const quarters = [];
@@ -306,7 +308,18 @@ const PortfolioIntelligence = () => {
   if (companies.length === 0) {
     return (
       <div style={{ color: "#ccc"}}>
-        No portfolio intelligence available. Add startups to your portfolio first.
+        <p>No portfolio intelligence available. Add startups to your portfolio first.</p>
+      <button  onClick={() => router.push("/companylist?tab=search")}
+          style={{
+            padding: "8px 16px",
+            backgroundColor: "#0070f3",
+            border: "none",
+            borderRadius: "4px",
+            color: "#fff",
+            cursor: "pointer",
+           marginTop: "1rem",
+           fontSize: "0.8rem"
+          }}>+ Add companies</button>
       </div>
     );
   }
@@ -365,145 +378,141 @@ const PortfolioIntelligence = () => {
     ],
   };
 
+    const sampleData = [
+    ['US', 5000],
+    ['IN', 3000],
+    ['DE', 2500],
+    ['JP', 4000],
+    ['BR', 1800],
+  ];
+
+   const handleCountryClick = (countryCode, value) => {
+    alert(`${countryCode} → ${value} applications`);
+  };
+
   return (
     <div style={{ color: "#fff" }}>
+
+      <hr className="mb-3" />
       <h3 className={styles.headingH3}>Portfolio Intelligence</h3>
 
-      <hr className="mb-5" />
-
       {/* Summary Panel */}
-      <section
-        style={{
-          display: "flex",
-          gap: "1rem",
-          flexWrap: "wrap",
-          marginBottom: "2rem",
-        }}
-      >
-        {[
-          ["Average Score", `${averageScore}%`],
-          ["Companies Shown", companies.length],
-          ["Portfolio Health", portfolioHealthStatus],
-          ["Industries Covered", industryCount],
-        ].map(([label, val], i) => (
-          <div
-            key={i}
-            style={{
-              flex: "1",
-              minWidth: "200px",
-              padding: "1.5rem",
-              borderRadius: "12px",
-              backgroundColor: "rgba(255,255,255,0.05)",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
-            }}
-          >
-            <p
-              style={{
-                fontFamily: "DM Sans, sans-serif",
-                fontWeight: 700,
-                fontSize: "20px",
-                margin: 0,
-              }}
-            >
-              {label}
-            </p>
-            {loading ? (
-              <div
-                style={{
-                  height: "30px",
-                  background: "#333",
-                  marginTop: "10px",
-                }}
-              />
-            ) : (
-              <h2
-                style={{
-                  fontFamily: "DM Sans, sans-serif",
-                  fontWeight: 700,
-                  fontSize: "32px",
-                  marginBottom: "8px",
-                  color:
-                    label === "Portfolio Health"
-                      ? val === "Healthy"
-                        ? "#22c55e"
-                        : val === "Moderate"
-                        ? "#f59e0b"
-                        : "#ef4444"
-                      : "#fff",
-                }}
-              >
-                {val}
-              </h2>
-            )}
-          </div>
-        ))}
-      </section>
+    <section className={styles.statsSection}>
+  {[
+    ["Average Score", `${averageScore}%`],
+    ["Companies Shown", companies.length],
+    ["Portfolio Health", portfolioHealthStatus],
+    ["Industries Covered", industryCount],
+  ].map(([label, val], i) => (
+    <div className={styles.statsCard} key={i}>
+      {loading ? (
+        <div className={styles.statsLoadingBar} />
+      ) : (
+        <h3
+          className={styles.statsValue}
+          style={{
+            color:
+              label === "Portfolio Health"
+                ? val === "Healthy"
+                  ? "#22c55e"
+                  : val === "Moderate"
+                  ? "#f59e0b"
+                  : "#ef4444"
+                : "#fff",
+          }}
+        >
+          {val}
+        </h3>
+      )}
+      <p className={styles.statsLabel}>{label}</p>
+    </div>
+  ))}
+</section>
+
+
+ <hr className="mb-2" />
+     
+
+        <div style={{
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: '1.5rem',
+  flexWrap: 'wrap',
+  gap: '0.5rem',
+}}>
+
+
+ <h3 className={styles.headingH3}>Performance</h3>
+
+  <select
+    id="dataToggle"
+    value={selectedView}
+    onChange={(e) => setSelectedView(e.target.value)}
+    style={{
+      padding: '6px 12px',
+      borderRadius: '6px',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      backgroundColor: '#1a2332',
+      color: '#fff',
+      cursor: 'pointer',
+      fontSize: "0.8rem" 
+    }}
+  >
+    <option value="weekly">Weekly</option>
+    <option value="monthly">Monthly</option>
+  </select>
+</div>
+
 
       {/* Performance Groups */}
-      <section style={{ display: "flex", flexWrap: "wrap" }}>
-        {[
-          {
-            title: "Strong Performers",
-            list: performanceGroups.strong,
-            borderColor: "#22c55e",
-            titleColor: "#15803d",
-          },
-          {
-            title: "Healthy Performers",
-            list: performanceGroups.moderate,
-            borderColor: "#f59e0b",
-            titleColor: "#b45309",
-          },
-          {
-            title: "Moderate Performers",
-            list: performanceGroups.risk,
-            borderColor: "#ef4444",
-            titleColor: "#b91c1c",
-          },
-        ].map(({ title, list, borderColor, titleColor }, i) => (
-          <div
-            key={i}
-            style={{
-              flex: 1,
-              minWidth: "250px",
-              margin: "0.5rem",
-              padding: "1rem 1.5rem",
-              borderTop: `4px solid ${borderColor}`,
-              borderRadius: "12px",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
-            }}
-          >
-            <h3
-              style={{
-                margin: 0,
-                fontFamily: "DM Sans, sans-serif",
-                fontWeight: 500,
-                color: titleColor,
-              }}
-            >
-              {title}
-            </h3>
-            <ul style={{ paddingLeft: "1rem", marginTop: "0.5rem" }}>
-              {list.length === 0 ? (
-                <li style={{ color: "#6b7280", fontStyle: "italic" }}>None</li>
-              ) : (
-                list.map((name, j) => (
-                  <li
-                    key={j}
-                    style={{
-                      fontSize: "16px",
-                      fontFamily: "DM Sans, sans-serif",
-                      lineHeight: "1.7",
-                    }}
-                  >
-                    {toTitleCase(name)}
-                  </li>
-                ))
-              )}
-            </ul>
-          </div>
-        ))}
-      </section>
+    <section className={styles.performanceSection}>
+  {[
+    {
+      title: "Strong",
+      list: performanceGroups.strong,
+      borderColor: "#22c55e",
+      titleColor: "#15803d",
+    },
+    {
+      title: "Moderate",
+      list: performanceGroups.moderate,
+      borderColor: "#f59e0b",
+      titleColor: "#b45309",
+    },
+    {
+      title: "Low",
+      list: performanceGroups.risk,
+      borderColor: "#ef4444",
+      titleColor: "#b91c1c",
+    },
+  ].map(({ title, list, borderColor, titleColor }, i) => (
+    <div
+      key={i}
+      className={styles.performanceCard}
+      style={{ borderTop: `4px solid ${borderColor}` }}
+    >
+      <h3
+        className={styles.performanceTitle}
+        style={{ color: titleColor }}
+      >
+        {title}
+      </h3>
+      <ul className={styles.performanceList}>
+        {list.length === 0 ? (
+          <li className={styles.performanceNone}>None</li>
+        ) : (
+          list.map((name, j) => (
+            <li key={j} className={styles.performanceItem}>
+              {toTitleCase(name)}
+            </li>
+          ))
+        )}
+      </ul>
+    </div>
+  ))}
+</section>
+
 
       {/* Trends Section */}
       <section
@@ -526,14 +535,8 @@ const PortfolioIntelligence = () => {
     flexWrap: "wrap", // ✅ ensures wrapping on smaller screens
   }}
 >
-  <h3
-    style={{
-      margin: 0,
-      fontFamily: "DM Sans, sans-serif",
-      fontWeight: 600,
-      fontSize: 20,
-      flexShrink: 0, // ✅ title never squishes
-    }}
+  <h3 className={styles.headingH3}
+   
   >
     Filing Trends
   </h3>
@@ -548,14 +551,6 @@ const PortfolioIntelligence = () => {
       justifyContent: "flex-end", 
     }}
   >
-    <label
-      style={{
-        fontWeight: 600,
-        whiteSpace: "nowrap", 
-      }}
-    >
-      View:
-    </label>
     <select
       value={selectedCompany}
       onChange={(e) => setSelectedCompany(e.target.value)}
@@ -567,6 +562,7 @@ const PortfolioIntelligence = () => {
         border: "1px solid #2b2b2b",
         minWidth: "140px", 
         flex: "0 1 auto", 
+        fontSize: "0.8rem",
       }}
     >
       <option value="all">All Companies</option>
@@ -602,6 +598,8 @@ const PortfolioIntelligence = () => {
           marginTop: "2rem",
           flexWrap: "wrap",
           marginBottom: "3rem",
+          borderRadius: "12px",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
         }}
       >
         {/* Portfolio Composition */}
@@ -611,21 +609,15 @@ const PortfolioIntelligence = () => {
             minWidth: "300px",
             backgroundColor: "transparent",
             padding: "1.5rem",
-            borderRadius: "12px",
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+            
           }}
         >
           <h3
-            style={{
-              fontFamily: "DM Sans, sans-serif",
-              fontWeight: "600",
-              fontSize: "24px",
-              marginBottom: "2rem",
-            }}
+           className={styles.headingH3}
           >
-            Portfolio Composition
+            Geographical Distribution
           </h3>
-          <div
+          {/* <div
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
@@ -647,7 +639,7 @@ const PortfolioIntelligence = () => {
                   textAlign: "center",
                 }}
               >
-                <div style={{ fontSize: "14px", marginBottom: "0.5rem" }}>
+                <div style={{ fontSize: "0.8rem", marginBottom: "0.5rem" }}>
                   {label}
                 </div>
                 <div style={{ fontSize: "24px", fontWeight: "700" }}>
@@ -655,7 +647,18 @@ const PortfolioIntelligence = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
+
+ <SimpleMap
+        data={sampleData}
+        clickHandler={handleCountryClick}
+        // label="Application Distribution 2025"
+         color="blue"
+                backgroundColor="transparent"
+                borderColor="white"
+        suffix="applications"
+      />
+
         </div>
 
         {/* Industry Distribution */}
@@ -665,17 +668,12 @@ const PortfolioIntelligence = () => {
             minWidth: "300px",
             backgroundColor: "transparent",
             padding: "1.5rem",
-            borderRadius: "12px",
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+            // borderRadius: "12px",
+            // boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
           }}
         >
           <h3
-            style={{
-              fontFamily: "DM Sans, sans-serif",
-              fontWeight: "600",
-              fontSize: "24px",
-              marginBottom: "2rem",
-            }}
+           className={styles.headingH3}
           >
             Industry Distribution
           </h3>

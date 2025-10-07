@@ -35,7 +35,6 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
   border: 0.5px solid rgb(68 68 68 / 20%);
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -46,18 +45,25 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 } */
 
+.companyHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
 
 .companyName {
   font-size: 1.3rem;
   font-weight: bold;
   /* color: white; */
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 }
 
 .companyCountry {
   font-size: 1rem; 
   /* color: white; */
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 }
 
 .industryFocus,
@@ -94,6 +100,43 @@
   display: inline-block;
 }
 
+.cardAction {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.viewButton {
+ background: linear-gradient(90deg, #007bff, #00bfff);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.viewButton:hover,
+.viewButton:focus {
+  background-color: #0056b3;
+  outline: none;
+}
+
+.addPortfolio {
+  background: linear-gradient(90deg, #007bff, #00bfff);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.addPortfolio:hover {
+  opacity: 0.9;
+}
+
 /* Responsive design adjustments */
 @media (max-width: 768px) {
   .carouselCard {
@@ -113,25 +156,35 @@
   }
 
   .companyCountry {
-    font-size: 0.7rem; 
+    font-size: 0.8rem; 
     /* color: white; */
   }
 
   .industryFocus h4,
   .technologiesDeveloped h4,
   .topInventor h4 {
-    font-size: 0.7rem; 
+    font-size: 0.8rem; 
     /* color: white; */
   }
 
   .industryFocus p,
   .technologiesDeveloped p,
   .topInventor p {
-    font-size: 0.7rem; 
+    font-size: 0.8rem; 
     /* color: white; */
   }
 
   .heading{
-    font-size: 0.7rem;
+    font-size: 0.8rem;
   }
+
+   .addPortfolio {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+
+  .viewButton{
+    font-size: 0.8rem;
+  }
+
 }

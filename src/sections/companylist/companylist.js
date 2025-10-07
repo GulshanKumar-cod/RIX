@@ -15,6 +15,13 @@ import PortfolioEngagement from "../portfolioengagement/portfolioengagement";
 import PortfolioSignals from "../portfoliosignals/portfoliosignals";
 import Portfolio from "../portfolio/portfolio";
 import PortfolioWeekly from "../portfolioweekly/portfolioweekly";
+import {
+  Search,
+  Brain,
+ CircleUserRound ,
+  Layers,
+  AlignEndHorizontal
+} from "lucide-react";
 
 export default function CompanyListPage() {
   const router = useRouter();
@@ -28,15 +35,13 @@ export default function CompanyListPage() {
     router.replace(`?${params.toString()}`);
   };
 
-  const tabs = [
-    { id: "weekly", label: "AI Discovery" },
-     { id: "portfolio", label: "Lens" },
-    { id: "search", label: "Search" },
-    // { id: "intelligence", label: "Portfolio Intelligence" },
-    { id: "alerts", label: "Signals" },
-    // { id: "reports", label: "Reports" },
-    // { id: "engagement", label: "Engagement" },
-  ];
+ const tabs = [
+  { id: "weekly", label: "AI Discovery", icon: Brain },
+  { id: "portfolio", label: "Lens", icon: Layers },
+  { id: "search", label: "Search", icon: Search },
+  { id: "alerts", label: "Signals", icon:  AlignEndHorizontal },
+];
+
 
   const renderTabContent = useMemo(() => {
     switch (currentTab) {
@@ -76,27 +81,19 @@ export default function CompanyListPage() {
           </div>
 
           <div className={styles.rightSection}>
-            <div className={styles.userInfo}>
+            {/* <div className={styles.userInfo}>
               <div>
-                {/* <p className={styles.welcomeText}>Welcome,</p> */}
+                <p className={styles.welcomeText}>Welcome,</p>
                 <p className={styles.userName}>AL</p>
               </div>
-            </div>
+            </div> */}
             <button
               className={styles.notificationButton}
               aria-label="Notifications"
               title="Notifications"
               onClick={() => alert("No new notifications")}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                width="20"
-              >
-                <path d="M12 24c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6.36-6-.6-.6V11c0-3.07-1.64-5.64-4.5-6.32V4a1.5 1.5 0 0 0-3 0v.68C7.88 5.36 6.24 7.92 6.24 11v6.4l-.6.6A.996.996 0 0 0 6 20h12c.89 0 1.34-1.08.72-1.72z" />
-              </svg>
+               <CircleUserRound size={35} />
             </button>
             {/* <button className={styles.exportButton}>Export Portfolio</button> */}
           </div>
@@ -104,23 +101,31 @@ export default function CompanyListPage() {
       </div>
       <div>
         <div
-          className="tab-container mt-5 mb-3"
+          className="tab-container mt-5 mobile-bottom-tabs"
           role="tablist"
           aria-label="Portfolio Tabs"
         >
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              role="tab"
-              className={`tab-button ${
-                currentTab === tab.id ? "active-tab" : ""
-              }`}
-              onClick={() => setTabInURL(tab.id)}
-              aria-selected={currentTab === tab.id}
-            >
-              {tab.label}
-            </button>
-          ))}
+         {tabs.map(({ id, label, icon: Icon }) => (
+  <button
+    key={id}
+    role="tab"
+    className={`tab-button ${currentTab === id ? "active-tab" : ""}`}
+    onClick={() => setTabInURL(id)}
+    aria-selected={currentTab === id}
+    // style={{
+    //   display: "flex",
+    //   flexDirection: "column",
+    //   alignItems: "center",
+    //   fontSize: "0.8rem",
+    //   padding: "0.75rem",
+    //   gap: "0.25rem"
+    // }}
+  >
+    <Icon size={20} />
+    {label}
+  </button>
+))}
+
         </div>
 
         <div className="mt-4">{renderTabContent}</div>

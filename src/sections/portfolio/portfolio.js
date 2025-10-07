@@ -5,6 +5,7 @@ import PortfolioStartup from '../portfoliostartup/portfoliostartup';
 import PortfolioIntelligence from '../portfoliointelligence/portfoliointelligence';
 import styles from "../companylist/companylist.module.css";
 import PortfolioSuggestions from '../portfoliosuggestions/portfoliosuggestions';
+import LensSignals from '../lenssignals/lenssignals';
 
 
 const Portfolio = () => {
@@ -14,8 +15,10 @@ const Portfolio = () => {
     switch (activeTab) {
       case 'startup':
         return <PortfolioStartup />;
-      case 'intelligence':
-        return <PortfolioIntelligence />;
+        case 'intelligence':
+          return <PortfolioIntelligence />;
+      case 'lenssignals':
+        return <LensSignals/>;
         case 'suggestions':
           return <PortfolioSuggestions />;
       default:
@@ -31,19 +34,25 @@ const Portfolio = () => {
       <div className={styles.tabButtonContainer}>
         <button
           onClick={() => setActiveTab('startup')}
-          className={`tab-button ${activeTab === 'startup' ? 'active-tab' : ''}`}
+          className={`tab-button ${activeTab === 'startup' ? 'active-tab active-tab-second' : ''}`}
         >
          My Lens
         </button>
         <button
           onClick={() => setActiveTab('intelligence')}
-          className={`tab-button ${activeTab === 'intelligence' ? 'active-tab' : ''}`}
+          className={`tab-button ${activeTab === 'intelligence' ? 'active-tab active-tab-second' : ''}`}
         >
         Intelligence
         </button>
         <button
+          onClick={() => setActiveTab('lenssignals')}
+          className={`tab-button ${activeTab === 'lenssignals' ? 'active-tab active-tab-second' : ''}`}
+        >
+        Signals
+        </button>
+        <button
           onClick={() => setActiveTab('suggestions')}
-          className={`tab-button ${activeTab === 'suggestions' ? 'active-tab' : ''}`}
+          className={`tab-button ${activeTab === 'suggestions' ? 'active-tab active-tab-second' : ''}`}
         >
         Recommendation
         </button>

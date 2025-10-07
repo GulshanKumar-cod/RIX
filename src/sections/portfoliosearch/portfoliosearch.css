@@ -43,6 +43,62 @@
   box-shadow: 0 0 6px rgba(0,0,0,0.3) inset;
 }
 
+.tab-button.active-tab-second{
+border: 1px solid;
+   border-color: #4da6ff;
+  box-shadow: 0px 0px 12px rgba(77, 166, 255, 0.3);
+  border-radius: 10px;
+  background: #111; 
+  width: fit-content;
+
+}
+
+@media (max-width: 768px) {
+  .mobile-bottom-tabs {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #111;
+    border: 1px solid #4da6ff;
+    box-shadow: 0 0 12px rgba(77, 166, 255, 0.4);
+    border-radius: 10px;
+    padding: 6px 10px;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    width: fit-content;
+  }
+
+  .mobile-bottom-tabs .tab-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 5px 16.5px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: #bbb;
+    transition: all 0.2s ease;
+    gap: 4px; 
+  }
+
+  .mobile-bottom-tabs .tab-button.active-tab {
+    background: #333;
+    color: white;
+    font-weight: 600;
+    box-shadow: none;
+  }
+  .tabContent {
+    padding-bottom: 70px;
+  }
+}
+
+
 /* Layout */
 .signals-container {
   font-family: "DM Sans", sans-serif;
@@ -99,6 +155,13 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.signals-tabs{
+  display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
 }
 
 /* Feed Card */
@@ -191,6 +254,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  margin-bottom: 2rem;
 }
 
 /* Sidebar Card */
@@ -261,6 +325,8 @@
   flex-wrap: nowrap;
   padding: 0.2rem;
    gap: 10px;
+   bottom: 0px;
+   width: 100%;
 }
 
    .tab-button {
@@ -275,11 +341,16 @@
 @media (max-width: 768px) {
   .signals-layout {
     flex-direction: column;
+    margin-bottom: 5rem;
+  }
+
+  .signal-header{
+    align-items: flex-start;
   }
 
   .signals-tabs {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-end;
     gap: 1rem;
   }
 
@@ -298,6 +369,14 @@
   border-bottom: 0.5px solid #353434;
   }
 
+  .author{
+    font-size: 0.8rem;
+  }
+
+  .description{
+    font-size: 0.8rem;
+  }
+
   .signals-feed::-webkit-scrollbar {
   width: 6px;
 }
@@ -312,14 +391,15 @@
   .tab-pill {
     width: 100%;
     text-align: left;
+    font-size: 0.8rem;
   }
 
   .industry-dropdown {
-    width: 100%;
+    width: 50%;
+    font-size: 0.8rem;
   }
 
   .signal-card {
-    font-size: 15px;
     padding: 16px;
   }
 
@@ -328,7 +408,7 @@
   }
 
   .tag {
-    font-size: 11px;
+    font-size: 0.8rem;
     padding: 3px 10px;
   }
 

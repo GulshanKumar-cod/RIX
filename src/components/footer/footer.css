@@ -3,7 +3,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #1134A7;
+  background-color: #020b26;
   color: white;
   display: flex;
   justify-content: center;
@@ -53,3 +53,14 @@
     font-size: 0.65rem;
   }
 }
+
+.footer-desktop-only {
+  display: block;
+}
+
+@media screen and (max-width: 767px) {
+  .footer-desktop-only {
+    display: none;
+  }
+}
+

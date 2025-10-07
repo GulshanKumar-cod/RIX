@@ -85,11 +85,13 @@
   color: #fff;
   transition: transform 0.2s ease, opacity 0.2s ease;
   background: transparent;
-  border: none;
   cursor: pointer;
   padding: 0;
   display: flex;
   align-items: center;
+      border-radius: 50%;
+    /* border: 1px solid #4da6ff; */
+    box-shadow: 0 0 12px rgba(77, 166, 255, .4);
 }
 
 .notificationButton:hover {
@@ -133,7 +135,7 @@
   border: 1px solid #333;
   border-radius: 6px;
   font-family: "DM Sans", sans-serif;
-  font-size: 18px;
+  /* font-size: 18px; */
   cursor: pointer;
 }
 
@@ -652,7 +654,7 @@
   font-family: DM Sans, sans-serif;
   font-weight: 600;
   font-size: 24px;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   margin-top: 2rem;
 }
 
@@ -675,7 +677,7 @@
   width: 100%;
   font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 10px;
 }
 
 .searchSuggestionUL {
@@ -770,17 +772,18 @@
 }
 
 .companyCard {
-  flex: 0 0 400px;
-  scroll-snap-align: start;
+  flex: 0 0 auto;      
+  width: 400px;         
+  display: flex;
+  flex-direction: column;
   background: #0d0d0d;
   border-radius: 12px;
   padding: 1rem 1.2rem;
   color: #fff;
   transition: 0.2s ease;
-  display: flex;
-  flex-direction: column;
   border: 1px solid #333;
 }
+
 
 .companyCard:hover {
   /* transform: translateY(-4px); */
@@ -849,30 +852,34 @@
 }
 
 /* Expanded content: smooth slide down/up animation */
+/* Default collapsed state */
 .expandedContent {
   margin-top: 12px;
   font-size: 0.9rem;
   color: #d0d0d0;
-  padding: 12px 16px;
+  padding: 0 16px;
   background-color: #121212;
   border-radius: 8px;
   box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.05);
-  max-height: 1000px; 
+  max-height: 0;
   overflow: hidden;
-  transition: max-height 0.35s ease, opacity 0.35s ease;
-  opacity: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: max-height 0.35s ease, opacity 0.35s ease, padding 0.35s ease;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-/* When not expanded, collapse smoothly */
-.companyCard:not(.expanded) .expandedContent {
-  max-height: 0;
-  opacity: 0;
-  padding: 0 16px;
-  pointer-events: none;
+/* When card has expanded class → allow content */
+.expanded .expandedContent {
+  max-height: 1000px;   
+  padding: 12px 16px;
+  opacity: 1;
+  pointer-events: auto;
 }
+
+
 
 .cardsGrid::-webkit-scrollbar {
   height: 8px;
@@ -920,7 +927,7 @@
 
 .viewButton:hover,
 .viewButton:focus {
-  background-color: #0056b3;
+  background-color: #29411f;
   outline: none;
 }
 
@@ -938,6 +945,7 @@
   padding: 6px 0;
   border-bottom: 1px solid #2a2a2a;
 }
+
 .detailRow:last-child {
   border-bottom: none;
 }
@@ -1034,15 +1042,21 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding-right: 8px;
+    margin-bottom: 5rem;
+  }
+
+  .detailRow {
+   font-size: 0.8rem;
   }
 }
 
 @media (max-width: 768px) {
   .headingH3 {
     font-size: 20px;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    text-align: center;
+    margin-top: 0.75rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+    font-size: 0.8rem;
   }
 
   .searchFilters {
@@ -1061,6 +1075,9 @@
     gap: 12px;
     margin-top: 20px;
     margin-bottom: 20px;
+     align-items: flex-end;    
+  width: 50%;      
+  margin-left: auto; 
   }
 
   .searchInput {
@@ -1096,13 +1113,14 @@
 
   .addPortfolio {
     padding: 5px 10px;
-    font-size: 14px;
+    font-size: 0.8rem;
   }
 
   .cardsGrid {
     display: grid;
     grid-template-columns: 1fr;
     overflow-x: unset;
+    margin-bottom: 2rem;
   }
 
   .companyCard {
@@ -1118,21 +1136,15 @@
 gap: 20px; 
 margin-bottom: 20px; 
 margin-top: 30px;
-border: 1px solid;
-   border-color: #4da6ff;
-  box-shadow: 0px 0px 12px rgba(77, 166, 255, 0.3);
-  border-radius: 10px;
-  background: #111; 
-  padding: 0.6rem;
-  width: fit-content;
 }
 
 @media (max-width: 600px) {
   .tabButtonContainer {
     flex-direction: row;
     justify-content: center;
-        gap: 10px;
+        gap: 0px;
         padding: .2rem;
+        margin: 0px;
   }
 }
 
@@ -1147,6 +1159,11 @@ border: 1px solid;
 }
 
 @media (max-width: 768px) {
+
+  .portfolioTable{
+    font-size: 0.8rem;
+  }
+
   .startupButtons {
     margin-bottom: 1rem;
           display: flex;
@@ -1158,6 +1175,7 @@ border: 1px solid;
   .startupButtons button {
     flex: 1 1 150px;
             min-width: 120px;
+            font-size: 0.8rem;
   }
 }
 
@@ -1168,11 +1186,111 @@ border: 1px solid;
   margin: 0 auto;
 }
 
+.statsSection{
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 7rem;
+}
+
+.statsCard {
+  flex: 1 1 calc(25% - 1rem); 
+  min-width: 0; 
+  padding: 1.5rem;
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+
+.statsLabel{
+  font-family: DM Sans, sans-serif;
+  font-weight: 700; 
+  font-size: 20px;
+  margin: 0;
+}
+
+.statsLoadingBar{
+  height: 30px; 
+  background: #333;
+  margin-top: 10px;
+}
+
+.statsValue{
+  font-family: DM Sans, sans-serif;
+  font-weight: 700; 
+  font-size: 32px; 
+  margin-bottom: 8px;
+}
+
+.performanceSection{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.performanceCard{
+  flex: 1;
+  min-width: 250px; 
+  margin: 0.5rem; 
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.performanceTitle{
+  margin: 0; 
+  font-family: DM Sans, sans-serif;
+  font-weight: 500; 
+  font-size: 32px;
+}
+
+.performanceList{
+  padding-left: 0rem; 
+  margin-top: 0.5rem;
+}
+
+.performanceNone{
+  color: #6b7280; 
+  font-style: italic;
+}
+
+.performanceItem{
+  font-size: 16px; 
+  font-family: DM Sans, sans-serif; 
+  line-height: 1.7;
+}
+
 @media (max-width: 600px) {
   .chartContainer {
     width: 100%;
     height: 250px; 
   }
+
+  .performanceNone, .performanceItem{
+font-size: 0.8rem; 
+}
+}
+
+@media (max-width: 768px) {
+
+   .statsCard {
+ flex: 0 0 calc(50% - 0.5rem);
+  padding: 1rem 1rem;
+  }
+
+  .statsLabel{
+    font-size: 0.8rem;
+    font-weight: normal;
+  }
+
+  .statsValue{
+    font-size: 1.2rem;
+  }
+
+  .performanceTitle{
+    font-size: 1.2rem;
+  }
+
 }
 
 /* Portfolio Discovery */
@@ -1223,6 +1341,7 @@ border: 1px solid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-top: 1rem;
+  margin-bottom: 2.5rem;
 }
 
 /* Card */
@@ -1265,6 +1384,31 @@ border: 1px solid;
   align-self: flex-end;
 }
 
+.subTabs{
+   display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+}
+
+.subTabButton{
+  flex: 1;
+          border-bottom: 1px solid transparent;
+     font-weight: 400;
+     color:   #fff;
+      font-size: 1rem;
+          cursor: pointer;
+          padding: 0.4rem 0.2rem;
+          transition: 0.2s;
+}
+
+.activeSubTab{
+  border-bottom: 1px solid rgba(0,191,255,0.4);
+  font-weight: 600;
+  color: #00bfff;
+}
+
 /* 📱 Responsive Design */
 @media (max-width: 1024px) {
   .weeklyGrid {
@@ -1287,6 +1431,10 @@ border: 1px solid;
     grid-template-columns: 1fr;
   }
 
+  .weeklyGrid button{
+    font-size: 0.8rem;
+  }
+
   .weeklyRefreshBtn,
   .weeklySelect {
     width: 100%;
@@ -1296,6 +1444,12 @@ border: 1px solid;
     width: 100%;
     align-self: stretch;
   }
+}
+
+@media (max-width: 768px) {
+.subTabButton{
+  font-size: 0.8rem;
+}
 }
 
 /* Portfolio Engagement  */
@@ -1404,5 +1558,9 @@ border: 1px solid;
   .th,
   .td {
     padding: 10px 12px;
+  }
+
+  .weeklyGrid{
+    margin-bottom: 8rem;
   }
 }

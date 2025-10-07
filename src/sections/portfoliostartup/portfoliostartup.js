@@ -65,20 +65,33 @@ const PortfolioStartup = () => {
   if (companies.length === 0) {
     return (
       <div style={{ color: "#ccc" }}>
-        No companies added to your portfolio yet.
+        <p>No companies added to your portfolio yet.</p>
+    <button  onClick={() => router.push("/companylist?tab=search")}
+          style={{
+            padding: "8px 16px",
+            backgroundColor: "#0070f3",
+            border: "none",
+            borderRadius: "4px",
+            color: "#fff",
+            cursor: "pointer",
+           marginTop: "1rem",
+           fontSize: "0.8rem"
+          }}>+ Add companies</button>
       </div>
     );
   }
 
   return (
     <div style={{ color: "#fff" }}>
-      <h3 className={styles.headingH3}>Your Portfolio Startups</h3>
+     
 
-      <hr className="mb-5" />
+      <hr className="mb-3" />
+
+       <h3 className={styles.headingH3}>Your Portfolio Startups</h3>
 
       {/* Company Table */}
       <div style={{ overflowX: "auto" }}>
-        <table
+        <table className={styles.portfolioTable}
           style={{
             width: "100%",
             borderCollapse: "collapse",
@@ -96,6 +109,7 @@ const PortfolioStartup = () => {
               <th style={thStyle}>Technologies</th>
               <th style={thStyle}>Inventors</th>
               <th style={thStyle}>Increment</th>
+              <th style={thStyle}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -123,6 +137,20 @@ const PortfolioStartup = () => {
                 >
                   {c.increment}%
                 </td>
+                <td style={tdStyle} >
+                 <button
+  onClick={() =>
+    router.push(
+      `https://dyr.incubig.org/company-page/${encodeURIComponent(
+        c.name
+      )}/overview`
+    )
+  }
+>
+  View
+</button>
+
+                      </td>
               </tr>
             ))}
           </tbody>

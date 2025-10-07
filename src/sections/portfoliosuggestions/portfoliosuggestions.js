@@ -110,14 +110,23 @@ const PortfolioSuggestions = () => {
     }
   };
 
+  const goToCompanyPage = (companyName) => {
+    router.push(
+      `https://dyr.incubig.org/company-page/${encodeURIComponent(
+        companyName
+      )}/overview`
+    );
+  };
+
+
   return (
     <div>
+
+  <hr className="mb-3" />
       <h3 className={styles.headingH3}>Suggested Companies</h3>
 
-  <hr className="mb-5" />
-
     <div className={styles.wrapper}>
-      <div className={styles.filterContainer}>
+      {/* <div className={styles.filterContainer}>
         {filters.map((filter, i) => (
           <button
             key={i}
@@ -129,7 +138,7 @@ const PortfolioSuggestions = () => {
             {filter}
           </button>
         ))}
-      </div>
+      </div> */}
 
       {/* Cards shown inside fixed-height scrollable container */}
       <div className={styles.cardContainer}>
@@ -150,15 +159,30 @@ const PortfolioSuggestions = () => {
               Recent innovation activity in {company.industry} industry:{" "}
               {company.totalDevelopments} new developments.
             </p>
+
+
+ <div className={styles.cardAction}>
+
+   <button
+                            className={styles.viewButton}
+                            onClick={() => goToCompanyPage(item.name)}
+                          >
+                            View
+                          </button>
+
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 handleAddCompany(company);
               }}
-              className={styles.addButton}
+              className={styles.addPortfolio}
             >
-              Add to Portfolio
+             + Add 
             </button>
+
+
+</div>
+
           </div>
         ))}
       </div>

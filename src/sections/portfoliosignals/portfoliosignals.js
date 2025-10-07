@@ -199,22 +199,25 @@ const PortfolioSignals = () => {
       <div className={styles.companyContainer}>
         <div className={styles.pagePadding}>
           <div className="signals-container">
-            <h3 className={styles.headingH3 }
+
+            <div style={{ marginBottom: '1.5rem', marginTop: "1.5rem" }}>
+    <h2 style={{ color: '#fff', fontSize: '1.5rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+     Signals
+    </h2>
+    <p style={{ fontSize: '0.8rem', margin: 0 }}>
+      Discover the applications driving innovation.
+    </p>
+  </div>
+
+              <hr className="mb-3" />
+            {/* <h3 className={styles.headingH3 }
             >
               Signals
-            </h3>
-
-              <hr className="mb-5" />
+            </h3> */}
 
             {/* Tabs and Dropdown */}
             <div
               className="signals-tabs"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: "1rem",
-              }}
             >
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 {countryOptions.map((tab) => (

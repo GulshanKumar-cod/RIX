@@ -97,7 +97,9 @@ const PortfolioSearch = () => {
   const router = useRouter();
   const [increments, setIncrements] = useState({});
   const [displayData, setDisplayData] = useState([]);
-  const [expandedCard, setExpandedCard] = useState(null);
+  const [expandedCard, setExpandedCard] = useState(() => {
+    return dummyData.map((item, i) => `${item.name ?? "company"}_${i}`);
+  });
 
   const [combinedFilterValue, setCombinedFilterValue] = useState("");
 
@@ -193,44 +195,45 @@ const PortfolioSearch = () => {
   ]);
 
   const handleInputChange = async (e) => {
-  const value = e.target.value;
-  setSearchTerm(value);
+    const value = e.target.value;
+    setSearchTerm(value);
 
-  if (value.length > 0) {
-    try {
-      const res = await fetch(
-        `https://api.incubig.org/analytics/assignee-suggestions?assignee=${encodeURIComponent(value)}`,
-        {
-          headers: {
-            "x-api-key": process.env.NEXT_PUBLIC_INCUBIG_API_KEY,
-          },
+    if (value.length > 0) {
+      try {
+        const res = await fetch(
+          `https://api.incubig.org/analytics/assignee-suggestions?assignee=${encodeURIComponent(
+            value
+          )}`,
+          {
+            headers: {
+              "x-api-key": process.env.NEXT_PUBLIC_INCUBIG_API_KEY,
+            },
+          }
+        );
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(errorText || "Failed to fetch suggestions");
         }
-      );
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText || "Failed to fetch suggestions");
+        const data = await res.json();
+
+        // Data is an array, use it directly
+        const suggestions = Array.isArray(data) ? data : [];
+
+        setSuggestions(suggestions.slice(0, 5));
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+        setSuggestions([]);
       }
-
-      const data = await res.json();
-
-      // Data is an array, use it directly
-      const suggestions = Array.isArray(data) ? data : [];
-
-      setSuggestions(suggestions.slice(0, 5));
-    } catch (error) {
-      console.error("Error fetching suggestions:", error);
+    } else {
       setSuggestions([]);
     }
-  } else {
-    setSuggestions([]);
-  }
-};
+  };
 
-// const goToCompanyPage = (companyName) => {
-//   window.location.href = `https://dyr.incubig.org/company-page/${encodeURIComponent(companyName)}/overview`;
-// };
-
+  // const goToCompanyPage = (companyName) => {
+  //   window.location.href = `https://dyr.incubig.org/company-page/${encodeURIComponent(companyName)}/overview`;
+  // };
 
   const goToCompanyPage = (companyName) => {
     router.push(
@@ -276,9 +279,18 @@ const PortfolioSearch = () => {
     <div className={styles.bodyCompany}>
       <div className={styles.companyContainer}>
         <div className={styles.pagePadding}>
-          <h3 className={styles.headingH3}>Search any company</h3>
 
-          <hr className="mb-5" />
+<div style={{ marginBottom: '1.5rem', marginTop: "1.5rem" }}>
+    <h2 style={{ color: '#fff', fontSize: '1.5rem', fontWeight: 600, marginBottom: '0.5rem' }}>
+     Search
+    </h2>
+    <p style={{ fontSize: '0.8rem', margin: 0 }}>
+      Access comprehensive research data.
+    </p>
+  </div>
+
+          <hr className="mb-3" />
+          {/* <h3 className={styles.headingH3}>Search any company</h3> */}
 
           {/* Search + Filters Row */}
           <div className={styles.searchFilters}>
@@ -402,12 +414,14 @@ const PortfolioSearch = () => {
                 <div className={styles.cardsGrid}>
                   {displayData.map((item, i) => {
                     const cardKey = `${item.name ?? "company"}_${i}`;
-                    const isExpanded = expandedCard === cardKey;
+                    const isExpanded = expandedCard.includes(cardKey);
 
                     return (
                       <div
                         key={cardKey}
-                        className={`${styles.companyCard} ${isExpanded ? styles.expanded : ""}`}
+                        className={`${styles.companyCard} ${
+                          isExpanded ? styles.expanded : ""
+                        }`}
                       >
                         {/* 🔹 Header */}
                         <div
@@ -422,7 +436,12 @@ const PortfolioSearch = () => {
                               alignItems: "center",
                             }}
                           >
-                            <h3 className={styles.companyName}  style={{fontSize: "1.2rem"}}>{item.name}</h3>
+                            <h3
+                              className={styles.companyName}
+                              style={{ fontSize: "1.2rem" }}
+                            >
+                              {item.name}
+                            </h3>
                             <span
                               className={styles.companyName}
                               style={{
@@ -444,8 +463,16 @@ const PortfolioSearch = () => {
                           </div>
                         </div>
 
-                        <p style={{ marginTop: "15px", fontSize: "0.8rem" }}>
-                        {item.patents} new developments.
+                        <p
+                          style={{
+                            marginTop: "15px",
+                            fontSize: "0.8rem",
+                            color: "#4da6ff",
+                            textShadow:
+                              "0 0 0px #4da6ff, 0 0 2px #4da6ff, 0 0 5px #4da6ff",
+                          }}
+                        >
+                          {item.patents} new developments.
                         </p>
 
                         <hr className={styles.divider} />
@@ -455,9 +482,11 @@ const PortfolioSearch = () => {
                           type="button"
                           className={styles.detailsToggle}
                           onClick={(e) => {
-                            e.stopPropagation(); // prevent card redirect
+                            e.stopPropagation();
                             setExpandedCard((prev) =>
-                              prev === cardKey ? null : cardKey
+                              prev.includes(cardKey)
+                                ? prev.filter((key) => key !== cardKey)
+                                : [...prev, cardKey]
                             );
                           }}
                           aria-expanded={isExpanded}
@@ -465,11 +494,15 @@ const PortfolioSearch = () => {
                             isExpanded ? "Collapse details" : "Expand to view"
                           }
                         >
-                          <span className={styles.detailsLabel} style={{fontSize: "0.8rem"}}>Details</span>
                           <span
-                            className={`${styles.arrow} ${
-                              isExpanded ? styles.rotated : ""
-                            }`} style={{fontSize: "0.8rem"}}
+                            className={styles.detailsLabel}
+                            style={{ fontSize: "0.8rem" }}
+                          >
+                            Details
+                          </span>
+                          <span
+                            className={styles.arrow}
+                            style={{ fontSize: "0.8rem" }}
                             aria-hidden="true"
                           >
                             {isExpanded ? "▲" : "▼"}
@@ -477,43 +510,29 @@ const PortfolioSearch = () => {
                         </button>
 
                         {/* 🔹 Expandable Section */}
-                        {isExpanded && (
-                          <div className={styles.expandedContent}>
-                            <div className={styles.detailRow}>
-                              <span>Industries</span>
-                              <span>{item.industries}</span>
-                            </div>
-                            <div className={styles.detailRow}>
-                              <span>Technologies</span>
-                              <span>{item.technologies}</span>
-                            </div>
-                            <div className={styles.detailRow}>
-                              <span>Inventors</span>
-                              <span>{item.inventors}</span>
-                            </div>
-                            <div className={styles.detailRow}>
-                              <span>Top Inventor</span>
-                              <span>{item.top_inventor}</span>
-                            </div>
-                            {item.topInventor && (
-                              <div className={styles.detailRow}>
-                                <span>Top Inventor</span>
-                                <span>{item.topInventor}</span>
-                              </div>
-                            )}
-                            {item.keyTechnologies?.length > 0 && (
-                              <div className={styles.keyTechs}>
-                                {item.keyTechnologies
-                                  .slice(0, 3)
-                                  .map((tech, idx) => (
-                                    <span key={idx} className={styles.techTag}>
-                                      {tech}
-                                    </span>
-                                  ))}
-                              </div>
-                            )}
-                          </div>
-                        )}
+                    <div
+  className={`${styles.expandedContent} ${
+    isExpanded ? styles.show : ""
+  }`}
+>
+  <div className={styles.detailRow}>
+    <span>Industries</span>
+    <span>{item.industries}</span>
+  </div>
+  <div className={styles.detailRow}>
+    <span>Technologies</span>
+    <span>{item.technologies}</span>
+  </div>
+  <div className={styles.detailRow}>
+    <span>Inventors</span>
+    <span>{item.inventors}</span>
+  </div>
+  <div className={styles.detailRow}>
+    <span>Top Inventor</span>
+    <span>{item.top_inventor}</span>
+  </div>
+</div>
+
 
                         {/* 🔹 Action */}
                         <div className={styles.cardAction}>
