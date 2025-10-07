@@ -386,7 +386,7 @@ const PortfolioWeeklyIndustry = ({
   {/* 🔹 Sub-tabs */}
   <div className={styles.subTabs}
   >
-    {["Overview", "Countries", "Companies", "Technologies"].map((tab) => (
+    {["Overview", "Countries", "Companies", "Tech"].map((tab) => (
       <button
         key={tab}
       className={`${styles.subTabButton} ${
@@ -636,7 +636,7 @@ const PortfolioWeeklyIndustry = ({
           )}
 
           {/* 🔬 Technologies Tab */}
-          {activeTab === "Technologies" && (
+          {activeTab === "Tech" && (
             <div
               style={{ padding: "2rem", textAlign: "center", color: "#9bb5ff" }}
             >
