@@ -68,7 +68,7 @@ const Portfolio = () => {
           onClick={() => setActiveTab('suggestions')}
           className={`tab-button ${activeTab === 'suggestions' ? 'active-tab active-tab-second' : ''}`}
         >
-        Recommendation
+        X Factor
         </button>
       </div>
 
