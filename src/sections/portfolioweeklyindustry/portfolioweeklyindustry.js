@@ -264,7 +264,7 @@ const PortfolioWeeklyIndustry = ({
                     marginTop: "10px",
                   }}
                 >
-                  Explore
+                  Deep Dive
                 </button>
               </div>
             );
