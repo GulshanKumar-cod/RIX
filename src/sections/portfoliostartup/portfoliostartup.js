@@ -66,7 +66,8 @@ const PortfolioStartup = () => {
     return (
       <div style={{ color: "#ccc" }}>
         <p>No companies added to your portfolio yet.</p>
-    <button  onClick={() => router.push("/companylist?tab=search")}
+        <button
+          onClick={() => router.push("/companylist?tab=search")}
           style={{
             padding: "8px 16px",
             backgroundColor: "#0070f3",
@@ -74,24 +75,26 @@ const PortfolioStartup = () => {
             borderRadius: "4px",
             color: "#fff",
             cursor: "pointer",
-           marginTop: "1rem",
-           fontSize: "0.8rem"
-          }}>+ Add companies</button>
+            marginTop: "1rem",
+            fontSize: "0.8rem",
+          }}
+        >
+          + Add companies
+        </button>
       </div>
     );
   }
 
   return (
     <div style={{ color: "#fff" }}>
-     
-
       <hr className="mb-3" />
 
-       <h3 className={styles.headingH3}>Your Portfolio</h3>
+      <h3 className={styles.headingH3}>Your Portfolio</h3>
 
       {/* Company Table */}
       <div style={{ overflowX: "auto" }}>
-        <table className={styles.portfolioTable}
+        <table
+          className={styles.portfolioTable}
           style={{
             width: "100%",
             borderCollapse: "collapse",
@@ -137,27 +140,27 @@ const PortfolioStartup = () => {
                 >
                   {c.increment}%
                 </td>
-                <td style={tdStyle} >
-                 <button
-  onClick={() =>
-    router.push(
-      `https://dyr.incubig.org/company-page/${encodeURIComponent(
-        c.name
-      )}/overview`
-    )
-  }
->
-  View
-</button>
-
-                      </td>
+                <td style={tdStyle}>
+                  <button
+                    onClick={() =>
+                      router.push(
+                        `https://dyr.incubig.org/company-page/${encodeURIComponent(
+                          c.name
+                        )}/overview`
+                      )
+                    }
+                  >
+                    View
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-{/* Action Buttons */}
+      {/* Action Buttons */}
+      
       <div className={styles.startupButtons}>
         <button
           onClick={() => router.push("/companylist?tab=search")}
@@ -188,8 +191,7 @@ const PortfolioStartup = () => {
           Delete
         </button>
       </div>
-
-    </div> 
+    </div>
   );
 };
 
