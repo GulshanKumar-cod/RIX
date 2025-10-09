@@ -1190,7 +1190,7 @@ margin-top: 30px;
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 7rem;
+  margin-bottom: 3rem;
 }
 
 .statsCard {
@@ -1260,6 +1260,13 @@ margin-top: 30px;
   line-height: 1.7;
 }
 
+.countryCompany {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 6rem;
+}
+
 @media (max-width: 600px) {
   .chartContainer {
     width: 100%;
@@ -1291,7 +1298,54 @@ font-size: 0.8rem;
     font-size: 1.2rem;
   }
 
+
 }
+
+@media (min-width: 768px) {
+  .countryCompany {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 3rem;
+  }
+
+  .countryCompany > div {
+    flex: 1;
+  }
+}
+
+/* 🔹 Each data row (Country/Company) */
+.dataRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  border: 1px solid rgb(24 24 24);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: #fff;
+}
+
+/* Ensure equal spacing between text values */
+.dataRow span {
+  flex: 1;
+}
+
+/* Add some spacing between columns */
+.dataRow span:nth-child(1) {
+  text-align: left;
+}
+
+.dataRow span:nth-child(2) {
+  text-align: center;
+}
+
+.dataRow span:nth-child(3) {
+  text-align: right;
+}
+
+
 
 /* Portfolio Discovery */
 .weeklyHeader {

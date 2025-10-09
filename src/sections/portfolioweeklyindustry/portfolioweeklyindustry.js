@@ -17,7 +17,7 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
-  Tooltip,
+  Tooltip
 );
 
 const dummyCompanies = [
@@ -95,9 +95,21 @@ const PortfolioWeeklyIndustry = ({
       change: "+18%",
       patents: 124500,
       tags: ["AI-driven optimization"],
-      history: [5, 7, 9, 11, 13],
-      topCountry: "China",
-      topCompany: "BYD",
+      history: [5, 7, 9, 11, 13, 34, 55],
+      topCountry: [
+        { name: "United States", applications: 12000, increment: "+12%" },
+        { name: "China", applications: 11000, increment: "+10%" },
+        { name: "Germany", applications: 5000, increment: "+8%" },
+        { name: "Japan", applications: 4800, increment: "+6%" },
+        { name: "South Korea", applications: 4500, increment: "+5%" },
+      ],
+      topCompany: [
+        { name: "IBM", applications: 3200, increment: "+5%" },
+        { name: "Samsung", applications: 3100, increment: "+6%" },
+        { name: "Intel", applications: 2900, increment: "+7%" },
+        { name: "Microsoft", applications: 2700, increment: "+4%" },
+        { name: "Qualcomm", applications: 2500, increment: "+3%" },
+      ],
       topTechnology: "Battery Cooling Systems",
       topInventor: "Li Wei",
       description:
@@ -109,9 +121,21 @@ const PortfolioWeeklyIndustry = ({
       change: "+44%",
       patents: 80500,
       tags: ["Neural computation", "Synthetic biology"],
-      history: [8, 10, 14, 18, 20],
-      topCountry: "United States",
-      topCompany: "IBM",
+      history: [8, 10, 14, 18, 20, 34, 55],
+      topCountry: [
+        { name: "United States", applications: 12000, increment: "+12%" },
+        { name: "China", applications: 11000, increment: "+10%" },
+        { name: "Germany", applications: 5000, increment: "+8%" },
+        { name: "Japan", applications: 4800, increment: "+6%" },
+        { name: "South Korea", applications: 4500, increment: "+5%" },
+      ],
+      topCompany: [
+        { name: "IBM", applications: 3200, increment: "+5%" },
+        { name: "Samsung", applications: 3100, increment: "+6%" },
+        { name: "Intel", applications: 2900, increment: "+7%" },
+        { name: "Microsoft", applications: 2700, increment: "+4%" },
+        { name: "Qualcomm", applications: 2500, increment: "+3%" },
+      ],
       topTechnology: "Neural Signal Mapping",
       topInventor: "Dr. Jane Smith",
       description:
@@ -123,9 +147,21 @@ const PortfolioWeeklyIndustry = ({
       change: "+36%",
       patents: 60400,
       tags: ["Predictive BMS", "Anomaly detection"],
-      history: [10, 13, 18, 22, 26],
-      topCountry: "Korea",
-      topCompany: "Hyundai",
+      history: [10, 13, 18, 22, 26, 34, 55],
+      topCountry: [
+        { name: "United States", applications: 12000, increment: "+12%" },
+        { name: "China", applications: 11000, increment: "+10%" },
+        { name: "Germany", applications: 5000, increment: "+8%" },
+        { name: "Japan", applications: 4800, increment: "+6%" },
+        { name: "South Korea", applications: 4500, increment: "+5%" },
+      ],
+      topCompany: [
+        { name: "IBM", applications: 3200, increment: "+5%" },
+        { name: "Samsung", applications: 3100, increment: "+6%" },
+        { name: "Intel", applications: 2900, increment: "+7%" },
+        { name: "Microsoft", applications: 2700, increment: "+4%" },
+        { name: "Qualcomm", applications: 2500, increment: "+3%" },
+      ],
       topTechnology: "Predictive Battery Analytics",
       topInventor: "Lee Sung-ho",
       description: "Korea & China leading AI-powered EV systems.",
@@ -168,10 +204,45 @@ const PortfolioWeeklyIndustry = ({
     scales: { x: { display: false }, y: { display: false } },
   };
 
+  // Filter companies relevant to selected industry
+  const relevantCompanies = dummyCompanies.filter(
+    (company) => company.industry === selectedIndustry?.name
+  );
+
+  // 🔹 Group by Country
+  const countryMap = {};
+  relevantCompanies.forEach((c) => {
+    if (!countryMap[c.country]) {
+      countryMap[c.country] = { name: c.country, applications: 0, count: 0 };
+    }
+    countryMap[c.country].applications += c.patents;
+    countryMap[c.country].count += 1;
+  });
+
+  const topCountries = Array.isArray(selectedIndustry?.topCountry)
+    ? selectedIndustry.topCountry
+    : Object.values(countryMap)
+        .sort((a, b) => b.applications - a.applications)
+        .slice(0, 5)
+        .map((c) => ({
+          ...c,
+          increment: `+${(Math.random() * 10).toFixed(1)}%`,
+        }));
+
+  const topCompanies = Array.isArray(selectedIndustry?.topCompany)
+    ? selectedIndustry.topCompany
+    : relevantCompanies
+        .sort((a, b) => b.patents - a.patents)
+        .slice(0, 5)
+        .map((company) => ({
+          name: company.name,
+          applications: company.patents,
+          increment: `${increments[company.name] || "+0.0"}%`,
+        }));
+
   return (
     <div>
-   {!selectedIndustry && <hr className="mb-4" />}
-
+      {!selectedIndustry && <hr className="mb-4" />}
 
       {/* 🔁 MAIN PAGE (Industry List) */}
       {!selectedIndustry ? (
@@ -193,10 +264,7 @@ const PortfolioWeeklyIndustry = ({
             };
 
             return (
-              <div
-                key={idx}
-                className={styles.industryCard}
-              >
+              <div key={idx} className={styles.industryCard}>
                 <div
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
@@ -296,157 +364,285 @@ const PortfolioWeeklyIndustry = ({
             </button>
           </div>
 
-         {/* 🔹 Summary Card */}
-<div
-  style={{
-    color: "#fff",
-    fontFamily: "DM Sans, sans-serif",
-  }}
->
-  {/* Title */}
-  <h3
-    style={{
-      marginBottom: "1rem",
-      fontSize: "1.5rem",
-      fontWeight: 600,
-    }}
-  >
-    {selectedIndustry.name}
-  </h3>
+          {/* 🔹 Summary Card */}
+          <div
+            style={{
+              color: "#fff",
+              fontFamily: "DM Sans, sans-serif",
+            }}
+          >
+            {/* Title */}
+            <h3
+              style={{
+                marginBottom: "1rem",
+                fontSize: "1.5rem",
+                fontWeight: 600,
+              }}
+            >
+              {selectedIndustry.name}
+            </h3>
 
-  {/* Patents line with YoY */}
-  <div
-    style={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: "1rem",
-    }}
-  >
-    <p
-      style={{
-        fontSize: "0.8rem",
-        opacity: 0.9,
-        margin: 0,
-        fontWeight: 500,
-      }}
-    >
-      {selectedIndustry.patents?.toLocaleString() || "124,000"} innovations globally
-    </p>
-    <span
-      style={{
-        color: "#00ff88",
-        fontSize: "0.8rem",
-        fontWeight: 600,
-      }}
-    >
-      {selectedIndustry.change || "+14%"} YoY
-    </span>
-  </div>
+            {/* Patents line with YoY */}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "1rem",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "0.8rem",
+                  opacity: 0.9,
+                  margin: 0,
+                  fontWeight: 500,
+                }}
+              >
+                {selectedIndustry.patents?.toLocaleString() || "124,000"}{" "}
+                innovations globally
+              </p>
+              <span
+                style={{
+                  color: "#00ff88",
+                  fontSize: "0.8rem",
+                  fontWeight: 600,
+                }}
+              >
+                {selectedIndustry.change || "+14%"} YoY
+              </span>
+            </div>
 
-  {/* Line Chart */}
-<div style={{ height: "100px", marginBottom: "1.5rem" }}>
-  <Line
-    data={{
-      labels: ["2018", "2019", "2020", "2021", "2022"],
-      datasets: [
-        {
-          data: selectedIndustry.history || [5, 7, 9, 11, 13],
-          borderColor: "#00bfff",
-          backgroundColor: "rgba(0,191,255,0.2)",
-          borderWidth: 2,
-          tension: 0.4,
-          pointRadius: 0,
-        },
-      ],
-    }}
-    options={{
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: false },
-      },
-      scales: {
-        x: {
-          ticks: {
-            display: false,
-          },
-          grid: { display: false },
-        },
-        y: {
-          display: false,
-        },
-      },
-    }}
-  />
-</div>
+            {/* Line Chart */}
+            <div style={{ height: "100px", marginBottom: "1.5rem" }}>
+              <Line
+                data={{
+                  labels: ["2018", "2019", "2020", "2021", "2022"],
+                  datasets: [
+                    {
+                      data: selectedIndustry.history || [5, 7, 9, 11, 13],
+                      borderColor: "#00bfff",
+                      backgroundColor: "rgba(0,191,255,0.2)",
+                      borderWidth: 2,
+                      tension: 0.4,
+                      pointRadius: 0,
+                    },
+                  ],
+                }}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false },
+                  },
+                  scales: {
+                    x: {
+                      ticks: {
+                        display: false,
+                      },
+                      grid: { display: false },
+                    },
+                    y: {
+                      display: false,
+                    },
+                  },
+                }}
+              />
+            </div>
 
+            {/* 🔹 Sub-tabs */}
+            <div className={styles.subTabs}>
+              {["Overview", "Countries", "Companies", "Tech"].map((tab) => (
+                <button
+                  key={tab}
+                  className={`${styles.subTabButton} ${
+                    activeTab === tab ? styles.activeSubTab : ""
+                  }`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
 
-  {/* 🔹 Sub-tabs */}
-  <div className={styles.subTabs}
-  >
-    {["Overview", "Countries", "Companies", "Tech"].map((tab) => (
-      <button
-        key={tab}
-      className={`${styles.subTabButton} ${
-                  activeTab === tab ? styles.activeSubTab : ""
-                }`}
-                onClick={() => setActiveTab(tab)}
-      >
-        {tab}
-      </button>
-    ))}
-  </div>
+            {/* ✅ Conditionally show Description and Info Grid only in Overview tab */}
+            {activeTab === "Overview" && (
+              <>
+                {/* Description */}
+                <p
+                  style={{
+                    fontSize: "0.9rem",
+                    color: "#fff",
+                    margin: "0 0 1.5rem 0",
+                    lineHeight: "1.4",
+                  }}
+                >
+                  {selectedIndustry.description ||
+                    "The biotechnology industry is experiencing steady growth, with leading activity in the US, China, and Europe."}
+                </p>
 
-  {/* ✅ Conditionally show Description and Info Grid only in Overview tab */}
-  {activeTab === "Overview" && (
-    <>
-      {/* Description */}
-      <p
-        style={{
-          fontSize: "0.9rem",
-          color: "#fff",
-          margin: "0 0 1.5rem 0",
-          lineHeight: "1.4",
-        }}
-      >
-        {selectedIndustry.description ||
-          "The biotechnology industry is experiencing steady growth, with leading activity in the US, China, and Europe."}
-      </p>
+                {/* Info Grid */}
+                <section className={styles.statsSection}>
+                  {[
+                    {
+                      label: "Innovations",
+                      value: "1299",
+                    },
+                    {
+                      label: "Countries",
+                      value: "12",
+                    },
+                    {
+                      label: "Companies",
+                      value: "34",
+                    },
+                    {
+                      label: "Technologies",
+                      value: "70",
+                    },
+                  ].map((item, i) => (
+                    <div className={styles.statsCard} key={i}>
+                      <h3 className={styles.statsValue}>{item.value}</h3>
+                      <p className={styles.statsLabel}>{item.label}</p>
+                    </div>
+                  ))}
+                </section>
 
-      {/* Info Grid */}
-   <section className={styles.statsSection}>
-  {[
-     {
-      label: "Innovations",
-      value: "1299",
-    },
-    {
-      label: "Countries",
-      value: "12",
-    },
-    {
-      label: "Companies",
-      value: "34",
-    },
-    {
-      label: "Technologies",
-      value: "70",
-    },
-   
-  ].map((item, i) => (
-    <div className={styles.statsCard} key={i}>
-      <h3 className={styles.statsValue}>{item.value}</h3>
-      <p className={styles.statsLabel}>{item.label}</p>
+                {/* 📈 YoY Innovation Activity Line Graph */}
+                <div style={{ marginBottom: "2rem" }}>
+                  <h4
+                    style={{
+                      marginBottom: "1rem",
+                      fontSize: "0.8rem",
+                      color: "#00bfff",
+                    }}
+                  >
+                    YoY Innovation Activity
+                  </h4>
+                  <div style={{ height: "180px" }}>
+                    <Line
+                      data={{
+                        labels: [
+                          "2018",
+                          "2019",
+                          "2020",
+                          "2021",
+                          "2022",
+                          "2023",
+                          "2024",
+                        ],
+                        datasets: [
+                          {
+                            data: [100, 30, 50, 170, 200, 230, 260],
+                            borderColor: "#00bfff",
+                            backgroundColor: "rgba(0,191,255,0.2)",
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 3,
+                            fill: true,
+                          },
+                        ],
+                      }}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                          legend: { display: false },
+                          tooltip: {
+                            mode: "index",
+                            intersect: false,
+                            callbacks: {
+                              label: (context) => {
+                                const value = context.parsed.y;
+                                return `Applications: ${value}`;
+                              },
+                            },
+                          },
+                        },
+                        scales: {
+                          x: {
+                            title: {
+                              display: true,
+                              text: "Year",
+                              color: "#ccc",
+                              font: { size: 12 },
+                            },
+                            ticks: {
+                              color: "#aaa",
+                            },
+                            grid: { display: false },
+                          },
+                          y: {
+                            title: {
+                              display: false,
+                            },
+                            ticks: {
+                              color: "#aaa",
+                            },
+                            grid: {
+                              color: "#333",
+                            },
+                          },
+                        },
+                      }}
+                    />
+                  </div>
+                </div>
+
+             <div className={styles.countryCompany}>
+
+  {/* 🌍 Top Countries Section */}
+  <div className={styles.countriesSection}>
+    <h4 style={{ marginBottom: "0.8rem", fontSize: "0.8rem", color: "#00bfff" }}>
+      Top Countries
+    </h4>
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+      {topCountries.map((country, index) => (
+        <div key={index} className={styles.dataRow}>
+          <span>{country.name}</span>
+          <span>{country.applications.toLocaleString()}</span>
+          <span
+            style={{
+              color: country.increment.startsWith("+") ? "#00ff88" : "#ff4d4d",
+              fontWeight: 500,
+            }}
+          >
+            {country.increment}
+          </span>
+        </div>
+      ))}
     </div>
-  ))}
-</section>
+  </div>
 
-    </>
-  )}
+  {/* 🏢 Leading Organizations Section */}
+  <div className={styles.organizationsSection}>
+    <h4 style={{ marginBottom: "0.8rem", fontSize: "0.8rem", color: "#00bfff" }}>
+      Leading Organizations
+    </h4>
+    <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+      {topCompanies.map((company, index) => (
+        <div key={index} className={styles.dataRow}>
+          <span>{company.name}</span>
+          <span>{company.applications.toLocaleString()}</span>
+          <span
+            style={{
+              color: company.increment.startsWith("+") ? "#00ff88" : "#ff4d4d",
+              fontWeight: 500,
+            }}
+          >
+            {company.increment}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+
 </div>
 
+              </>
+            )}
+          </div>
 
           {/* 🏢 Companies Tab (Filtered) */}
           {activeTab === "Companies" && (
@@ -628,10 +824,7 @@ const PortfolioWeeklyIndustry = ({
             <div
               style={{ padding: "2rem", textAlign: "center", color: "#9bb5ff" }}
             >
-           
-              <p>
-                Sign up to view.
-              </p>
+              <p>Sign up to view.</p>
             </div>
           )}
 
@@ -640,9 +833,7 @@ const PortfolioWeeklyIndustry = ({
             <div
               style={{ padding: "2rem", textAlign: "center", color: "#9bb5ff" }}
             >
-              <p>
-                Sign up to view.
-              </p>
+              <p>Sign up to view.</p>
             </div>
           )}
         </>
