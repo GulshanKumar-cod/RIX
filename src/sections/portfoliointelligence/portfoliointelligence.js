@@ -532,7 +532,7 @@ const PortfolioIntelligence = () => {
     alignItems: "center",
     gap: 12,
     marginBottom: 25,
-    flexWrap: "wrap", // ✅ ensures wrapping on smaller screens
+    flexWrap: "wrap", 
   }}
 >
   <h3 className={styles.headingH3}
@@ -541,38 +541,44 @@ const PortfolioIntelligence = () => {
     Filing Trends
   </h3>
 
-  <div
+ <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    flexWrap: "wrap",
+    flex: "1 1 auto",
+    justifyContent: "flex-end",
+    overflow: "hidden", 
+  }}
+>
+  <select
+    value={selectedCompany}
+    onChange={(e) => setSelectedCompany(e.target.value)}
     style={{
-      display: "flex",
-      alignItems: "center",
-      gap: 8,
-      flexWrap: "wrap", 
-      flex: "1 1 auto", 
-      justifyContent: "flex-end", 
+      padding: "6px 10px",
+      borderRadius: 8,
+      background: "#0b1220",
+      color: "#fff",
+      border: "1px solid #2b2b2b",
+      minWidth: "140px",
+      maxWidth: "100%", 
+      flex: "0 1 auto",
+      fontSize: "0.8rem",
+      whiteSpace: "nowrap", 
+      overflow: "hidden",   
+      textOverflow: "ellipsis", 
     }}
   >
-    <select
-      value={selectedCompany}
-      onChange={(e) => setSelectedCompany(e.target.value)}
-      style={{
-        padding: "6px 10px",
-        borderRadius: 8,
-        background: "#0b1220",
-        color: "#fff",
-        border: "1px solid #2b2b2b",
-        minWidth: "140px", 
-        flex: "0 1 auto", 
-        fontSize: "0.8rem",
-      }}
-    >
-      <option value="all">All Companies</option>
-      {companies.map((c, idx) => (
-        <option key={idx} value={c.name}>
-          {toTitleCase(c.name)}
-        </option>
-      ))}
-    </select>
-  </div>
+    <option value="all">All Companies</option>
+    {companies.map((c, idx) => (
+      <option key={idx} value={c.name}>
+        {toTitleCase(c.name)}
+      </option>
+    ))}
+  </select>
+</div>
+
 </div>
 
 
