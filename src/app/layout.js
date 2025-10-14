@@ -23,7 +23,6 @@ export const metadata = {
   title: 'RIX',
   description: 'Access wealth of global research data...',
   manifest: '/manifest.json',
-  themeColor: '#0b1220',
   icons: {
     icon: '/icons/logo.png',
     apple: '/icons/logo.png',
@@ -40,6 +39,7 @@ export const metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
+   themeColor: '#0b1220',
 };
 
 export default function RootLayout({ children }) {
