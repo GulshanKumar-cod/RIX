@@ -371,6 +371,8 @@ const PortfolioWeeklyIndustry = ({
               fontFamily: "DM Sans, sans-serif",
             }}
           >
+
+            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem"}}>
             {/* Title */}
             <h3
               style={{
@@ -381,6 +383,10 @@ const PortfolioWeeklyIndustry = ({
             >
               {selectedIndustry.name}
             </h3>
+
+            <button className={styles.viewButton} style={{    marginBottom: "1rem",padding: "4px 10px"}}>Get Intel</button>
+
+            </div>
 
             {/* Patents line with YoY */}
             <div
