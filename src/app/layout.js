@@ -22,7 +22,20 @@ const dmSans = DM_Sans({
 export const metadata = {
   title: 'RIX',
   description: 'Access wealth of global research data...',
+  manifest: '/manifest.json',
+  themeColor: '#0b1220',
+  icons: {
+    icon: '/icons/logo.png',
+    apple: '/icons/logo.png',
+    shortcut: '/icons/logo.png',
+  },
+  appleWebApp: {
+    capable: true,
+    title: 'RIX',
+    statusBarStyle: 'black-translucent',
+  },
 };
+
 
 export const viewport = {
   width: 'device-width',
