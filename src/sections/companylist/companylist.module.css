@@ -953,7 +953,7 @@
 }
 
 .industryCardCompany{
-    min-width: 250px;
+    min-width: 350px;
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
@@ -976,8 +976,8 @@
         gap: 1.5rem;
   }
 
-.industryCard {
-    min-width: 100%;
+.industryCardCompany {
+    min-width: 250px;
     width: 100%;
   }
 

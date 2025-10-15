@@ -87,14 +87,14 @@ export default function CompanyListPage() {
                 <p className={styles.userName}>AL</p>
               </div>
             </div> */}
-            <button
-              className={styles.notificationButton}
-              aria-label="Notifications"
-              title="Notifications"
-              onClick={() => alert("No new notifications")}
-            >
-               <CircleUserRound size={35} />
-            </button>
+          <button
+        className={styles.notificationButton}
+        aria-label="Profile"
+        title="Profile Settings"
+        onClick={() => router.push("/userprofile")}
+      >
+        <CircleUserRound size={35} />
+      </button>
             {/* <button className={styles.exportButton}>Export Portfolio</button> */}
           </div>
         </header>
