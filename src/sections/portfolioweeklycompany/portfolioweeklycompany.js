@@ -65,49 +65,6 @@ const sampleData = [
 
 const PortfolioWeeklyCompany = () => {
   const [selectedView, setSelectedView] = useState("weekly");
-  const scrollRef = useRef(null);
-  const animationRef = useRef(null);
-
-  // 🔹 Smooth auto-scroll effect for Suggested Companies
-useEffect(() => {
-  const container = scrollRef.current;
-  if (!container) return;
-
-  let scrollAmount = 0;
-  const scrollSpeed = 1.5;
-
-  const scroll = () => {
-    scrollAmount += scrollSpeed;
-    container.scrollLeft = scrollAmount;
-
-    if (scrollAmount >= container.scrollWidth / 2) {
-      scrollAmount = 0; // reset scroll to beginning
-      container.scrollLeft = 0;
-    }
-
-    animationRef.current = requestAnimationFrame(scroll);
-  };
-
-  const startScroll = () => {
-    animationRef.current = requestAnimationFrame(scroll);
-  };
-
-  const stopScroll = () => {
-    cancelAnimationFrame(animationRef.current);
-  };
-
-  startScroll();
-  container.addEventListener("mouseenter", stopScroll);
-  container.addEventListener("mouseleave", startScroll);
-
-  return () => {
-    cancelAnimationFrame(animationRef.current);
-    container.removeEventListener("mouseenter", stopScroll);
-    container.removeEventListener("mouseleave", startScroll);
-  };
-}, []);
-
-
 
   const handleAddCompany = (company) => {
     try {
@@ -131,124 +88,95 @@ useEffect(() => {
     <div>
       <hr className="mb-5" />
 
-     
-
-      {/* 🏢 Suggested Companies*/}
+      {/* Suggested Companies */}
       <div style={{ marginBottom: "3rem" }}>
         <h3 className={styles.headingH3}>Featured Companies</h3>
 
-        <div
-          ref={scrollRef}
-          style={{
-            display: "flex",
-            overflowX: "auto",
-            gap: "1rem",
-            paddingBottom: "0.5rem",
-  scrollBehavior: "smooth", 
-  scrollbarWidth: "none", 
-  msOverflowStyle: "none",
-   width: "100%",
-  padding: "10px",
-          }}
-        >
-           {[...suggestedCompanies, ...suggestedCompanies].map((company, i) => (
-    <div
-      key={`${company.name}-${i}`}
-      style={{
+        <div className={styles.featuredContainer}>
+            {suggestedCompanies.map((company, i) => (
+              <div key={`${company.name}-${i}`} className={styles.industryCardCompany}>
+                <div>
+                  <h4 style={{ margin: "0.5rem 0", fontSize: "18px" }}>
+                    {company.name}
+                  </h4>
+                  <p
+                    style={{
+                      background: "#1e2a3a",
+                      padding: "2px 8px",
+                      borderRadius: "6px",
+                      fontSize: "0.8rem",
+                      marginTop: "0.8rem",
+                      marginBottom: "0.8rem",
+                      display: "flex",
+                      width: "fit-content",
+                      gap: "0.5rem",
+                    }}
+                  >
+                    {company.industry}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: "0.8rem",
+                      color: "#4da6ff",
+                      textShadow: "0 0 3px #4da6ff",
+                    }}
+                  >
+                    {company.patents.toLocaleString()} innovations
+                  </p>
+                </div>
 
-                minWidth: "220px",
-                background: "transparent",
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: "8px",
-                padding: "1rem",
-                flexShrink: 0,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-              }}
-            >
-              <div>
-                <h3
+                <div
                   style={{
-                    margin: 0,
-                    fontSize: "1rem",
-                    fontWeight: 600,
-                    color: "#fff",
-                    marginBottom: "0.5rem",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    gap: "20px",
                   }}
                 >
-                  {company.name}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "0.8rem",
-                    color: "#6c757d",
-                    margin: "0 0 0.4rem 0",
-                  }}
-                >
-                  {company.industry}
-                </p>
-                <p
-                  style={{
-                    fontSize: "0.8rem",
-                    color: "#6c757d",
-                    margin: 0,
-                  }}
-                >
-                  {company.patents.toLocaleString()} innovations
-                </p>
+                  <button
+                    onClick={() =>
+                      window.open(
+                        `https://dyr.incubig.org/company-page/${encodeURIComponent(
+                          company.name
+                        )}/overview`,
+                        "_blank"
+                      )
+                    }
+                    style={{
+                      color: "#fff",
+                      cursor: "pointer",
+                      background: "linear-gradient(90deg, #007bff, #00bfff)",
+                      border: "none",
+                      borderRadius: "20px",
+                      padding: "6px 12px",
+                      fontSize: ".8rem",
+                      marginTop: "10px",
+                    }}
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => handleAddCompany(company)}
+                    style={{
+                      color: "#fff",
+                      cursor: "pointer",
+                      background: "linear-gradient(90deg, #007bff, #00bfff)",
+                      border: "none",
+                      borderRadius: "20px",
+                      padding: "6px 12px",
+                      fontSize: ".8rem",
+                      marginTop: "10px",
+                    }}
+                  >
+                    + Add
+                  </button>
+                </div>
               </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginTop: "0.8rem",
-                }}
-              >
-                <button
-                  onClick={() =>
-                    window.open(
-                      `https://dyr.incubig.org/company-page/${encodeURIComponent(
-                        company.name
-                      )}/overview`,
-                      "_blank"
-                    )
-                  }
-                  style={{
-                    padding: "4px 10px",
-                    background: "linear-gradient(90deg, #007bff, #00bfff)",
-                    border: "none",
-                    borderRadius: "20px",
-                    fontSize: "0.8rem",
-                    color: "#fff",
-                    cursor: "pointer",
-                  }}
-                >
-                  View
-                </button>
-                <button
-                  onClick={() => handleAddCompany(company)}
-                  style={{
-                    padding: "4px 10px",
-                    background: "linear-gradient(90deg, #007bff, #00bfff)",
-                    border: "none",
-                    borderRadius: "20px",
-                    fontSize: "0.8rem",
-                    color: "#fff",
-                    cursor: "pointer",
-                  }}
-                >
-                  + Add
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
 
-       {/* 🔹 Toggle Dropdown */}
+      {/* 🔹 Toggle Dropdown */}
       <div
         style={{
           display: "flex",
