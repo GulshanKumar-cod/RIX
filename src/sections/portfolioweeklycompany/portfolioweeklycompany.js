@@ -3,14 +3,15 @@ import styles from "../companylist/companylist.module.css";
 import { CompanyCarousel } from "@/components/companycarousel/companycarousel";
 
 const suggestedCompanies = [
-  { name: "SpaceX", industry: "Aerospace", patents: 320 },
-  { name: "BYD", industry: "EV Manufacturing", patents: 280 },
-  { name: "Tata Motors", industry: "Automotive", patents: 190 },
-  { name: "Apple", industry: "Consumer Electronics", patents: 540 },
-  { name: "IBM", industry: "Quantum Computing", patents: 720 },
-  { name: "Intel", industry: "Semiconductors", patents: 650 },
-  { name: "Ford", industry: "Automotive", patents: 310 },
+  { name: "SpaceX", industry: "Aerospace", country: "USA", patents: 320 },
+  { name: "BYD", industry: "EV Manufacturing", country: "China", patents: 280 },
+  { name: "Tata Motors", industry: "Automotive", country: "India", patents: 190 },
+  { name: "Apple", industry: "Consumer Electronics", country: "USA", patents: 540 },
+  { name: "IBM", industry: "Quantum Computing", country: "USA", patents: 720 },
+  { name: "Intel", industry: "Semiconductors", country: "USA", patents: 650 },
+  { name: "Ford", industry: "Automotive", country: "USA", patents: 310 },
 ];
+
 
 const sampleData = [
   {
@@ -99,21 +100,31 @@ const PortfolioWeeklyCompany = () => {
                   <h4 style={{ margin: "0.5rem 0", fontSize: "18px" }}>
                     {company.name}
                   </h4>
-                  <p
-                    style={{
-                      background: "#1e2a3a",
-                      padding: "2px 8px",
-                      borderRadius: "6px",
-                      fontSize: "0.8rem",
-                      marginTop: "0.8rem",
-                      marginBottom: "0.8rem",
-                      display: "flex",
-                      width: "fit-content",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    {company.industry}
-                  </p>
+                <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", margin: "0.8rem 0" }}>
+                   <span
+    style={{
+      background: "#2c3e50",
+      padding: "2px 8px",
+      borderRadius: "6px",
+      fontSize: "0.8rem",
+      color: "#fff",
+    }}
+  >
+    {company.country || "N/A"}
+  </span>
+  <span
+    style={{
+      background: "#1e2a3a",
+      padding: "2px 8px",
+      borderRadius: "6px",
+      fontSize: "0.8rem",
+      color: "#fff",
+    }}
+  >
+    {company.industry}
+  </span>
+</div>
+
                   <p
                     style={{
                       fontSize: "0.8rem",
