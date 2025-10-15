@@ -240,11 +240,142 @@ const PortfolioWeeklyIndustry = ({
           increment: `${increments[company.name] || "+0.0"}%`,
         }));
 
+  const suggestedIndustries = [
+  {
+    rank: 99,
+    name: "Artificial Intelligence",
+    change: "+36%",
+      patents: 60400,
+      tags: ["Predictive BMS", "Anomaly detection"],
+      history: [10, 13, 18, 22, 26, 34, 55],
+      topCountry: [
+        { name: "United States", applications: 12000, increment: "+12%" },
+        { name: "China", applications: 11000, increment: "+10%" },
+        { name: "Germany", applications: 5000, increment: "+8%" },
+        { name: "Japan", applications: 4800, increment: "+6%" },
+        { name: "South Korea", applications: 4500, increment: "+5%" },
+      ],
+      topCompany: [
+        { name: "IBM", applications: 3200, increment: "+5%" },
+        { name: "Samsung", applications: 3100, increment: "+6%" },
+        { name: "Intel", applications: 2900, increment: "+7%" },
+        { name: "Microsoft", applications: 2700, increment: "+4%" },
+        { name: "Qualcomm", applications: 2500, increment: "+3%" },
+      ],
+      topTechnology: "Predictive Battery Analytics",
+      topInventor: "Lee Sung-ho",
+      description: "Korea & China leading AI-powered EV systems.",
+    },
+  {
+    rank: 100,
+    name: "Pharmaceuticals",
+    change: "+36%",
+      patents: 60400,
+      tags: ["Predictive BMS", "Anomaly detection"],
+      history: [10, 13, 18, 22, 26, 34, 55],
+      topCountry: [
+        { name: "United States", applications: 12000, increment: "+12%" },
+        { name: "China", applications: 11000, increment: "+10%" },
+        { name: "Germany", applications: 5000, increment: "+8%" },
+        { name: "Japan", applications: 4800, increment: "+6%" },
+        { name: "South Korea", applications: 4500, increment: "+5%" },
+      ],
+      topCompany: [
+        { name: "IBM", applications: 3200, increment: "+5%" },
+        { name: "Samsung", applications: 3100, increment: "+6%" },
+        { name: "Intel", applications: 2900, increment: "+7%" },
+        { name: "Microsoft", applications: 2700, increment: "+4%" },
+        { name: "Qualcomm", applications: 2500, increment: "+3%" },
+      ],
+      topTechnology: "Predictive Battery Analytics",
+      topInventor: "Lee Sung-ho",
+      description: "Korea & China leading AI-powered EV systems.",
+    },
+  {
+    rank: 101,
+    name: "Fuel Cells",
+    change: "+36%",
+      patents: 60400,
+      tags: ["Predictive BMS", "Anomaly detection"],
+      history: [10, 13, 18, 22, 26, 34, 55],
+      topCountry: [
+        { name: "United States", applications: 12000, increment: "+12%" },
+        { name: "China", applications: 11000, increment: "+10%" },
+        { name: "Germany", applications: 5000, increment: "+8%" },
+        { name: "Japan", applications: 4800, increment: "+6%" },
+        { name: "South Korea", applications: 4500, increment: "+5%" },
+      ],
+      topCompany: [
+        { name: "IBM", applications: 3200, increment: "+5%" },
+        { name: "Samsung", applications: 3100, increment: "+6%" },
+        { name: "Intel", applications: 2900, increment: "+7%" },
+        { name: "Microsoft", applications: 2700, increment: "+4%" },
+        { name: "Qualcomm", applications: 2500, increment: "+3%" },
+      ],
+      topTechnology: "Predictive Battery Analytics",
+      topInventor: "Lee Sung-ho",
+      description: "Korea & China leading AI-powered EV systems.",
+    },
+];
+
+
+
   return (
     <div>
       {!selectedIndustry && <hr className="mb-4" />}
 
+       {/* 🔹 Suggested Industries Section */}
+ {!selectedIndustry && (
+  <div style={{ marginBottom: "2rem" }}>
+    <h3
+      className={styles.headingH3}
+    >
+      Trending Industries
+    </h3>
+
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "0.6rem",
+      }}
+    >
+      {suggestedIndustries.map((item, idx) => (
+        <button
+          key={idx}
+         onClick={() => {
+  console.log("👉 Clicked Suggested:", item.name);
+  setSelectedIndustry(item);
+  setActiveTab("Overview");
+}}
+          style={{
+            background: "linear-gradient(90deg, #007bff, #00bfff)",
+            border: "none",
+            borderRadius: "20px",
+            padding: "6px 12px",
+            fontSize: "0.8rem",
+            color: "#fff",
+            cursor: "pointer",
+            transition: "all 0.3s ease",
+          }}
+        >
+          {item.name}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+
+
+
       {/* 🔁 MAIN PAGE (Industry List) */}
+      {!selectedIndustry && (
+           <h3
+         className={styles.headingH3}
+    >
+      Industry Feed
+    </h3>
+      )}
       {!selectedIndustry ? (
         <div className={styles.weeklyGrid}>
           {industries.map((ind, idx) => {
