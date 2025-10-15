@@ -7,16 +7,17 @@ const UserProfile = () => {
   const router = useRouter();
 
   const [profile, setProfile] = useState({
-    name: "Ankit Lekhra",
-    email: "ankit@incubig.ai",
-    occupation: "Incubig AI",
-    industries: ["Artificial Intelligence", "Electric Vehicles"],
-    technologies: ["Battery Tech", "Generative AI"],
-    companies: ["Tesla", "NVIDIA", "Google"],
-    insightType: "AI Summary",
-    notification: "Weekly",
-    defaultView: "Industry",
-  });
+  name: "",
+  email: "",
+  occupation: "",
+  industries: [],
+  technologies: [],
+  companies: [],
+  insightType: "AI Summary",
+  notification: "Weekly",
+  defaultView: "Industry",
+});
+
 
   const handleChange = (field, value) => {
     setProfile((prev) => ({ ...prev, [field]: value }));
@@ -121,20 +122,37 @@ const UserProfile = () => {
     Focus Areas
   </h3>
 
-  <div style={{ marginBottom: "1rem", fontSize: "0.8rem" }}>
-    <label>Industries</label>
-    <MultiSelect
-      options={[
-        "Artificial Intelligence",
-        "Electric Vehicles",
-        "Semiconductors",
-        "Robotics",
-        "Biotech",
-      ]}
-      values={profile.industries}
-      onChange={(values) => handleChange("industries", values)}
-    />
+<div style={{ marginBottom: "1rem", fontSize: "0.8rem" }}>
+  <label>Industries</label>
+  <div style={{ ...checkboxListStyle }}>
+    {[
+      "Artificial Intelligence",
+      "Electric Vehicles",
+      "Semiconductors",
+      "Robotics",
+      "Biotech",
+    ].map((industry) => (
+      <label key={industry} style={checkboxLabelStyle}>
+        <input
+          type="checkbox"
+          checked={profile.industries.includes(industry)}
+          onChange={(e) => {
+            if (e.target.checked) {
+              handleChange("industries", [...profile.industries, industry]);
+            } else {
+              handleChange(
+                "industries",
+                profile.industries.filter((i) => i !== industry)
+              );
+            }
+          }}
+        />
+        {industry}
+      </label>
+    ))}
   </div>
+</div>
+
 
   {/* Conditionally show selected industries */}
   {profile.industries.length > 0 && (
@@ -325,6 +343,21 @@ const optionStyle = {
   padding: "6px 10px",
   cursor: "pointer",
 };
+
+const checkboxListStyle = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "8px",
+  marginTop: "6px",
+};
+
+const checkboxLabelStyle = {
+  display: "flex",
+  alignItems: "center",
+  gap: "6px",
+  fontSize: "0.8rem",
+};
+
 
 
 /* ---------- MultiSelect ---------- */
