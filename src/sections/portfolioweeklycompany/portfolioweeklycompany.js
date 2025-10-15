@@ -69,40 +69,45 @@ const PortfolioWeeklyCompany = () => {
   const animationRef = useRef(null);
 
   // 🔹 Smooth auto-scroll effect for Suggested Companies
-  useEffect(() => {
-    const container = scrollRef.current;
-    if (!container) return;
+useEffect(() => {
+  const container = scrollRef.current;
+  if (!container) return;
 
-    const scroll = () => {
-      if (
-        container.scrollLeft >=
-        container.scrollWidth - container.clientWidth
-      ) {
-        container.scrollTo({ left: 0, behavior: "auto" });
-      } else {
-        container.scrollLeft += 1.5; // 👈 same speed as CompanyCarousel
-      }
-      animationRef.current = requestAnimationFrame(scroll);
-    };
+  let scrollAmount = 0;
+  const scrollSpeed = 1.5;
 
-    const startScroll = () => {
-      animationRef.current = requestAnimationFrame(scroll);
-    };
+  const scroll = () => {
+    scrollAmount += scrollSpeed;
+    container.scrollLeft = scrollAmount;
 
-    const stopScroll = () => {
-      cancelAnimationFrame(animationRef.current);
-    };
+    if (scrollAmount >= container.scrollWidth / 2) {
+      scrollAmount = 0; // reset scroll to beginning
+      container.scrollLeft = 0;
+    }
 
-    startScroll();
-    container.addEventListener("mouseenter", stopScroll);
-    container.addEventListener("mouseleave", startScroll);
+    animationRef.current = requestAnimationFrame(scroll);
+  };
 
-    return () => {
-      cancelAnimationFrame(animationRef.current);
-      container.removeEventListener("mouseenter", stopScroll);
-      container.removeEventListener("mouseleave", startScroll);
-    };
-  }, []);
+  const startScroll = () => {
+    animationRef.current = requestAnimationFrame(scroll);
+  };
+
+  const stopScroll = () => {
+    cancelAnimationFrame(animationRef.current);
+  };
+
+  startScroll();
+  container.addEventListener("mouseenter", stopScroll);
+  container.addEventListener("mouseleave", startScroll);
+
+  return () => {
+    cancelAnimationFrame(animationRef.current);
+    container.removeEventListener("mouseenter", stopScroll);
+    container.removeEventListener("mouseleave", startScroll);
+  };
+}, []);
+
+
 
   const handleAddCompany = (company) => {
     try {
@@ -139,13 +144,18 @@ const PortfolioWeeklyCompany = () => {
             overflowX: "auto",
             gap: "1rem",
             paddingBottom: "0.5rem",
-            scrollBehavior: "smooth",
+  scrollBehavior: "smooth", 
+  scrollbarWidth: "none", 
+  msOverflowStyle: "none",
+   width: "100%",
+  padding: "10px",
           }}
         >
-          {suggestedCompanies.map((company, i) => (
-            <div
-              key={i}
-              style={{
+           {[...suggestedCompanies, ...suggestedCompanies].map((company, i) => (
+    <div
+      key={`${company.name}-${i}`}
+      style={{
+
                 minWidth: "220px",
                 background: "transparent",
                 border: "1px solid rgba(255,255,255,0.1)",
@@ -268,7 +278,7 @@ const PortfolioWeeklyCompany = () => {
         </select>
       </div>
 
-      {/* 📈 Main Weekly Companies Carousel */}
+      {/*  Main Weekly Companies Carousel */}
       <div style={{ marginTop: "3rem", marginBottom: "3rem" }}>
         <h3 className={styles.headingH3}>Companies Feed</h3>
         <CompanyCarousel data={sampleData} heading="" />
