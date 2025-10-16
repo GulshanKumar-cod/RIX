@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react"; // optional icon
 
@@ -17,6 +17,12 @@ const UserProfile = () => {
   notification: "Weekly",
   defaultView: "Industry",
 });
+useEffect(() => {
+  const storedProfile = localStorage.getItem("userProfile");
+  if (storedProfile) {
+    setProfile(JSON.parse(storedProfile));
+  }
+}, []);
 
 
   const handleChange = (field, value) => {
