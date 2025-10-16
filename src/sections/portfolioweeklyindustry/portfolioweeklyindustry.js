@@ -295,7 +295,17 @@ const PortfolioWeeklyIndustry = ({
       ],
       topTechnology: "Predictive Battery Analytics",
       topInventor: "Lee Sung-ho",
-      description: "Korea & China leading AI-powered EV systems.",
+    description: "Korea & China leading AI-powered EV systems.",
+    descriptionsByTab: {
+      Overview:
+        "AI is rapidly transforming industries through automation, decision-making, and predictive capabilities, with Asia and the US leading patent growth.",
+      Companies:
+        "Tech giants like IBM, Microsoft, and Samsung are at the forefront of AI development, focusing on edge computing and AI optimization layers.",
+      Countries:
+        "The US and China are dominating AI research, while Europe shows strong momentum in ethical AI and regulatory frameworks.",
+      Tech:
+        "Top AI innovations include neural network optimization, real-time analytics engines, and predictive models for smart systems.",
+    },
     },
   {
     rank: 100,
@@ -320,7 +330,17 @@ const PortfolioWeeklyIndustry = ({
       ],
       topTechnology: "Predictive Battery Analytics",
       topInventor: "Lee Sung-ho",
-      description: "Korea & China leading AI-powered EV systems.",
+       description: "Korea & China leading AI-powered EV systems.",
+    descriptionsByTab: {
+      Overview:
+        "Pharmaceutical innovation continues to surge, especially in areas like precision medicine, biologics, and AI-based drug discovery.",
+      Companies:
+        "Global leaders such as Pfizer, Roche, and Johnson & Johnson are leveraging AI and genomics to streamline drug development.",
+      Countries:
+        "The United States leads pharma innovation, followed by Europe and Asia, with a sharp rise in biotech-focused patents.",
+      Tech:
+        "Cutting-edge developments include mRNA platforms, gene therapies, and computational drug discovery engines.",
+    },
     },
   {
     rank: 101,
@@ -346,6 +366,16 @@ const PortfolioWeeklyIndustry = ({
       topTechnology: "Predictive Battery Analytics",
       topInventor: "Lee Sung-ho",
       description: "Korea & China leading AI-powered EV systems.",
+    descriptionsByTab: {
+      Overview:
+        "Fuel cell technology is experiencing a resurgence as industries seek cleaner energy alternatives, especially in transport and heavy industries.",
+      Companies:
+        "Hyundai, Toyota, and Ballard Power are investing heavily in PEM and SOFC technologies, driving global innovation.",
+      Countries:
+        "Japan and South Korea are pioneering national-level initiatives in fuel cells, with the US following closely in industrial applications.",
+      Tech:
+        "Focus areas include proton exchange membrane fuel cells, hydrogen storage, and solid oxide technologies.",
+    },
     },
 ];
 
