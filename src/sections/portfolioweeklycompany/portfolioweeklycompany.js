@@ -188,40 +188,42 @@ const PortfolioWeeklyCompany = () => {
       </div>
 
       {/* 🔹 Toggle Dropdown */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          marginBottom: "1.5rem",
-          flexWrap: "wrap",
-          gap: "0.5rem",
-        }}
-      >
-        <select
-          id="dataToggle"
-          value={selectedView}
-          onChange={(e) => setSelectedView(e.target.value)}
-          style={{
-            padding: "6px 12px",
-            borderRadius: "6px",
-            border: "1px solid rgba(255, 255, 255, 0.2)",
-            backgroundColor: "#1a2332",
-            color: "#fff",
-            cursor: "pointer",
-            fontSize: "0.8rem",
-          }}
-        >
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-        </select>
-      </div>
+    <div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "0rem",
+    flexWrap: "wrap",
+    gap: "0.5rem",
+  }}
+>
+  <h3 className={styles.headingH3}>Companies Feed</h3>
 
-      {/*  Main Weekly Companies Carousel */}
-      <div style={{ marginTop: "3rem", marginBottom: "3rem" }}>
-        <h3 className={styles.headingH3}>Companies Feed</h3>
-        <CompanyCarousel data={sampleData} heading="" />
-      </div>
+  <select
+    id="dataToggle"
+    value={selectedView}
+    onChange={(e) => setSelectedView(e.target.value)}
+    style={{
+      padding: "6px 12px",
+      borderRadius: "6px",
+      border: "1px solid rgba(255, 255, 255, 0.2)",
+      backgroundColor: "#000",
+      color: "#fff",
+      cursor: "pointer",
+      fontSize: "0.8rem",
+    }}
+  >
+    <option value="weekly">Weekly</option>
+    <option value="monthly">Monthly</option>
+  </select>
+</div>
+
+{/* Main Weekly Companies Carousel */}
+<div style={{ marginTop: "0rem", marginBottom: "3rem" }}>
+  <CompanyCarousel data={sampleData} heading="" />
+</div>
+
     </div>
   );
 };

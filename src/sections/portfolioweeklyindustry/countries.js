@@ -176,7 +176,7 @@ const CountriesTab = ({ selectedIndustry, activeTab}) => {
     margin: "0 auto",       
   }}
 >
-  Get Intel
+  1-Click Insight
 </button>
 
     </div>

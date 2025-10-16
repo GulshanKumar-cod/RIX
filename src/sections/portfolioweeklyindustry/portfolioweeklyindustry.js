@@ -16,8 +16,6 @@ import CompaniesTab from "./companies";
 import CountriesTab from "./countries";
 import TechTab from "./tech";
 
-
-
 ChartJS.register(
   LineElement,
   CategoryScale,
@@ -119,15 +117,13 @@ const PortfolioWeeklyIndustry = ({
       topTechnology: "Battery Cooling Systems",
       topInventor: "Li Wei",
       descriptionsByTab: {
-      Overview:
-        "EV Innovation led by China, US & Korea in battery & AI systems.",
-      Companies:
-        "Top automotive firms like Tesla, Bosch, and Toyota dominate the patent landscape in electric and autonomous vehicle systems.",
-      Countries:
-        "The USA is leading innovations in Vehicle Industry.",
-      Tech:
-        "Key emerging technologies include battery cooling systems, ADAS, hydrogen fuel tech, and AI-powered mobility platforms.",
-    },
+        Overview:
+          "EV Innovation led by China, US & Korea in battery & AI systems.",
+        Companies:
+          "Top automotive firms like Tesla, Bosch, and Toyota dominate the patent landscape in electric and autonomous vehicle systems.",
+        Countries: "The USA is leading innovations in Vehicle Industry.",
+        Tech: "Key emerging technologies include battery cooling systems, ADAS, hydrogen fuel tech, and AI-powered mobility platforms.",
+      },
     },
     {
       rank: 2,
@@ -152,16 +148,15 @@ const PortfolioWeeklyIndustry = ({
       ],
       topTechnology: "Neural Signal Mapping",
       topInventor: "Dr. Jane Smith",
-       descriptionsByTab: {
-      Overview:
-        "Breakthroughs in brain-inspired computing systems are being pioneered by US and European institutions in neuroscience and AI fusion.",
-      Companies:
-        "IBM and Intel are pushing the frontiers of biological computing, investing heavily in neural processing and synthetic biology models.",
-      Countries:
-        "The United States leads this space, followed by China and Germany, with a sharp rise in collaborative patents across academia and industry.",
-      Tech:
-        "Core technologies include neural signal mapping, brain-computer interfaces, and molecular-level computation models.",
-    },
+      descriptionsByTab: {
+        Overview:
+          "Breakthroughs in brain-inspired computing systems are being pioneered by US and European institutions in neuroscience and AI fusion.",
+        Companies:
+          "IBM and Intel are pushing the frontiers of biological computing, investing heavily in neural processing and synthetic biology models.",
+        Countries:
+          "The United States leads this space, followed by China and Germany, with a sharp rise in collaborative patents across academia and industry.",
+        Tech: "Core technologies include neural signal mapping, brain-computer interfaces, and molecular-level computation models.",
+      },
     },
     {
       rank: 3,
@@ -186,20 +181,19 @@ const PortfolioWeeklyIndustry = ({
       ],
       topTechnology: "Predictive Battery Analytics",
       topInventor: "Lee Sung-ho",
-       descriptionsByTab: {
-      Overview:
-        "Korea and China are leading innovation in AI applications for electric vehicles, focusing on predictive systems and efficiency optimization.",
-      Companies:
-        "Tech-driven firms like Samsung, IBM, and Microsoft are applying AI models to optimize EV powertrains, safety, and maintenance.",
-      Countries:
-        "Korea and China have rapidly increased AI-EV patent activity, with significant contributions from US-based R&D as well.",
-      Tech:
-        "Predictive BMS, anomaly detection systems, and AI-powered fleet management tools are at the core of this innovation wave.",
-    },
+      descriptionsByTab: {
+        Overview:
+          "Korea and China are leading innovation in AI applications for electric vehicles, focusing on predictive systems and efficiency optimization.",
+        Companies:
+          "Tech-driven firms like Samsung, IBM, and Microsoft are applying AI models to optimize EV powertrains, safety, and maintenance.",
+        Countries:
+          "Korea and China have rapidly increased AI-EV patent activity, with significant contributions from US-based R&D as well.",
+        Tech: "Predictive BMS, anomaly detection systems, and AI-powered fleet management tools are at the core of this innovation wave.",
+      },
     },
   ];
 
-   const handleAddCompany = (company) => {
+  const handleAddCompany = (company) => {
     try {
       const existing =
         JSON.parse(localStorage.getItem("portfolioStartups")) || [];
@@ -272,80 +266,10 @@ const PortfolioWeeklyIndustry = ({
         }));
 
   const suggestedIndustries = [
-  {
-    rank: 99,
-    name: "Artificial Intelligence",
-    change: "+36%",
-      patents: 60400,
-      tags: ["Predictive BMS", "Anomaly detection"],
-      history: [10, 13, 18, 22, 26, 34, 55],
-      topCountry: [
-        { name: "United States", applications: 12000, increment: "+12%" },
-        { name: "China", applications: 11000, increment: "+10%" },
-        { name: "Germany", applications: 5000, increment: "+8%" },
-        { name: "Japan", applications: 4800, increment: "+6%" },
-        { name: "South Korea", applications: 4500, increment: "+5%" },
-      ],
-      topCompany: [
-        { name: "IBM", applications: 3200, increment: "+5%" },
-        { name: "Samsung", applications: 3100, increment: "+6%" },
-        { name: "Intel", applications: 2900, increment: "+7%" },
-        { name: "Microsoft", applications: 2700, increment: "+4%" },
-        { name: "Qualcomm", applications: 2500, increment: "+3%" },
-      ],
-      topTechnology: "Predictive Battery Analytics",
-      topInventor: "Lee Sung-ho",
-    description: "Korea & China leading AI-powered EV systems.",
-    descriptionsByTab: {
-      Overview:
-        "AI is rapidly transforming industries through automation, decision-making, and predictive capabilities, with Asia and the US leading patent growth.",
-      Companies:
-        "Tech giants like IBM, Microsoft, and Samsung are at the forefront of AI development, focusing on edge computing and AI optimization layers.",
-      Countries:
-        "The US and China are dominating AI research, while Europe shows strong momentum in ethical AI and regulatory frameworks.",
-      Tech:
-        "Top AI innovations include neural network optimization, real-time analytics engines, and predictive models for smart systems.",
-    },
-    },
-  {
-    rank: 100,
-    name: "Pharmaceuticals",
-    change: "+36%",
-      patents: 60400,
-      tags: ["Predictive BMS", "Anomaly detection"],
-      history: [10, 13, 18, 22, 26, 34, 55],
-      topCountry: [
-        { name: "United States", applications: 12000, increment: "+12%" },
-        { name: "China", applications: 11000, increment: "+10%" },
-        { name: "Germany", applications: 5000, increment: "+8%" },
-        { name: "Japan", applications: 4800, increment: "+6%" },
-        { name: "South Korea", applications: 4500, increment: "+5%" },
-      ],
-      topCompany: [
-        { name: "IBM", applications: 3200, increment: "+5%" },
-        { name: "Samsung", applications: 3100, increment: "+6%" },
-        { name: "Intel", applications: 2900, increment: "+7%" },
-        { name: "Microsoft", applications: 2700, increment: "+4%" },
-        { name: "Qualcomm", applications: 2500, increment: "+3%" },
-      ],
-      topTechnology: "Predictive Battery Analytics",
-      topInventor: "Lee Sung-ho",
-       description: "Korea & China leading AI-powered EV systems.",
-    descriptionsByTab: {
-      Overview:
-        "Pharmaceutical innovation continues to surge, especially in areas like precision medicine, biologics, and AI-based drug discovery.",
-      Companies:
-        "Global leaders such as Pfizer, Roche, and Johnson & Johnson are leveraging AI and genomics to streamline drug development.",
-      Countries:
-        "The United States leads pharma innovation, followed by Europe and Asia, with a sharp rise in biotech-focused patents.",
-      Tech:
-        "Cutting-edge developments include mRNA platforms, gene therapies, and computational drug discovery engines.",
-    },
-    },
-  {
-    rank: 101,
-    name: "Fuel Cells",
-    change: "+36%",
+    {
+      rank: 99,
+      name: "Artificial Intelligence",
+      change: "+36%",
       patents: 60400,
       tags: ["Predictive BMS", "Anomaly detection"],
       history: [10, 13, 18, 22, 26, 34, 55],
@@ -366,29 +290,96 @@ const PortfolioWeeklyIndustry = ({
       topTechnology: "Predictive Battery Analytics",
       topInventor: "Lee Sung-ho",
       description: "Korea & China leading AI-powered EV systems.",
-    descriptionsByTab: {
-      Overview:
-        "Fuel cell technology is experiencing a resurgence as industries seek cleaner energy alternatives, especially in transport and heavy industries.",
-      Companies:
-        "Hyundai, Toyota, and Ballard Power are investing heavily in PEM and SOFC technologies, driving global innovation.",
-      Countries:
-        "Japan and South Korea are pioneering national-level initiatives in fuel cells, with the US following closely in industrial applications.",
-      Tech:
-        "Focus areas include proton exchange membrane fuel cells, hydrogen storage, and solid oxide technologies.",
+      descriptionsByTab: {
+        Overview:
+          "AI is rapidly transforming industries through automation, decision-making, and predictive capabilities, with Asia and the US leading patent growth.",
+        Companies:
+          "Tech giants like IBM, Microsoft, and Samsung are at the forefront of AI development, focusing on edge computing and AI optimization layers.",
+        Countries:
+          "The US and China are dominating AI research, while Europe shows strong momentum in ethical AI and regulatory frameworks.",
+        Tech: "Top AI innovations include neural network optimization, real-time analytics engines, and predictive models for smart systems.",
+      },
     },
+    {
+      rank: 100,
+      name: "Pharmaceuticals",
+      change: "+36%",
+      patents: 60400,
+      tags: ["Predictive BMS", "Anomaly detection"],
+      history: [10, 13, 18, 22, 26, 34, 55],
+      topCountry: [
+        { name: "United States", applications: 12000, increment: "+12%" },
+        { name: "China", applications: 11000, increment: "+10%" },
+        { name: "Germany", applications: 5000, increment: "+8%" },
+        { name: "Japan", applications: 4800, increment: "+6%" },
+        { name: "South Korea", applications: 4500, increment: "+5%" },
+      ],
+      topCompany: [
+        { name: "IBM", applications: 3200, increment: "+5%" },
+        { name: "Samsung", applications: 3100, increment: "+6%" },
+        { name: "Intel", applications: 2900, increment: "+7%" },
+        { name: "Microsoft", applications: 2700, increment: "+4%" },
+        { name: "Qualcomm", applications: 2500, increment: "+3%" },
+      ],
+      topTechnology: "Predictive Battery Analytics",
+      topInventor: "Lee Sung-ho",
+      description: "Korea & China leading AI-powered EV systems.",
+      descriptionsByTab: {
+        Overview:
+          "Pharmaceutical innovation continues to surge, especially in areas like precision medicine, biologics, and AI-based drug discovery.",
+        Companies:
+          "Global leaders such as Pfizer, Roche, and Johnson & Johnson are leveraging AI and genomics to streamline drug development.",
+        Countries:
+          "The United States leads pharma innovation, followed by Europe and Asia, with a sharp rise in biotech-focused patents.",
+        Tech: "Cutting-edge developments include mRNA platforms, gene therapies, and computational drug discovery engines.",
+      },
     },
-];
+    {
+      rank: 101,
+      name: "Fuel Cells",
+      change: "+36%",
+      patents: 60400,
+      tags: ["Predictive BMS", "Anomaly detection"],
+      history: [10, 13, 18, 22, 26, 34, 55],
+      topCountry: [
+        { name: "United States", applications: 12000, increment: "+12%" },
+        { name: "China", applications: 11000, increment: "+10%" },
+        { name: "Germany", applications: 5000, increment: "+8%" },
+        { name: "Japan", applications: 4800, increment: "+6%" },
+        { name: "South Korea", applications: 4500, increment: "+5%" },
+      ],
+      topCompany: [
+        { name: "IBM", applications: 3200, increment: "+5%" },
+        { name: "Samsung", applications: 3100, increment: "+6%" },
+        { name: "Intel", applications: 2900, increment: "+7%" },
+        { name: "Microsoft", applications: 2700, increment: "+4%" },
+        { name: "Qualcomm", applications: 2500, increment: "+3%" },
+      ],
+      topTechnology: "Predictive Battery Analytics",
+      topInventor: "Lee Sung-ho",
+      description: "Korea & China leading AI-powered EV systems.",
+      descriptionsByTab: {
+        Overview:
+          "Fuel cell technology is experiencing a resurgence as industries seek cleaner energy alternatives, especially in transport and heavy industries.",
+        Companies:
+          "Hyundai, Toyota, and Ballard Power are investing heavily in PEM and SOFC technologies, driving global innovation.",
+        Countries:
+          "Japan and South Korea are pioneering national-level initiatives in fuel cells, with the US following closely in industrial applications.",
+        Tech: "Focus areas include proton exchange membrane fuel cells, hydrogen storage, and solid oxide technologies.",
+      },
+    },
+  ];
 
-// Render function for active tab
+  // Render function for active tab
   const renderActiveTab = () => {
     switch (activeTab) {
       case "Overview":
         return (
           <OverviewTab
-           selectedIndustry={selectedIndustry}
-  activeTab={activeTab}
-  topCountries={topCountries}
-  topCompanies={topCompanies}
+            selectedIndustry={selectedIndustry}
+            activeTab={activeTab}
+            topCountries={topCountries}
+            topCompanies={topCompanies}
           />
         );
       case "Companies":
@@ -405,14 +396,18 @@ const PortfolioWeeklyIndustry = ({
           />
         );
       case "Countries":
-        return <CountriesTab selectedIndustry={selectedIndustry}   activeTab={activeTab}/>;
+        return (
+          <CountriesTab
+            selectedIndustry={selectedIndustry}
+            activeTab={activeTab}
+          />
+        );
       case "Tech":
         return <TechTab />;
       default:
         return null;
     }
   };
-
 
   return (
     <div>
@@ -421,9 +416,7 @@ const PortfolioWeeklyIndustry = ({
       {/* 🔹 Suggested Industries Section */}
       {!selectedIndustry && (
         <div style={{ marginBottom: "2rem" }}>
-          <h3 className={styles.headingH3}>
-            Trending Industries
-          </h3>
+          <h3 className={styles.headingH3}>Trending Industries</h3>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem" }}>
             {suggestedIndustries.map((item, idx) => (
               <button
@@ -452,12 +445,8 @@ const PortfolioWeeklyIndustry = ({
       )}
 
       {/* 🔁 MAIN PAGE (Industry List) */}
-      {!selectedIndustry && (
-        <h3 className={styles.headingH3}>
-          Industry Feed
-        </h3>
-      )}
-      
+      {!selectedIndustry && <h3 className={styles.headingH3}>Industry Feed</h3>}
+
       {!selectedIndustry ? (
         <div className={styles.weeklyGrid}>
           {industries.map((ind, idx) => {
@@ -478,7 +467,9 @@ const PortfolioWeeklyIndustry = ({
 
             return (
               <div key={idx} className={styles.industryCard}>
-                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
                   <span style={{ fontSize: "0.8rem", opacity: 0.7 }}>
                     #{ind.rank}
                   </span>
@@ -504,7 +495,13 @@ const PortfolioWeeklyIndustry = ({
                   Active Companies: {ind.patents}
                 </p>
 
-                <div style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem" }}>
+                <div
+                  style={{
+                    marginTop: "0.5rem",
+                    display: "flex",
+                    gap: "0.5rem",
+                  }}
+                >
                   {ind.tags.map((tag, i) => (
                     <span
                       key={i}
@@ -546,40 +543,96 @@ const PortfolioWeeklyIndustry = ({
       ) : (
         <>
           {/* 🔙 Back Button */}
-          <div style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
-            <button
-              onClick={() => {
-                setSelectedIndustry(null);
-                setActiveTab("Overview");
-              }}
-              style={{
-                marginRight: "10px",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              <CircleArrowLeft size={24} color="#00bfff" />
-            </button>
-          </div>
+         <div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "0rem",
+  }}
+>
+  {/* Back button */}
+  <button
+    onClick={() => {
+      setSelectedIndustry(null);
+      setActiveTab("Overview");
+    }}
+    style={{
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      padding: 0,
+    }}
+  >
+    <CircleArrowLeft size={24} color="#00bfff" />
+  </button>
+
+  {/* 1-Click Insight button */}
+  <button
+    className={styles.viewButton}
+    style={{
+      padding: "6px 12px",
+      whiteSpace: "nowrap",
+    }}
+  >
+    1-Click Insight
+  </button>
+</div>
 
           {/* 🔹 Summary Card */}
           <div style={{ color: "#fff", fontFamily: "DM Sans, sans-serif" }}>
-            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem"}}>
-              <h3 style={{ marginBottom: "1rem", fontSize: "1.5rem", fontWeight: 600 }}>
+            <div
+              style={{
+                position: "relative",
+                marginBottom: "0rem",
+                minHeight: "4rem", // Slightly taller to allow room
+              }}
+            >
+
+              {/* Industry Title with extra paddingTop to push below button */}
+              <h3
+                style={{
+                  margin: 0,
+                  fontSize: "1.5rem",
+                  fontWeight: 600,
+                  paddingTop: "1.5rem",
+                  maxWidth: "100%",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
                 {selectedIndustry.name}
               </h3>
-              <button className={styles.viewButton} style={{ marginBottom: "1rem", padding: "4px 10px" }}>
-                1-Click Insight
-              </button>
             </div>
 
             {/* Patents line with YoY */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-              <p style={{ fontSize: "0.8rem", opacity: 0.9, margin: 0, fontWeight: 500 }}>
-                {selectedIndustry.patents?.toLocaleString() || "124,000"} innovations globally
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "1rem",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "0.8rem",
+                  opacity: 0.9,
+                  margin: 0,
+                  fontWeight: 500,
+                }}
+              >
+                {selectedIndustry.patents?.toLocaleString() || "124,000"}{" "}
+                innovations globally
               </p>
-              <span style={{ color: "#00ff88", fontSize: "0.8rem", fontWeight: 600 }}>
+              <span
+                style={{
+                  color: "#00ff88",
+                  fontSize: "0.8rem",
+                  fontWeight: 600,
+                }}
+              >
                 {selectedIndustry.change || "+14%"} YoY
               </span>
             </div>
