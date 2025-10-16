@@ -105,13 +105,14 @@ const CountriesTab = ({ selectedIndustry, activeTab}) => {
   }}
 >
 
-        <SimpleMap
-          data={mapData}
-          color="#4a90e2"
-          backgroundColor="transparent"
-          borderColor="#ccc"
-          label="Vehicle Innovation Density"
-        />
+     <SimpleMap
+  data={mapData}
+  color="#4a90e2"
+  backgroundColor="transparent"
+  borderColor="#ccc"
+  label={`${selectedIndustry?.name || "Industry"} Innovation Density`}
+/>
+
       </div>
 
       {/* --------- TABLE --------- */}

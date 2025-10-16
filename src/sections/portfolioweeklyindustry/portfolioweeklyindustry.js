@@ -65,6 +65,37 @@ const dummyCompanies = [
     industry: "Biological Computer Models",
     top_inventor: "Sarbajit k. rakshit",
   },
+  {
+  name: "Meta platforms, inc.",
+  patents: 474,
+  industries: 21,
+  technologies: 263,
+  inventors: 1346,
+  country: "United States",
+  industry: "Artificial Intelligence",
+  top_inventor: "Harikrishna madadi reddy",
+},
+{
+  name: "Pfizer inc.",
+  patents: 390,
+  industries: 8,
+  technologies: 130,
+  inventors: 1041,
+  country: "United States",
+  industry: "Pharmaceuticals",
+  top_inventor: "Annaliesa sybil anderson",
+},
+{
+  name: "Ballard power systems inc.",
+  patents: 9,
+  industries: 1,
+  technologies: 6,
+  inventors: 18,
+  country: "Canada",
+  industry: "Fuel Cells",
+  top_inventor: "Rajesh bashyam",
+}
+
 ];
 
 const PortfolioWeeklyIndustry = ({
@@ -387,7 +418,11 @@ const PortfolioWeeklyIndustry = ({
           <CompaniesTab
             selectedIndustry={selectedIndustry}
             activeTab={activeTab}
-            dummyCompanies={dummyCompanies}
+            dummyCompanies={
+    relevantCompanies.length > 0
+      ? relevantCompanies
+      : (selectedIndustry?.topCompany || [])
+  }
             expandedCard={expandedCard}
             setExpandedCard={setExpandedCard}
             increments={increments}
