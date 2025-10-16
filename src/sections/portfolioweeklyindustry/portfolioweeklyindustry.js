@@ -11,6 +11,12 @@ import {
   Tooltip,
 } from "chart.js";
 import { CircleArrowLeft } from "lucide-react";
+import OverviewTab from "./overview";
+import CompaniesTab from "./companies";
+import CountriesTab from "./countries";
+import TechTab from "./tech";
+
+
 
 ChartJS.register(
   LineElement,
@@ -112,8 +118,16 @@ const PortfolioWeeklyIndustry = ({
       ],
       topTechnology: "Battery Cooling Systems",
       topInventor: "Li Wei",
-      description:
+      descriptionsByTab: {
+      Overview:
         "EV Innovation led by China, US & Korea in battery & AI systems.",
+      Companies:
+        "Top automotive firms like Tesla, Bosch, and Toyota dominate the patent landscape in electric and autonomous vehicle systems.",
+      Countries:
+        "The USA is leading innovations in Vehicle Industry.",
+      Tech:
+        "Key emerging technologies include battery cooling systems, ADAS, hydrogen fuel tech, and AI-powered mobility platforms.",
+    },
     },
     {
       rank: 2,
@@ -138,8 +152,16 @@ const PortfolioWeeklyIndustry = ({
       ],
       topTechnology: "Neural Signal Mapping",
       topInventor: "Dr. Jane Smith",
-      description:
-        "Breakthroughs in brain-inspired systems led by US & Europe.",
+       descriptionsByTab: {
+      Overview:
+        "Breakthroughs in brain-inspired computing systems are being pioneered by US and European institutions in neuroscience and AI fusion.",
+      Companies:
+        "IBM and Intel are pushing the frontiers of biological computing, investing heavily in neural processing and synthetic biology models.",
+      Countries:
+        "The United States leads this space, followed by China and Germany, with a sharp rise in collaborative patents across academia and industry.",
+      Tech:
+        "Core technologies include neural signal mapping, brain-computer interfaces, and molecular-level computation models.",
+    },
     },
     {
       rank: 3,
@@ -164,11 +186,20 @@ const PortfolioWeeklyIndustry = ({
       ],
       topTechnology: "Predictive Battery Analytics",
       topInventor: "Lee Sung-ho",
-      description: "Korea & China leading AI-powered EV systems.",
+       descriptionsByTab: {
+      Overview:
+        "Korea and China are leading innovation in AI applications for electric vehicles, focusing on predictive systems and efficiency optimization.",
+      Companies:
+        "Tech-driven firms like Samsung, IBM, and Microsoft are applying AI models to optimize EV powertrains, safety, and maintenance.",
+      Countries:
+        "Korea and China have rapidly increased AI-EV patent activity, with significant contributions from US-based R&D as well.",
+      Tech:
+        "Predictive BMS, anomaly detection systems, and AI-powered fleet management tools are at the core of this innovation wave.",
+    },
     },
   ];
 
-  const handleAddCompany = (company) => {
+   const handleAddCompany = (company) => {
     try {
       const existing =
         JSON.parse(localStorage.getItem("portfolioStartups")) || [];
@@ -318,64 +349,85 @@ const PortfolioWeeklyIndustry = ({
     },
 ];
 
+// Render function for active tab
+  const renderActiveTab = () => {
+    switch (activeTab) {
+      case "Overview":
+        return (
+          <OverviewTab
+           selectedIndustry={selectedIndustry}
+  activeTab={activeTab}
+  topCountries={topCountries}
+  topCompanies={topCompanies}
+          />
+        );
+      case "Companies":
+        return (
+          <CompaniesTab
+            selectedIndustry={selectedIndustry}
+            activeTab={activeTab}
+            dummyCompanies={dummyCompanies}
+            expandedCard={expandedCard}
+            setExpandedCard={setExpandedCard}
+            increments={increments}
+            goToCompanyPage={goToCompanyPage}
+            handleAddCompany={handleAddCompany}
+          />
+        );
+      case "Countries":
+        return <CountriesTab selectedIndustry={selectedIndustry}   activeTab={activeTab}/>;
+      case "Tech":
+        return <TechTab />;
+      default:
+        return null;
+    }
+  };
 
 
   return (
     <div>
       {!selectedIndustry && <hr className="mb-4" />}
 
-       {/* 🔹 Suggested Industries Section */}
- {!selectedIndustry && (
-  <div style={{ marginBottom: "2rem" }}>
-    <h3
-      className={styles.headingH3}
-    >
-      Trending Industries
-    </h3>
-
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "0.6rem",
-      }}
-    >
-      {suggestedIndustries.map((item, idx) => (
-        <button
-          key={idx}
-         onClick={() => {
-  console.log("👉 Clicked Suggested:", item.name);
-  setSelectedIndustry(item);
-  setActiveTab("Overview");
-}}
-          style={{
-            background: "linear-gradient(90deg, #007bff, #00bfff)",
-            border: "none",
-            borderRadius: "20px",
-            padding: "6px 12px",
-            fontSize: "0.8rem",
-            color: "#fff",
-            cursor: "pointer",
-            transition: "all 0.3s ease",
-          }}
-        >
-          {item.name}
-        </button>
-      ))}
-    </div>
-  </div>
-)}
-
-
+      {/* 🔹 Suggested Industries Section */}
+      {!selectedIndustry && (
+        <div style={{ marginBottom: "2rem" }}>
+          <h3 className={styles.headingH3}>
+            Trending Industries
+          </h3>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem" }}>
+            {suggestedIndustries.map((item, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  console.log("👉 Clicked Suggested:", item.name);
+                  setSelectedIndustry(item);
+                  setActiveTab("Overview");
+                }}
+                style={{
+                  background: "linear-gradient(90deg, #007bff, #00bfff)",
+                  border: "none",
+                  borderRadius: "20px",
+                  padding: "6px 12px",
+                  fontSize: "0.8rem",
+                  color: "#fff",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                }}
+              >
+                {item.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 🔁 MAIN PAGE (Industry List) */}
       {!selectedIndustry && (
-           <h3
-         className={styles.headingH3}
-    >
-      Industry Feed
-    </h3>
+        <h3 className={styles.headingH3}>
+          Industry Feed
+        </h3>
       )}
+      
       {!selectedIndustry ? (
         <div className={styles.weeklyGrid}>
           {industries.map((ind, idx) => {
@@ -396,9 +448,7 @@ const PortfolioWeeklyIndustry = ({
 
             return (
               <div key={idx} className={styles.industryCard}>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ fontSize: "0.8rem", opacity: 0.7 }}>
                     #{ind.rank}
                   </span>
@@ -424,13 +474,7 @@ const PortfolioWeeklyIndustry = ({
                   Active Companies: {ind.patents}
                 </p>
 
-                <div
-                  style={{
-                    marginTop: "0.5rem",
-                    display: "flex",
-                    gap: "0.5rem",
-                  }}
-                >
+                <div style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem" }}>
                   {ind.tags.map((tag, i) => (
                     <span
                       key={i}
@@ -472,13 +516,7 @@ const PortfolioWeeklyIndustry = ({
       ) : (
         <>
           {/* 🔙 Back Button */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "1rem",
-            }}
-          >
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
             <button
               onClick={() => {
                 setSelectedIndustry(null);
@@ -496,56 +534,22 @@ const PortfolioWeeklyIndustry = ({
           </div>
 
           {/* 🔹 Summary Card */}
-          <div
-            style={{
-              color: "#fff",
-              fontFamily: "DM Sans, sans-serif",
-            }}
-          >
-
+          <div style={{ color: "#fff", fontFamily: "DM Sans, sans-serif" }}>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem"}}>
-            {/* Title */}
-            <h3
-              style={{
-                marginBottom: "1rem",
-                fontSize: "1.5rem",
-                fontWeight: 600,
-              }}
-            >
-              {selectedIndustry.name}
-            </h3>
-
-            <button className={styles.viewButton} style={{    marginBottom: "1rem",padding: "4px 10px"}}>Get Intel</button>
-
+              <h3 style={{ marginBottom: "1rem", fontSize: "1.5rem", fontWeight: 600 }}>
+                {selectedIndustry.name}
+              </h3>
+              <button className={styles.viewButton} style={{ marginBottom: "1rem", padding: "4px 10px" }}>
+                1-Click Insight
+              </button>
             </div>
 
             {/* Patents line with YoY */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "1rem",
-              }}
-            >
-              <p
-                style={{
-                  fontSize: "0.8rem",
-                  opacity: 0.9,
-                  margin: 0,
-                  fontWeight: 500,
-                }}
-              >
-                {selectedIndustry.patents?.toLocaleString() || "124,000"}{" "}
-                innovations globally
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+              <p style={{ fontSize: "0.8rem", opacity: 0.9, margin: 0, fontWeight: 500 }}>
+                {selectedIndustry.patents?.toLocaleString() || "124,000"} innovations globally
               </p>
-              <span
-                style={{
-                  color: "#00ff88",
-                  fontSize: "0.8rem",
-                  fontWeight: 600,
-                }}
-              >
+              <span style={{ color: "#00ff88", fontSize: "0.8rem", fontWeight: 600 }}>
                 {selectedIndustry.change || "+14%"} YoY
               </span>
             </div>
@@ -575,14 +579,10 @@ const PortfolioWeeklyIndustry = ({
                   },
                   scales: {
                     x: {
-                      ticks: {
-                        display: false,
-                      },
+                      ticks: { display: false },
                       grid: { display: false },
                     },
-                    y: {
-                      display: false,
-                    },
+                    y: { display: false },
                   },
                 }}
               />
@@ -603,376 +603,9 @@ const PortfolioWeeklyIndustry = ({
               ))}
             </div>
 
-            {/* ✅ Conditionally show Description and Info Grid only in Overview tab */}
-            {activeTab === "Overview" && (
-              <>
-                {/* Description */}
-                <p
-                  style={{
-                    fontSize: "0.9rem",
-                    color: "#fff",
-                    margin: "0 0 1.5rem 0",
-                    lineHeight: "1.4",
-                  }}
-                >
-                  {selectedIndustry.description ||
-                    "The biotechnology industry is experiencing steady growth, with leading activity in the US, China, and Europe."}
-                </p>
-
-                {/* Info Grid */}
-                <section className={styles.statsSection}>
-                  {[
-                    {
-                      label: "Innovations",
-                      value: "1299",
-                    },
-                    {
-                      label: "Countries",
-                      value: "12",
-                    },
-                    {
-                      label: "Companies",
-                      value: "34",
-                    },
-                    {
-                      label: "Technologies",
-                      value: "70",
-                    },
-                  ].map((item, i) => (
-                    <div className={styles.statsCard} key={i}>
-                      <h3 className={styles.statsValue}>{item.value}</h3>
-                      <p className={styles.statsLabel}>{item.label}</p>
-                    </div>
-                  ))}
-                </section>
-
-                {/* 📈 YoY Innovation Activity Line Graph */}
-                <div style={{ marginBottom: "2rem" }}>
-                  <h4
-                    style={{
-                      marginBottom: "1rem",
-                      fontSize: "0.8rem",
-                      color: "#00bfff",
-                    }}
-                  >
-                    YoY Innovation Activity
-                  </h4>
-                  <div style={{ height: "180px" }}>
-                    <Line
-                      data={{
-                        labels: [
-                          "2018",
-                          "2019",
-                          "2020",
-                          "2021",
-                          "2022",
-                          "2023",
-                          "2024",
-                        ],
-                        datasets: [
-                          {
-                            data: [100, 30, 50, 170, 200, 230, 260],
-                            borderColor: "#00bfff",
-                            backgroundColor: "rgba(0,191,255,0.2)",
-                            borderWidth: 2,
-                            tension: 0.4,
-                            pointRadius: 3,
-                            fill: true,
-                          },
-                        ],
-                      }}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                          legend: { display: false },
-                          tooltip: {
-                            mode: "index",
-                            intersect: false,
-                            callbacks: {
-                              label: (context) => {
-                                const value = context.parsed.y;
-                                return `Applications: ${value}`;
-                              },
-                            },
-                          },
-                        },
-                        scales: {
-                          x: {
-                            title: {
-                              display: true,
-                              text: "Year",
-                              color: "#ccc",
-                              font: { size: 12 },
-                            },
-                            ticks: {
-                              color: "#aaa",
-                            },
-                            grid: { display: false },
-                          },
-                          y: {
-                            title: {
-                              display: false,
-                            },
-                            ticks: {
-                              color: "#aaa",
-                            },
-                            grid: {
-                              color: "#333",
-                            },
-                          },
-                        },
-                      }}
-                    />
-                  </div>
-                </div>
-
-             <div className={styles.countryCompany}>
-
-  {/* 🌍 Top Countries Section */}
-  <div className={styles.countriesSection}>
-    <h4 style={{ marginBottom: "0.8rem", fontSize: "0.8rem", color: "#00bfff" }}>
-      Top Countries
-    </h4>
-    <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-      {topCountries.map((country, index) => (
-        <div key={index} className={styles.dataRow}>
-          <span>{country.name}</span>
-          <span>{country.applications.toLocaleString()}</span>
-          <span
-            style={{
-              color: country.increment.startsWith("+") ? "#00ff88" : "#ff4d4d",
-              fontWeight: 500,
-            }}
-          >
-            {country.increment}
-          </span>
-        </div>
-      ))}
-    </div>
-  </div>
-
-  {/* 🏢 Leading Organizations Section */}
-  <div className={styles.organizationsSection}>
-    <h4 style={{ marginBottom: "0.8rem", fontSize: "0.8rem", color: "#00bfff" }}>
-      Leading Organizations
-    </h4>
-    <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-      {topCompanies.map((company, index) => (
-        <div key={index} className={styles.dataRow}>
-          <span>{company.name}</span>
-          <span>{company.applications.toLocaleString()}</span>
-          <span
-            style={{
-              color: company.increment.startsWith("+") ? "#00ff88" : "#ff4d4d",
-              fontWeight: 500,
-            }}
-          >
-            {company.increment}
-          </span>
-        </div>
-      ))}
-    </div>
-  </div>
-
-</div>
-
-              </>
-            )}
+            {/* Render active tab content */}
+            {renderActiveTab()}
           </div>
-
-          {/* 🏢 Companies Tab (Filtered) */}
-          {activeTab === "Companies" && (
-            <section className={styles.cardsWrapper}>
-              {dummyCompanies.filter(
-                (c) => c.industry === selectedIndustry.name
-              ).length === 0 ? (
-                <div
-                  style={{
-                    padding: "14px 16px",
-                    textAlign: "center",
-                    color: "#9bb5ff",
-                  }}
-                >
-                  No companies match your search
-                </div>
-              ) : (
-                <div className={styles.cardsScrollableContainer}>
-                  <div className={styles.cardsGrid}>
-                    {dummyCompanies
-                      .filter((c) => c.industry === selectedIndustry.name)
-                      .map((item, i) => {
-                        const randomIncrement =
-                          Math.floor(Math.random() * 31) - 10;
-                        const cardKey = `${item.name ?? "company"}_${i}`;
-                        const isExpanded = expandedCard.includes(cardKey);
-
-                        return (
-                          <div
-                            key={cardKey}
-                            className={`${styles.companyCard} ${
-                              isExpanded ? styles.expanded : ""
-                            }`}
-                          >
-                            {/* 🔹 Header */}
-                            <div className={styles.cardHeader}>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexDirection: "row",
-                                  justifyContent: "space-between",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <h3
-                                  className={styles.companyName}
-                                  style={{ fontSize: "1.2rem" }}
-                                >
-                                  {item.name}
-                                </h3>
-                                <span
-                                  className={styles.companyName}
-                                  style={{
-                                    color:
-                                      randomIncrement < 0
-                                        ? "#ff4d4d"
-                                        : "#00ff88",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  {randomIncrement > 0
-                                    ? `+${randomIncrement}%`
-                                    : `${randomIncrement}%`}
-                                </span>
-                              </div>
-
-                              <div className={styles.tagsRow}>
-                                <span className={styles.tagSearch}>
-                                  {item.country}
-                                </span>
-                                <span className={styles.tagSearch}>
-                                  {item.industry}
-                                </span>
-                              </div>
-                            </div>
-
-                            {/* 🔹 Summary Line */}
-                            <p
-                              style={{
-                                marginTop: "15px",
-                                fontSize: "0.8rem",
-                                color: "#4da6ff",
-                                textShadow:
-                                  "0 0 0px #4da6ff, 0 0 2px #4da6ff, 0 0 5px #4da6ff",
-                              }}
-                            >
-                              {item.patents} new developments.
-                            </p>
-
-                            <hr className={styles.divider} />
-
-                            {/* 🔹 Toggle for details */}
-                            <button
-                              type="button"
-                              className={styles.detailsToggle}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setExpandedCard((prev) =>
-                                  prev.includes(cardKey)
-                                    ? prev.filter((key) => key !== cardKey)
-                                    : [...prev, cardKey]
-                                );
-                              }}
-                              aria-expanded={isExpanded}
-                              title={
-                                isExpanded
-                                  ? "Collapse details"
-                                  : "Expand to view"
-                              }
-                            >
-                              <span
-                                className={styles.detailsLabel}
-                                style={{ fontSize: "0.8rem" }}
-                              >
-                                Details
-                              </span>
-                              <span
-                                className={styles.arrow}
-                                style={{ fontSize: "0.8rem" }}
-                                aria-hidden="true"
-                              >
-                                {isExpanded ? "▲" : "▼"}
-                              </span>
-                            </button>
-
-                            {/* 🔹 Expandable Section */}
-                            <div
-                              className={`${styles.expandedContent} ${
-                                isExpanded ? styles.show : ""
-                              }`}
-                            >
-                              <div className={styles.detailRow}>
-                                <span>Industries</span>
-                                <span>{item.industries}</span>
-                              </div>
-                              <div className={styles.detailRow}>
-                                <span>Technologies</span>
-                                <span>{item.technologies}</span>
-                              </div>
-                              <div className={styles.detailRow}>
-                                <span>Inventors</span>
-                                <span>{item.inventors}</span>
-                              </div>
-                              <div className={styles.detailRow}>
-                                <span>Top Inventor</span>
-                                <span>{item.top_inventor}</span>
-                              </div>
-                            </div>
-
-                            {/* 🔹 Action Buttons */}
-                            <div className={styles.cardAction}>
-                              <button
-                                className={styles.viewButton}
-                                onClick={() => goToCompanyPage(item.name)}
-                              >
-                                View
-                              </button>
-                              <button
-                                className={styles.addPortfolio}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleAddCompany(item);
-                                }}
-                              >
-                                + Add
-                              </button>
-                            </div>
-                          </div>
-                        );
-                      })}
-                  </div>
-                </div>
-              )}
-            </section>
-          )}
-
-          {/* 📊 Countries Tab */}
-          {activeTab === "Countries" && (
-            <div
-              style={{ padding: "2rem", textAlign: "center", color: "#9bb5ff" }}
-            >
-              <p>Sign up to view.</p>
-            </div>
-          )}
-
-          {/* 🔬 Technologies Tab */}
-          {activeTab === "Tech" && (
-            <div
-              style={{ padding: "2rem", textAlign: "center", color: "#9bb5ff" }}
-            >
-              <p>Sign up to view.</p>
-            </div>
-          )}
         </>
       )}
     </div>
