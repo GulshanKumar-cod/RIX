@@ -4,7 +4,7 @@ import styles from "../companylist/companylist.module.css";
 
 const OverviewTab = ({ selectedIndustry,activeTab, topCountries, topCompanies }) => {
   return (
-    <>
+    <div style={{marginBottom: "5rem"}}>
       {/* Description */}
       <p
         style={{
@@ -173,7 +173,27 @@ const OverviewTab = ({ selectedIndustry,activeTab, topCountries, topCompanies })
           </div>
         </div>
       </div>
-    </>
+
+ <button
+  style={{
+    background: "linear-gradient(90deg, #007bff, #00bfff)",
+    color: "#fff",
+    border: "none",
+    padding: "0.5rem 1.25rem",
+    borderRadius: "8px",
+    fontSize: "0.8rem",
+    fontWeight: 500,
+    cursor: "pointer",
+    width: "100%",
+    maxWidth: "200px",     
+    display: "block",
+    margin: "0 auto",       
+  }}
+>
+  1-Click Insight
+</button>
+
+    </div>
   );
 };
 

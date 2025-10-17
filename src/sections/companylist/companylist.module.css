@@ -1101,7 +1101,7 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding-right: 8px;
-    margin-bottom: 5rem;
+    margin-bottom: 2rem;
   }
 
   .detailRow {
@@ -1323,7 +1323,7 @@ margin-top: 30px;
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  margin-bottom: 6rem;
+  margin-bottom: 2rem;
 }
 
 @media (max-width: 600px) {
