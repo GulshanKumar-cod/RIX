@@ -59,7 +59,7 @@ const SimpleMap = (props) => {
           onClickFunction={(e) => {onClick(e)}}
         />
       </div>
-      <h2 style={{ textAlign: "left", marginTop: "auto", fontSize: "0.8rem"}}>
+      <h2 style={{ textAlign: "center", marginTop: "auto", fontSize: "0.8rem"}}>
         {props.label}
       </h2>
     </div>

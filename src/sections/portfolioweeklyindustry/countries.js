@@ -116,7 +116,8 @@ const CountriesTab = ({ selectedIndustry, activeTab}) => {
       </div>
 
       {/* --------- TABLE --------- */}
-     <div style={{ overflowX: "auto", marginBottom: "1.5rem" }}>
+     <div style={{ overflowX: "auto", marginBottom: "1.5rem"}}>
+        <h3 className={styles.headingH3} style={{marginBottom: "1rem"}}>Global Rankings</h3>
   <table
     className={styles.portfolioTable}
     style={{
