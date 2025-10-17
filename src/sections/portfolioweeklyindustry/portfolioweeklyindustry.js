@@ -632,9 +632,9 @@ const PortfolioWeeklyIndustry = ({
                   fontWeight: 600,
                   paddingTop: "1.5rem",
                   maxWidth: "100%",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  // overflow: "hidden",
+                  // textOverflow: "ellipsis",
+                  // whiteSpace: "nowrap",
                 }}
               >
                 {selectedIndustry.name}

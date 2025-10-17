@@ -87,7 +87,7 @@ const PortfolioWeeklyCompany = () => {
 
   return (
     <div>
-      <hr className="mb-5" />
+      <hr className="mb-4" />
 
       {/* Suggested Companies */}
       <div style={{ marginBottom: "3rem" }}>
