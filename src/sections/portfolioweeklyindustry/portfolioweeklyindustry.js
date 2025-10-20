@@ -603,7 +603,7 @@ const PortfolioWeeklyIndustry = ({
   </button>
 
   {/* 1-Click Insight button */}
-  {/* <button
+  <button
     className={styles.viewButton}
     style={{
       padding: "6px 12px",
@@ -611,7 +611,7 @@ const PortfolioWeeklyIndustry = ({
     }}
   >
     1-Click Insight
-  </button> */}
+  </button>
 </div>
 
           {/* 🔹 Summary Card */}
