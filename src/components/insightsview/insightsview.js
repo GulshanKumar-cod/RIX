@@ -32,47 +32,57 @@ const InsightsView = ({ company }) => {
   };
 
   // ✅ Download handler
-  const handleDownloadReport = async () => {
-    try {
-      const insightsElement = document.getElementById("insights-content");
-      if (!insightsElement) {
-        alert("Insights section not found. Please open the insights first.");
-        return;
-      }
-
-      const canvas = await html2canvas(insightsElement, {
-        scale: 2,
-        backgroundColor: "#000",
-        useCORS: true,
-      });
-
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "pt",
-        format: "a4",
-      });
-
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pageWidth - 40;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      let heightLeft = imgHeight;
-      let position = 20;
-
-      while (heightLeft > 0) {
-        pdf.addImage(imgData, "PNG", 20, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-        if (heightLeft > 0) pdf.addPage();
-      }
-
-      pdf.save(`${company.name}_Insights_Report.pdf`);
-    } catch (error) {
-      console.error("PDF generation failed:", error);
-      alert("Failed to generate PDF report.");
+ const handleDownloadReport = async () => {
+  try {
+    const insightsElement = document.getElementById("insights-content");
+    if (!insightsElement) {
+      alert("Insights section not found. Please open the insights first.");
+      return;
     }
-  };
+
+    // Capture the element
+    const canvas = await html2canvas(insightsElement, {
+      scale: 2,
+      backgroundColor: "#000",
+      useCORS: true,
+      scrollX: 0,
+      scrollY: -window.scrollY, // avoids offset issues
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "pt", "a4");
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    const imgWidth = pageWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    // add first page
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+
+    // add remaining pages by shifting the image upward
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+
+    // Remove white border margins
+    pdf.setLineWidth(0);
+
+    pdf.save(`${company.name}_Insights_Report.pdf`);
+  } catch (error) {
+    console.error("PDF generation failed:", error);
+    alert("Failed to generate PDF report.");
+  }
+};
+
 
   return (
     <div id="insights-content" className={styles.insightsContainer}>
