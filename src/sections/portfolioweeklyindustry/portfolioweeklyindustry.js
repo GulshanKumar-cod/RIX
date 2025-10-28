@@ -608,6 +608,7 @@ const PortfolioWeeklyIndustry = ({
     style={{
       padding: "6px 12px",
       whiteSpace: "nowrap",
+      borderRadius: "8px",
     }}
   >
     1-Click Insight

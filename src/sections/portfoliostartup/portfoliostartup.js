@@ -165,10 +165,9 @@ const PortfolioStartup = () => {
         <button
           onClick={() => router.push("/companylist?tab=search")}
           style={{
-            padding: "8px 16px",
             backgroundColor: "#0070f3",
             border: "none",
-            borderRadius: "4px",
+            borderRadius: "8px",
             color: "#fff",
             cursor: "pointer",
           }}
@@ -180,10 +179,9 @@ const PortfolioStartup = () => {
           onClick={handleDelete}
           disabled={selectedCompanies.length === 0}
           style={{
-            padding: "8px 16px",
             backgroundColor: "#e00",
             border: "none",
-            borderRadius: "4px",
+            borderRadius: "8px",
             color: "#fff",
             cursor: selectedCompanies.length === 0 ? "not-allowed" : "pointer",
           }}

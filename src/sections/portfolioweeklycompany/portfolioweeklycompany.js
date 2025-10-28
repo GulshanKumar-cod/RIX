@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react";
 import styles from "../companylist/companylist.module.css";
 import { CompanyCarousel } from "@/components/companycarousel/companycarousel";
 import InsightsView from "@/components/insightsview/insightsview";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+
 
 const suggestedCompanies = [
-  { name: "SpaceX", industry: "Aerospace", country: "USA", patents: 320,industries: 1150, technologies: 980 },
-  { name: "BYD", industry: "EV Manufacturing", country: "China", patents: 280, industries: 2316, technologies: 1500 },
-  { name: "Tata Motors", industry: "Automotive", country: "India", patents: 190, industries: 980, technologies: 760 },
-  { name: "Apple", industry: "Consumer Electronics", country: "USA", patents: 540, industries: 7652,technologies: 6300 },
-  { name: "IBM", industry: "Quantum Computing", country: "USA", patents: 720,industries: 8900, technologies: 7500 },
-  { name: "Intel", industry: "Semiconductors", country: "USA", patents: 650, industries: 4320, technologies: 3900 },
-  { name: "Ford", industry: "Automotive", country: "USA", patents: 310, industries: 2100, technologies: 1800 },
+  { name: "SpaceX", industry: "Aerospace", country: "USA", patents: 320,industries: 1150, technologies: 980,change: "+18%", },
+  { name: "BYD", industry: "EV Manufacturing", country: "China", patents: 280, industries: 2316, technologies: 1500,change: "+44%" },
+  { name: "Tata Motors", industry: "Automotive", country: "India", patents: 190, industries: 980, technologies: 760,change: "+36%", },
+  { name: "Apple", industry: "Consumer Electronics", country: "USA", patents: 540, industries: 7652,technologies: 6300, change: "+12%" },
+  { name: "IBM", industry: "Quantum Computing", country: "USA", patents: 720,industries: 8900, technologies: 7500,change: "+8%" },
+  { name: "Intel", industry: "Semiconductors", country: "USA", patents: 650, industries: 4320, technologies: 3900,change: "+15%" },
+  { name: "Ford", industry: "Automotive", country: "USA", patents: 310, industries: 2100, technologies: 1800,change: "+20%" },
 ];
 
 const sampleData = [
@@ -70,23 +73,40 @@ const PortfolioWeeklyCompany = () => {
   const [currentCompany, setCurrentCompany] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [progressMessage, setProgressMessage] = useState("Fetching innovation activity data...");
+
 
   // Simulate progress bar before showing insights
-  useEffect(() => {
-    if (isLoading) {
-      let progressInterval = setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= 100) {
-            clearInterval(progressInterval);
-            setIsLoading(false);
-            return 100;
-          }
-          return prev + 2;
-        });
-      }, 60);
-      return () => clearInterval(progressInterval);
-    }
-  }, [isLoading]);
+ useEffect(() => {
+  if (isLoading) {
+    let progressInterval = setInterval(() => {
+      setProgress((prev) => {
+        let next = prev + 2;
+        if (next >= 100) {
+          clearInterval(progressInterval);
+          setIsLoading(false);
+          next = 100;
+        }
+
+        // 🔹 Update message based on progress stage
+        if (next < 25) {
+          setProgressMessage("Fetching innovation activity data...");
+        } else if (next < 50) {
+          setProgressMessage("Analyzing industries and emerging technologies...");
+        } else if (next < 75) {
+          setProgressMessage("Processing inventor networks...");
+        } else {
+          setProgressMessage("Generating intelligence report...");
+        }
+
+        return next;
+      });
+    }, 60);
+
+    return () => clearInterval(progressInterval);
+  }
+}, [isLoading]);
+
 
   // Add company to portfolio
   const handleAddCompany = (company) => {
@@ -106,42 +126,6 @@ const PortfolioWeeklyCompany = () => {
     }
   };
 
-  // Share or copy report
-  const handleShareInsights = async () => {
-    const textToShare = `Insights for ${currentCompany.name}`;
-    const shareData = {
-      title: `Insights for ${currentCompany.name}`,
-      text: textToShare,
-      url: window.location.href,
-    };
-
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else {
-        await navigator.clipboard.writeText(textToShare);
-        alert("Insights copied to clipboard (sharing not supported on this device).");
-      }
-    } catch (err) {
-      console.error("Error sharing insights:", err);
-      alert("Unable to share insights.");
-    }
-  };
-
-  // Download report
-  const handleDownloadReport = () => {
-    if (!currentCompany) return;
-    const blob = new Blob(
-      [`Insights Report for ${currentCompany.name}`],
-      { type: "text/plain" }
-    );
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `${currentCompany.name}_insights.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   return (
     <div>
@@ -158,9 +142,21 @@ const PortfolioWeeklyCompany = () => {
               className={styles.industryCardCompany}
             >
               <div>
+                 <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
                 <h4 style={{ margin: "0.5rem 0", fontSize: "18px" }}>
                   {company.name}
                 </h4>
+                  <span
+                    style={{
+                      color: company.change.startsWith("+") ? "#00ff88" : "#ff4d4d",
+                       margin: "0.5rem 0", fontSize: "18px" 
+                    }}
+                  >
+                    {company.change}
+                  </span>
+                </div>
                 <div
                   style={{
                     display: "flex",
@@ -266,7 +262,7 @@ const PortfolioWeeklyCompany = () => {
                     cursor: "pointer",
                     background: "linear-gradient(90deg, #007bff, #00bfff)",
                     border: "none",
-                    borderRadius: "20px",
+                    borderRadius: "8px",
                     padding: "8px 16px",
                     fontSize: ".8rem",
                   }}
@@ -365,12 +361,12 @@ const PortfolioWeeklyCompany = () => {
             </button>
 
             {/* Loading / Insights */}
-            <div style={{ marginTop: "40px", textAlign: "center", fontSize: "0.85rem" }}>
+            <div style={{ marginTop: "40px", textAlign: "center", fontSize: "0.8rem" }}>
               {isLoading ? (
                 <div>
-                  <p style={{ marginBottom: "10px", color: "#4da6ff" }}>
-                    Generating C-level innovation intelligence...
-                  </p>
+                 <p style={{ marginBottom: "10px", color: "#fff", fontSize: "0.8rem" }}>
+  {progressMessage}
+</p>
                   <div
                     style={{
                       height: "10px",
@@ -399,7 +395,7 @@ const PortfolioWeeklyCompany = () => {
             </div>
 
             {/* Actions */}
-            {!isLoading && (
+            {/* {!isLoading && (
               <div
                 style={{
                   marginTop: "2rem",
@@ -437,7 +433,7 @@ const PortfolioWeeklyCompany = () => {
                   Download
                 </button>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       )}

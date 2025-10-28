@@ -10,12 +10,38 @@
   margin-bottom: 20px;
 }
 
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
 .companyName {
   color: #fff;
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
   text-align: left;
+}
+
+.iconButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.actionIcon {
+  font-size: 1.2rem;
+  color: #4da6ff;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.actionIcon:hover {
+  color: #00bfff;
+  transform: scale(1.1);
 }
 
 .subtitle {

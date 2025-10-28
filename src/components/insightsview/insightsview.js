@@ -1,29 +1,117 @@
 import React from "react";
+import { Share2,Download  } from 'lucide-react';
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import styles from "./insightsview.module.css";
 
 const InsightsView = ({ company }) => {
+  if (!company) return null;
+
+  // ✅ Share handler
+  const handleShareInsights = async () => {
+    const textToShare = `Insights for ${company.name}`;
+    const shareData = {
+      title: `Insights for ${company.name}`,
+      text: textToShare,
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(textToShare);
+        alert(
+          "Insights copied to clipboard (sharing not supported on this device)."
+        );
+      }
+    } catch (err) {
+      console.error("Error sharing insights:", err);
+      alert("Unable to share insights.");
+    }
+  };
+
+  // ✅ Download handler
+  const handleDownloadReport = async () => {
+    try {
+      const insightsElement = document.getElementById("insights-content");
+      if (!insightsElement) {
+        alert("Insights section not found. Please open the insights first.");
+        return;
+      }
+
+      const canvas = await html2canvas(insightsElement, {
+        scale: 2,
+        backgroundColor: "#000",
+        useCORS: true,
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "pt",
+        format: "a4",
+      });
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth - 40;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 20;
+
+      while (heightLeft > 0) {
+        pdf.addImage(imgData, "PNG", 20, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+        if (heightLeft > 0) pdf.addPage();
+      }
+
+      pdf.save(`${company.name}_Insights_Report.pdf`);
+    } catch (error) {
+      console.error("PDF generation failed:", error);
+      alert("Failed to generate PDF report.");
+    }
+  };
+
   return (
-    <div className={styles.insightsContainer}>
+    <div id="insights-content" className={styles.insightsContainer}>
       {/* ===== Header ===== */}
+
       <div className={styles.headerSection}>
-        <h1 className={styles.companyName}>{company.name}</h1>
+         <div className={styles.headerRow}>
+        <h2 className={styles.companyName}>{company.name}</h2>
+        <div className={styles.iconButtons}>
+         <Share2
+            title="Share Insights"
+            className={styles.actionIcon}
+            onClick={handleShareInsights}
+          />
+          <Download
+            title="Download PDF"
+            className={styles.actionIcon}
+            onClick={handleDownloadReport}
+          />
+        </div>
+      </div>
         <p className={styles.subtitle}>
-          C-level innovation intelligence — industries, technologies, people & recommendations
+          Innovation intelligence — industries, technologies, people &
+          recommendations.
         </p>
       </div>
 
       {/* ===== Executive Summary ===== */}
       <h2 className={styles.sectionTitle}>Executive Summary</h2>
       <p className={styles.summaryText}>
-        {company.name} remains a top global innovator with a strong inventor base.
-        Over the last 12 months, {company.name} focused on{" "}
+        {company.name} remains a top global innovator with a strong inventor
+        base. Over the last 12 months, {company.name} focused on{" "}
         {company.industry} and continues to lead in emerging technologies.
       </p>
 
       {/* ===== Stats Section ===== */}
       <section className={styles.statsSection}>
         {[
-          ["Patents Filed", company.patents.toLocaleString()],
+          ["Innovations", company.patents.toLocaleString()],
           ["Inventors", Math.floor(company.patents / 1.3).toLocaleString()],
           ["Industries", company.industries],
           ["Technologies", company.technologies],
@@ -48,8 +136,10 @@ const InsightsView = ({ company }) => {
       </section>
 
       {/* ===== Filing Trends ===== */}
-      <h3 className={styles.sectionTitle}>Filing Trends</h3>
-      <p className={styles.subtext}>Patent activity over the last six quarters.</p>
+      <h3 className={styles.sectionTitle}>Innovation Trends</h3>
+      <p className={styles.subtext}>
+        Patent activity over the last six quarters.
+      </p>
 
       <div className={styles.chartWrapper}>
         <svg viewBox="0 0 300 100" width="100%" height="80">
