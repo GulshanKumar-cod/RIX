@@ -81,7 +81,7 @@ const PortfolioWeeklyCompany = () => {
   if (isLoading) {
     let progressInterval = setInterval(() => {
       setProgress((prev) => {
-        let next = prev + 2;
+        let next = prev + 1;
         if (next >= 100) {
           clearInterval(progressInterval);
           setIsLoading(false);
@@ -101,7 +101,7 @@ const PortfolioWeeklyCompany = () => {
 
         return next;
       });
-    }, 60);
+    }, 100);
 
     return () => clearInterval(progressInterval);
   }
