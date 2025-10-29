@@ -335,7 +335,7 @@ const PortfolioWeeklyCompany = () => {
               border: "1px solid #4da6ff",
               boxShadow: "0 0 12px rgba(77, 166, 255, .3)",
               borderRadius: "10px",
-              padding: "20px",
+              // padding: "20px",
               width: "90%",
               maxWidth: "900px",
               height: "80vh",

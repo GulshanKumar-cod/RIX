@@ -3,6 +3,7 @@
   font-size: 0.8rem;
   color: #fff;
       font-family: DM Sans, sans-serif;
+      padding: 20px;
 }
 
 .headerSection {
@@ -175,5 +176,73 @@ margin-top: 2rem;
 
   .statsValue{
     font-size: 1rem;
+  }
+}
+
+/* Footer pdf  */
+.footer {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #020b26;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 13px;
+  z-index: 9999;
+  padding: 6px 10px;   
+  text-align: center;
+  line-height: 1.4;
+  flex-wrap: wrap;    
+   font-family: DM Sans, sans-serif; 
+}
+
+.footerLabel {
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.footer a,
+.incubigHyper {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 768px) {
+  .footer {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+
+  .footerLabel {
+    font-size: 0.7rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .footer {
+    font-size: 11px;
+    padding: 4px 6px;
+  }
+
+  .footerLabel {
+    font-size: 0.65rem;
+  }
+}
+
+.footer-desktop-only {
+  display: block;
+}
+
+@media screen and (max-width: 767px) {
+  .footer-desktop-only {
+    display: none;
   }
 }

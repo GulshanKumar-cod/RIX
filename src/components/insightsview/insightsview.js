@@ -3,6 +3,7 @@ import { Share2,Download  } from 'lucide-react';
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import styles from "./insightsview.module.css";
+import Footer from "../footer/footer";
 
 const InsightsView = ({ company }) => {
   if (!company) return null;
@@ -83,9 +84,13 @@ const InsightsView = ({ company }) => {
   }
 };
 
+ const year = new Date().getFullYear();
 
   return (
-    <div id="insights-content" className={styles.insightsContainer}>
+
+    <div id="insights-content">
+    
+    <div  className={styles.insightsContainer}>
       {/* ===== Header ===== */}
 
       <div className={styles.headerSection}>
@@ -192,6 +197,24 @@ const InsightsView = ({ company }) => {
           <p className={styles.extraStatLabel}>Top Tech Growth</p>
         </div>
       </div>
+
+      </div>
+
+  <div className={styles.footer}>
+      <span className={styles.footerLabel}>
+        The Future of Research Intelligence - RIX |{" "}
+        <a
+          href="/"
+          className="incubigHyper"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          rix.incubig.org
+        </a>{" "}
+        © {year}
+      </span>
+    </div>
+
     </div>
   );
 };
