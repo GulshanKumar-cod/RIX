@@ -212,7 +212,7 @@ const handleDownloadReport = async () => {
 
   <div className={styles.footer}>
       <span className={styles.footerLabel}>
-        The Future of Research Intelligence - RIX |{" "}
+        Incubig AI - RIX | {" "}
         <a
           href="/"
           className="incubigHyper"
