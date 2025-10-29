@@ -33,7 +33,7 @@ const InsightsView = ({ company }) => {
   };
 
   // ✅ Download handler
- const handleDownloadReport = async () => {
+const handleDownloadReport = async () => {
   try {
     const insightsElement = document.getElementById("insights-content");
     if (!insightsElement) {
@@ -41,13 +41,20 @@ const InsightsView = ({ company }) => {
       return;
     }
 
+    // ✅ Hide the icons temporarily
+    const iconButtons = insightsElement.querySelector(`.${styles.iconButtons}`);
+    if (iconButtons) iconButtons.style.display = "none";
+
+    // Wait a tick to ensure DOM updates
+    await new Promise((r) => setTimeout(r, 100));
+
     // Capture the element
     const canvas = await html2canvas(insightsElement, {
       scale: 2,
       backgroundColor: "#000",
       useCORS: true,
       scrollX: 0,
-      scrollY: -window.scrollY, // avoids offset issues
+      scrollY: -window.scrollY,
     });
 
     const imgData = canvas.toDataURL("image/png");
@@ -62,11 +69,11 @@ const InsightsView = ({ company }) => {
     let heightLeft = imgHeight;
     let position = 0;
 
-    // add first page
+    // Add first page
     pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
     heightLeft -= pageHeight;
 
-    // add remaining pages by shifting the image upward
+    // Add remaining pages if needed
     while (heightLeft > 0) {
       position = heightLeft - imgHeight;
       pdf.addPage();
@@ -74,8 +81,10 @@ const InsightsView = ({ company }) => {
       heightLeft -= pageHeight;
     }
 
-    // Remove white border margins
     pdf.setLineWidth(0);
+
+    // ✅ Restore icons visibility
+    if (iconButtons) iconButtons.style.display = "flex";
 
     pdf.save(`${company.name}_Insights_Report.pdf`);
   } catch (error) {
@@ -83,6 +92,7 @@ const InsightsView = ({ company }) => {
     alert("Failed to generate PDF report.");
   }
 };
+
 
  const year = new Date().getFullYear();
 
