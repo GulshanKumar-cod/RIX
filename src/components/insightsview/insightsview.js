@@ -6,9 +6,17 @@ import styles from "./insightsview.module.css";
 import Footer from "../footer/footer";
 
 const InsightsView = ({ company }) => {
+  // ✅ Always define hooks at the top
+  const [tooltip, setTooltip] = React.useState(null);
+  const [hoveredIndex, setHoveredIndex] = React.useState(null);
+
+  // Example colors for pie chart
+  const colors = ["#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f"];
+
+  // ✅ Only then check props
   if (!company) return null;
 
-  // Example industry data (can be fetched or passed in from parent)
+  // Example industry data
   const industryData = company.industryData || [
     { rank: 1, name: "AI & ML", percentage: 35 },
     { rank: 2, name: "Healthcare", percentage: 25 },
@@ -16,6 +24,9 @@ const InsightsView = ({ company }) => {
     { rank: 4, name: "Energy", percentage: 10 },
     { rank: 5, name: "Other", percentage: 10 },
   ];
+
+  // ✅ Helper values
+  const year = new Date().getFullYear();
 
   // ✅ Share handler
   const handleShareInsights = async () => {
@@ -48,7 +59,7 @@ const InsightsView = ({ company }) => {
         return;
       }
 
-      // ✅ Hide the icons temporarily
+      // Hide icons before capture
       const iconButtons = insightsElement.querySelector(`.${styles.iconButtons}`);
       if (iconButtons) iconButtons.style.display = "none";
 
@@ -92,14 +103,7 @@ const InsightsView = ({ company }) => {
     }
   };
 
-  const year = new Date().getFullYear();
-
-    // ====== Pie chart interactivity ======
-  const colors = ["#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f"];
-  const [tooltip, setTooltip] = React.useState(null);
-  const [hoveredIndex, setHoveredIndex] = React.useState(null);
-
-  // Precompute cumulative angles for each slice
+  // Precompute cumulative angles for pie slices
   const cumulativeAngles = industryData.reduce((acc, slice, i) => {
     const prev = acc[i - 1] || 0;
     acc.push(prev + slice.percentage / 100);
