@@ -500,6 +500,7 @@ margin-top: 2rem;
 .peopleTable th:nth-child(3),
 .peopleTable td:nth-child(3) {
   width: 30%;
+  text-align: center;
 }
 
 /* .peopleTable th:nth-child(4),
