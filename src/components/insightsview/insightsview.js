@@ -429,16 +429,16 @@ company.people = defaultPeopleData[company.name] || [];
       <table className={styles.peopleTable}>
         <thead>
           <tr>
-            <th>Rank</th>
+            {/* <th>Rank</th> */}
             <th>Name</th>
-            <th>Industries</th>
-            <th>Activity</th>
+            <th>Focus</th>
+            <th>Publications</th>
           </tr>
         </thead>
         <tbody>
           {company.people.map((person, i) => (
             <tr key={i}>
-              <td className={styles.personRank}>{i + 1}</td>
+              {/* <td className={styles.personRank}>{i + 1}</td> */}
               <td className={styles.personName}>{person.name}</td>
               <td className={styles.personFocus}>{person.focus}</td>
               <td className={styles.personPatents}>{person.patents}</td>
