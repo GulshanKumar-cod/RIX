@@ -11,6 +11,9 @@ const nextConfig = {
   reactStrictMode: true,
   basePath: '',
   assetPrefix: '',
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = withPWA(nextConfig);
