@@ -119,7 +119,10 @@ margin-top: 2rem;
 }
 
 .chartWrapper {
-  margin-bottom: 20px;
+  width: 100%;
+  overflow-x: auto;
+  margin: 1rem 0;
+  text-align: center;
 }
 
 .extraStatsSection {

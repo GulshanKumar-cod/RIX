@@ -191,35 +191,87 @@ company.people = defaultPeopleData[company.name] || [];
 
         {/* ===== Filing Trends ===== */}
         <h3 className={styles.sectionTitle}>Innovation Trends</h3>
-        <p className={styles.subtext}>
+        {/* <p className={styles.subtext}>
           Patent activity over the last six quarters.
-        </p>
+        </p> */}
 
-        <div className={styles.chartWrapper}>
-          <svg viewBox="0 0 300 100" width="100%" height="80">
-            <polyline
-              fill="none"
-              stroke="url(#lineGradient)"
-              strokeWidth="2"
-              points="10,70 60,50 110,60 160,40 210,30 260,20"
-            />
-            <defs>
-              <linearGradient id="lineGradient" x1="0" x2="1" y1="0" y2="0">
-                <stop offset="0%" stopColor="#007bff" />
-                <stop offset="100%" stopColor="#00bfff" />
-              </linearGradient>
-            </defs>
-            {[10, 60, 110, 160, 210, 260].map((x, i) => (
-              <circle
-                key={i}
-                cx={x}
-                cy={[70, 50, 60, 40, 30, 20][i]}
-                r="3"
-                fill="url(#lineGradient)"
-              />
-            ))}
-          </svg>
-        </div>
+    <div className={styles.chartWrapper}>
+  <svg viewBox="0 0 350 160" width="100%" height="130">
+    {/* Axes */}
+    <line x1="40" y1="30" x2="40" y2="120" stroke="#555" strokeWidth="1" />
+    <line x1="40" y1="120" x2="330" y2="120" stroke="#555" strokeWidth="1" />
+
+    {/* Y-axis labels */}
+    {[0, 25, 50, 75, 100].map((val, i) => (
+      <text
+        key={i}
+        x="10"
+        y={120 - (val * 90) / 100 + 4}
+        fill="#888"
+        fontSize="8"
+      >
+        {val}k
+      </text>
+    ))}
+
+    {/* X-axis labels for 5 years */}
+    {["2020", "2021", "2022", "2023", "2024"].map((year, i) => (
+      <text
+        key={i}
+        x={60 + i * 60}
+        y="135"
+        fill="#888"
+        fontSize="9"
+        textAnchor="middle"
+      >
+        {year}
+      </text>
+    ))}
+
+    {/* Line Gradient */}
+    <defs>
+      <linearGradient id="lineGradient" x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0%" stopColor="#007bff" />
+        <stop offset="100%" stopColor="#00bfff" />
+      </linearGradient>
+    </defs>
+
+    {/* Line Path */}
+    <polyline
+      fill="none"
+      stroke="url(#lineGradient)"
+      strokeWidth="2"
+      points="60,100 120,80 180,70 240,50 300,40"
+    />
+
+    {/* Data Points */}
+    {[60, 120, 180, 240, 300].map((x, i) => (
+      <circle
+        key={i}
+        cx={x}
+        cy={[100, 80, 70, 50, 40][i]}
+        r="3"
+        fill="url(#lineGradient)"
+      />
+    ))}
+
+    {/* Chart Label Below Graph */}
+       <text
+      x="185"
+      y="155"  
+      fill="#fff"
+      fontSize="11"
+      textAnchor="middle"
+      fontWeight="500"
+      style={{ transform: "translateY(5px)" }} 
+    >
+      YoY Innovation Activity
+    </text>
+  </svg>
+</div>
+
+
+
 
         {/* ===== Extra Stat Cards Below Chart ===== */}
         <div className={styles.extraStatsSection}>
