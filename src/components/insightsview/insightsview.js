@@ -117,6 +117,29 @@ const InsightsView = ({ company }) => {
     [0]
   );
 
+  // Example fallback data for key companies (you can expand later)
+const defaultPeopleData = {
+  SpaceX: [
+    { name: "Gwynne R.", role: "Chief Propulsion Engineer", patents: 210, focus: "Reusable rockets, cryogenic systems" },
+    { name: "Tom M.", role: "Avionics Lead", patents: 145, focus: "Starlink integration, communication hardware" },
+    { name: "Sara P.", role: "Thermal Control Specialist", patents: 98, focus: "Thermal coatings, heat shields" },
+  ],
+  Apple: [
+    { name: "Soenghun Kim", role: "Lead Scientist – Communication Systems", patents: 712, focus: "5G/6G precoding, antenna arrays" },
+    { name: "Min-Jae Lee", role: "Chief Semiconductor Researcher", patents: 521, focus: "sub-3nm process integration" },
+    { name: "Eun-Young Park", role: "AI Architect", patents: 389, focus: "On-device ML, NPU optimization" },
+  ],
+  IBM: [
+    { name: "Dr. Li Wei", role: "Quantum Research Head", patents: 842, focus: "Superconducting qubits, error correction" },
+    { name: "Priya R.", role: "AI Systems Engineer", patents: 615, focus: "LLM optimization, NLP hardware" },
+    { name: "Mark O.", role: "Security Scientist", patents: 478, focus: "Quantum-safe cryptography" },
+  ],
+};
+
+// Attach people data dynamically if exists
+company.people = defaultPeopleData[company.name] || [];
+
+
   return (
     <div id="insights-content">
       <div className={styles.insightsContainer}>
@@ -393,6 +416,41 @@ const InsightsView = ({ company }) => {
     })()}
   </>
 )}
+
+{/* ===== People & Innovators Section ===== */}
+{company.people && company.people.length > 0 && (
+  <>
+    <h3 className={styles.sectionTitle}>People & Innovators</h3>
+    <p className={styles.subtext}>
+      Top inventors and their activity trends — focused on industries and innovation output.
+    </p>
+
+    <div className={styles.peopleSection}>
+      <table className={styles.peopleTable}>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Industries</th>
+            <th>Activity</th>
+          </tr>
+        </thead>
+        <tbody>
+          {company.people.map((person, i) => (
+            <tr key={i}>
+              <td className={styles.personRank}>{i + 1}</td>
+              <td className={styles.personName}>{person.name}</td>
+              <td className={styles.personFocus}>{person.focus}</td>
+              <td className={styles.personPatents}>{person.patents}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </>
+)}
+
+
 
       </div>
 

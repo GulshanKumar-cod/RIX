@@ -432,3 +432,94 @@ margin-top: 2rem;
     display: none;
   }
 }
+
+
+.peopleSection {
+  /* background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.2rem; */
+  margin-top: 1rem;
+  overflow-x: auto;
+  /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); */
+}
+
+.peopleTable {
+  width: 100%;
+  border-collapse: collapse;
+  color: #ddd;
+  font-size: 0.8rem;
+  min-width: 600px;
+}
+
+.peopleTable th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.peopleTable td {
+  padding: 0.75rem 1rem;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.personName {
+  font-weight: 600;
+  color: #fff;
+}
+
+.personRole {
+  color: #bbb;
+}
+
+.personPatents {
+  font-weight: 600;
+  color: #4adf86;
+}
+
+.personFocus {
+  color: #9ecbff;
+   color: #9ecbff;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+.peopleTable th:nth-child(1),
+.peopleTable td:nth-child(1) {
+  width: 18%;
+}
+
+.peopleTable th:nth-child(2),
+.peopleTable td:nth-child(2) {
+  width: 28%;
+}
+
+.peopleTable th:nth-child(3),
+.peopleTable td:nth-child(3) {
+  width: 12%;
+}
+
+.peopleTable th:nth-child(4),
+.peopleTable td:nth-child(4) {
+  width: 48%;
+}
+
+
+@media (max-width: 768px) {
+  .peopleTable {
+    font-size: 0.8rem;
+    min-width: unset;
+  }
+
+  .peopleTable th,
+  .peopleTable td {
+    padding: 0.3rem 0.3rem;
+  }
+
+  .personFocus {
+    word-break: break-word;
+  }
+}
