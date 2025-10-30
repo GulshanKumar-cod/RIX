@@ -305,7 +305,7 @@ const InsightsView = ({ company }) => {
 
 
         {/* ===== Summary Paragraph ===== */}
-        <h3 className={styles.sectionTitle}>Summary</h3>
+        {/* <h3 className={styles.sectionTitle}>Summary</h3> */}
         <p className={styles.summaryText}>
           {company.name} demonstrates a well-diversified innovation strategy, with
           significant patent concentration in {industryData[0].name} and emerging interest
