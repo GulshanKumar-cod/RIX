@@ -308,6 +308,84 @@ margin-top: 2rem;
   border-radius: 50%;
 }
 
+/* ==== Technologies Developed Section ==== */
+.techSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  background: #111;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin: 1.5rem 0;
+}
+
+.techCard {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.techCard:hover {
+  background: #222;
+  transform: translateY(-3px);
+}
+
+.techHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.techTitle {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.techDescription {
+  color: #aaa;
+  font-size: 0.8rem;
+  margin: 0.25rem 0 0.5rem 0;
+}
+
+.techPatents {
+  color: #ccc;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.techChange {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.trendUp {
+  color: #4caf50; /* green */
+}
+
+.trendDown {
+  color: #f44336; /* red */
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .techSection {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+  .techCard {
+    padding: 1rem;
+  }
+}
+
 
 
 @media (max-width: 768px) {

@@ -312,6 +312,36 @@ const InsightsView = ({ company }) => {
           in {industryData[1].name}. This balance across sectors reflects a proactive
           approach toward future technologies and market adaptability.
         </p>
+
+{/* ===== Technologies Developed Section ===== */}
+{company.technologiesDeveloped && company.technologiesDeveloped.length > 0 && (
+  <>
+    <h3 className={styles.sectionTitle}>Technologies Developed</h3>
+    <div className={styles.techSection}>
+      {company.technologiesDeveloped.map((tech, i) => (
+        <div key={i} className={styles.techCard}>
+          <div className={styles.techHeader}>
+            <h4 className={styles.techTitle}>{tech.name}</h4>
+            <span
+              className={`${styles.techChange} ${
+                tech.trend === "up" ? styles.trendUp : styles.trendDown
+              }`}
+            >
+              {tech.trend === "up" ? "↑" : "↓"} {tech.change}
+            </span>
+          </div>
+          <p className={styles.techPatents}>
+            {tech.patents.toLocaleString()} patents
+          </p>
+        </div>
+      ))}
+    </div>
+  </>
+)}
+
+
+
+
       </div>
 
       <div className={styles.footer}>
