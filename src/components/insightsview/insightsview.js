@@ -161,8 +161,7 @@ company.people = defaultPeopleData[company.name] || [];
             </div>
           </div>
           <p className={styles.subtitle}>
-            Innovation intelligence — industries, technologies, people &
-            recommendations.
+            Innovation intelligence — industries, technologies &people.
           </p>
         </div>
 
