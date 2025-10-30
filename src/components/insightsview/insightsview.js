@@ -42,7 +42,9 @@ const InsightsView = ({ company }) => {
         await navigator.share(shareData);
       } else {
         await navigator.clipboard.writeText(textToShare);
-        alert("Insights copied to clipboard (sharing not supported on this device).");
+        alert(
+          "Insights copied to clipboard (sharing not supported on this device)."
+        );
       }
     } catch (err) {
       console.error("Error sharing insights:", err);
@@ -60,7 +62,9 @@ const InsightsView = ({ company }) => {
       }
 
       // Hide icons before capture
-      const iconButtons = insightsElement.querySelector(`.${styles.iconButtons}`);
+      const iconButtons = insightsElement.querySelector(
+        `.${styles.iconButtons}`
+      );
       if (iconButtons) iconButtons.style.display = "none";
 
       await new Promise((r) => setTimeout(r, 100));
@@ -104,12 +108,14 @@ const InsightsView = ({ company }) => {
   };
 
   // Precompute cumulative angles for pie slices
-  const cumulativeAngles = industryData.reduce((acc, slice, i) => {
-    const prev = acc[i - 1] || 0;
-    acc.push(prev + slice.percentage / 100);
-    return acc;
-  }, [0]);
-
+  const cumulativeAngles = industryData.reduce(
+    (acc, slice, i) => {
+      const prev = acc[i - 1] || 0;
+      acc.push(prev + slice.percentage / 100);
+      return acc;
+    },
+    [0]
+  );
 
   return (
     <div id="insights-content">
@@ -132,16 +138,17 @@ const InsightsView = ({ company }) => {
             </div>
           </div>
           <p className={styles.subtitle}>
-            Innovation intelligence — industries, technologies, people & recommendations.
+            Innovation intelligence — industries, technologies, people &
+            recommendations.
           </p>
         </div>
 
         {/* ===== Executive Summary ===== */}
         <h2 className={styles.sectionTitle}>Executive Summary</h2>
         <p className={styles.summaryText}>
-          {company.name} remains a top global innovator with a strong inventor base. Over
-          the last 12 months, {company.name} focused on {company.industry} and continues
-          to lead in emerging technologies.
+          {company.name} remains a top global innovator with a strong inventor
+          base. Over the last 12 months, {company.name} focused on{" "}
+          {company.industry} and continues to lead in emerging technologies.
         </p>
 
         {/* ===== Stats Section ===== */}
@@ -161,7 +168,9 @@ const InsightsView = ({ company }) => {
 
         {/* ===== Filing Trends ===== */}
         <h3 className={styles.sectionTitle}>Innovation Trends</h3>
-        <p className={styles.subtext}>Patent activity over the last six quarters.</p>
+        <p className={styles.subtext}>
+          Patent activity over the last six quarters.
+        </p>
 
         <div className={styles.chartWrapper}>
           <svg viewBox="0 0 300 100" width="100%" height="80">
@@ -178,7 +187,13 @@ const InsightsView = ({ company }) => {
               </linearGradient>
             </defs>
             {[10, 60, 110, 160, 210, 260].map((x, i) => (
-              <circle key={i} cx={x} cy={[70, 50, 60, 40, 30, 20][i]} r="3" fill="url(#lineGradient)" />
+              <circle
+                key={i}
+                cx={x}
+                cy={[70, 50, 60, 40, 30, 20][i]}
+                r="3"
+                fill="url(#lineGradient)"
+              />
             ))}
           </svg>
         </div>
@@ -199,121 +214,125 @@ const InsightsView = ({ company }) => {
           </div>
         </div>
 
-      {/* ===== Industry Distribution Section ===== */}
-<h3 className={styles.sectionTitle}>Industry Distribution</h3>
-<div className={styles.industrySection}>
-  {/* Pie Chart */}
-  <div className={styles.pieChartWrapper}>
-    <svg
-      viewBox="-60 -60 120 120"
-      className={styles.pieChart}
-      onMouseLeave={() => setHoveredIndex(null)}
-    >
-      {(() => {
-        let cumulative = 0;
-        return industryData.map((slice, i) => {
-          const startAngle = cumulative;
-          const sliceAngle = (slice.percentage / 100) * 2 * Math.PI;
-          cumulative += sliceAngle;
+        {/* ===== Industry Distribution Section ===== */}
+        <h3 className={styles.sectionTitle}>Industry Distribution</h3>
+        <div className={styles.industrySection}>
+          {/* Pie Chart */}
+          <div className={styles.pieChartWrapper}>
+            <svg
+              viewBox="-60 -60 120 120"
+              className={styles.pieChart}
+              onMouseLeave={() => setHoveredIndex(null)}
+            >
+              {(() => {
+                let cumulative = 0;
+                return industryData.map((slice, i) => {
+                  const startAngle = cumulative;
+                  const sliceAngle = (slice.percentage / 100) * 2 * Math.PI;
+                  cumulative += sliceAngle;
 
-          // Convert polar → Cartesian
-          const x1 = 50 * Math.cos(startAngle - Math.PI / 2);
-          const y1 = 50 * Math.sin(startAngle - Math.PI / 2);
-          const x2 = 50 * Math.cos(startAngle + sliceAngle - Math.PI / 2);
-          const y2 = 50 * Math.sin(startAngle + sliceAngle - Math.PI / 2);
+                  // Convert polar → Cartesian
+                  const x1 = 50 * Math.cos(startAngle - Math.PI / 2);
+                  const y1 = 50 * Math.sin(startAngle - Math.PI / 2);
+                  const x2 =
+                    50 * Math.cos(startAngle + sliceAngle - Math.PI / 2);
+                  const y2 =
+                    50 * Math.sin(startAngle + sliceAngle - Math.PI / 2);
 
-          const largeArc = slice.percentage > 50 ? 1 : 0;
-          const d = `M 0 0 L ${x1} ${y1} A 50 50 0 ${largeArc} 1 ${x2} ${y2} Z`;
+                  const largeArc = slice.percentage > 50 ? 1 : 0;
+                  const d = `M 0 0 L ${x1} ${y1} A 50 50 0 ${largeArc} 1 ${x2} ${y2} Z`;
 
-          return (
-            <path
-              key={i}
-              d={d}
-              fill={colors[i % colors.length]}
-              style={{
-                opacity: hoveredIndex === null || hoveredIndex === i ? 1 : 0.4,
-                transition: "opacity 0.2s ease",
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => {
-                const svgRect = e.target.ownerSVGElement.getBoundingClientRect();
-                setTooltip({
-                  name: slice.name,
-                  value: slice.percentage,
-                  x: e.clientX - svgRect.left,
-                  y: e.clientY - svgRect.top,
+                  return (
+                    <path
+                      key={i}
+                      d={d}
+                      fill={colors[i % colors.length]}
+                      style={{
+                        opacity:
+                          hoveredIndex === null || hoveredIndex === i ? 1 : 0.4,
+                        transition: "opacity 0.2s ease",
+                        cursor: "pointer",
+                      }}
+                      onMouseEnter={(e) => {
+                        const svgRect =
+                          e.target.ownerSVGElement.getBoundingClientRect();
+                        setTooltip({
+                          name: slice.name,
+                          value: slice.percentage,
+                          x: e.clientX - svgRect.left,
+                          y: e.clientY - svgRect.top,
+                        });
+                        setHoveredIndex(i);
+                      }}
+                    />
+                  );
                 });
-                setHoveredIndex(i);
-              }}
-            />
-          );
-        });
-      })()}
-    </svg>
+              })()}
+            </svg>
 
-    {/* Tooltip */}
-    {tooltip && (
-      <div
-        className={styles.tooltip}
-        style={{
-          top: tooltip.y - 30,
-          left: tooltip.x + 15,
-        }}
-      >
-        {tooltip.name}: {tooltip.value}%
-      </div>
-    )}
-  </div>
+            {/* Tooltip */}
+            {tooltip && (
+              <div
+                className={styles.tooltip}
+                style={{
+                  top: tooltip.y - 30,
+                  left: tooltip.x + 15,
+                }}
+              >
+                {tooltip.name}: {tooltip.value}%
+              </div>
+            )}
+          </div>
 
-  {/* Legends */}
-  <div className={styles.legendWrapper}>
-    {industryData.map((item, i) => (
-      <div key={i} className={styles.legendItem}>
-        <span
-          className={styles.legendColor}
-          style={{ backgroundColor: colors[i % colors.length] }}
-        />
-        <span className={styles.legendText}>
-          {item.name} — {item.percentage}%
-        </span>
-      </div>
-    ))}
-  </div>
+          {/* Legends */}
+          <div className={styles.legendWrapper}>
+            {industryData.map((item, i) => (
+              <div key={i} className={styles.legendItem}>
+                <span
+                  className={styles.legendColor}
+                  style={{ backgroundColor: colors[i % colors.length] }}
+                />
+                <span className={styles.legendText}>
+                  {item.name} — {item.percentage}%
+                </span>
+              </div>
+            ))}
+          </div>
 
-  {/* Industry Table */}
-  <div className={styles.industryTableWrapper}>
-    <table className={styles.industryTable}>
-      <thead>
-        <tr>
-            <th>Rank</th>
-          <th>Industry</th>
-          <th>Patent Share (%)</th>
-        </tr>
-      </thead>
-      <tbody>
-        {industryData.map((item, idx) => (
-          <tr key={idx}>
-            <td>{item.rank}</td>
-            <td>{item.name}</td>
-            <td>{item.percentage}%</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
-
+          {/* Industry Table */}
+          <div className={styles.industryTableWrapper}>
+            <table className={styles.industryTable}>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Industry</th>
+                  <th>Patent Share (%)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {industryData.map((item, idx) => (
+                  <tr key={idx}>
+                    <td>{item.rank}</td>
+                    <td>{item.name}</td>
+                    <td>{item.percentage}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         {/* ===== Summary Paragraph ===== */}
         {/* <h3 className={styles.sectionTitle}>Summary</h3> */}
         <p className={styles.summaryText}>
-          {company.name} demonstrates a well-diversified innovation strategy, with
-          significant patent concentration in {industryData[0].name} and emerging interest
-          in {industryData[1].name}. This balance across sectors reflects a proactive
-          approach toward future technologies and market adaptability.
+          {company.name} demonstrates a well-diversified innovation strategy,
+          with significant patent concentration in {industryData[0].name} and
+          emerging interest in {industryData[1].name}. This balance across
+          sectors reflects a proactive approach toward future technologies and
+          market adaptability.
         </p>
 
-{/* ===== Technologies Developed Section ===== */}
+       {/* ===== Technologies Developed Section ===== */}
 {company.technologiesDeveloped && company.technologiesDeveloped.length > 0 && (
   <>
     <h3 className={styles.sectionTitle}>Technologies Developed</h3>
@@ -330,24 +349,62 @@ const InsightsView = ({ company }) => {
               {tech.trend === "up" ? "↑" : "↓"} {tech.change}
             </span>
           </div>
+          {tech.description && (
+            <p className={styles.techDescription}>{tech.description}</p>
+          )}
           <p className={styles.techPatents}>
             {tech.patents.toLocaleString()} patents
           </p>
         </div>
       ))}
     </div>
+
+    {/* ===== Dynamic Technologies Summary ===== */}
+    {(() => {
+      const topTechs = company.technologiesDeveloped
+        .slice(0, 3)
+        .map((t) => t.name)
+        .join(", ");
+      const risingTechs = company.technologiesDeveloped
+        .filter((t) => t.trend === "up")
+        .map((t) => t.name)
+        .slice(0, 2)
+        .join(", ");
+
+      const decliningTechs = company.technologiesDeveloped
+        .filter((t) => t.trend === "down")
+        .map((t) => t.name)
+        .slice(0, 1)
+        .join(", ");
+
+      const summaryText = `
+        Emerging focus areas include ${topTechs || "next-gen innovation clusters"}.
+        Several previously dominant areas like ${decliningTechs || "traditional hardware"} 
+        show stabilization, while ${risingTechs || "AI and connectivity"} technologies exhibit an upward trajectory.
+      `;
+
+      return (
+        <div className={styles.techSummaryBox}>
+          <p className={styles.techSummaryText}>
+            {summaryText}
+          </p>
+        </div>
+      );
+    })()}
   </>
 )}
-
-
-
 
       </div>
 
       <div className={styles.footer}>
         <span className={styles.footerLabel}>
           Incubig AI - RIX |{" "}
-          <a href="/" className="incubigHyper" target="_blank" rel="noopener noreferrer">
+          <a
+            href="/"
+            className="incubigHyper"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             rix.incubig.org
           </a>{" "}
           © {year}
