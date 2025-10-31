@@ -2,7 +2,12 @@
 import React, { useState } from "react";
 import styles from "./portfoliosuggestions.module.css";
 
-const mockData = [
+
+
+const PortfolioSuggestions = ({data ,showHeading = true}) => {
+  const [activeFilter, setActiveFilter] = useState("All");
+
+  const defaultData  = [
   {
     name: "Rivian Automotive",
     tags: ["USA", "EV"],
@@ -74,8 +79,8 @@ const increments = {
 
 const filters = ["All", "AI", "EV", "Renewable Energy", "Pharma"];
 
-const PortfolioSuggestions = () => {
-  const [activeFilter, setActiveFilter] = useState("All");
+const companies = Array.isArray(data) && data.length > 0 ? data : defaultData;
+
 
   const handleAddCompany = (company) => {
     try {
@@ -122,8 +127,13 @@ const PortfolioSuggestions = () => {
   return (
     <div>
 
-  <hr className="mb-3" />
-      <h3 className={styles.headingH3}>Suggested Companies</h3>
+  {showHeading && (
+  <>
+    <hr className="mb-3" />
+    <h3 className={styles.headingH3}>Suggested Companies</h3>
+  </>
+)}
+
 
     <div className={styles.wrapper}>
       {/* <div className={styles.filterContainer}>
@@ -142,15 +152,33 @@ const PortfolioSuggestions = () => {
 
       {/* Cards shown inside fixed-height scrollable container */}
       <div className={styles.cardContainer}>
-        {mockData.map((company, index) => (
+        {companies.map((company, index) => (
           <div key={index} className={styles.card}>
             <h3 className={styles.companyName}>{company.name}</h3>
             <div className={styles.tags}>
-              {company.tags.map((tag, i) => (
-                <span key={i} className={styles.tag}>
-                  {tag}
-                </span>
-              ))}
+             {company.tags && company.tags.length > 0 ? (
+  company.tags.map((tag, i) => (
+    <span key={i} className={styles.tag}>
+      {tag}
+    </span>
+  ))
+) : (
+  <>
+    {company.country && (
+      <span className={styles.tag}>{company.country}</span>
+    )}
+    {company.industry && (
+      <span className={styles.tag}>{company.industry}</span>
+    )}
+    {company.industry1 && (
+      <span className={styles.tag}>{company.industry1}</span>
+    )}
+    {company.industry2 && (
+      <span className={styles.tag}>{company.industry2}</span>
+    )}
+  </>
+)}
+
             </div>
             <p className={styles.innovations}>
               +{company.innovations} recent innovations
@@ -165,7 +193,8 @@ const PortfolioSuggestions = () => {
 
    <button
                             className={styles.viewButton}
-                            onClick={() => goToCompanyPage(item.name)}
+                           onClick={() => goToCompanyPage(company.name)}
+
                           >
                             View
                           </button>

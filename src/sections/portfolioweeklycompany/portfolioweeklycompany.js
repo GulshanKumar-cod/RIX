@@ -4,6 +4,7 @@ import { CompanyCarousel } from "@/components/companycarousel/companycarousel";
 import InsightsView from "@/components/insightsview/insightsview";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import PortfolioSuggestions from "../portfoliosuggestions/portfoliosuggestions";
 
 
 const suggestedCompanies = [
@@ -117,52 +118,64 @@ const suggestedCompanies = [
 
 const sampleData = [
   {
-    companyName: "Tesla",
+    name: "Tesla",
     country: "USA",
     industry1: "EV & Battery Tech",
     industry2: "Autonomous Vehicles",
     technologiesCount: 120,
     topInventor: "Elon Musk",
+     totalDevelopments: 1231,
+      innovations: 53,
   },
   {
-    companyName: "Samsung",
+    name: "Samsung",
     country: "South Korea",
     industry1: "Semiconductors",
     industry2: "Consumer Electronics",
     technologiesCount: 95,
     topInventor: "Kim Min-Soo",
+     totalDevelopments: 2345,
+      innovations: 45,
   },
   {
-    companyName: "Siemens",
+    name: "Siemens",
     country: "Germany",
     industry1: "Industrial Automation",
     industry2: "Energy Tech",
     technologiesCount: 80,
     topInventor: "Johann Bauer",
+     totalDevelopments: 131,
+      innovations: 33,
   },
   {
-    companyName: "Sony",
+    name: "Sony",
     country: "Japan",
     industry1: "Electronics",
     industry2: "Entertainment",
     technologiesCount: 65,
     topInventor: "Hiroshi Tanaka",
+     totalDevelopments: 4051,
+      innovations: 531,
   },
   {
-    companyName: "Nvidia",
+    name: "Nvidia",
     country: "USA",
     industry1: "AI & GPUs",
     industry2: "Autonomous Driving",
     technologiesCount: 110,
     topInventor: "Jensen Huang",
+     totalDevelopments: 11231,
+      innovations: 331,
   },
   {
-    companyName: "Ola Electric",
+    name: "Ola Electric",
     country: "India",
     industry1: "EV Manufacturing",
     industry2: "Mobility Solutions",
     technologiesCount: 40,
     topInventor: "Bhavish Aggarwal",
+     totalDevelopments: 115,
+      innovations: 23,
   },
 ];
 
@@ -408,7 +421,7 @@ const PortfolioWeeklyCompany = () => {
 
       {/* Main Weekly Companies Carousel */}
       <div style={{ marginTop: "0rem", marginBottom: "3rem" }}>
-        <CompanyCarousel data={sampleData} heading="" />
+        <PortfolioSuggestions data={sampleData} showHeading={false} />
       </div>
 
       {/* Insights Popup Modal  */}
