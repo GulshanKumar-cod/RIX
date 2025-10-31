@@ -102,11 +102,12 @@ const PortfolioWeeklyIndustry = ({
   selectedIndustry,
   setSelectedIndustry,
   refreshKey,
-  selectedView,
+  // selectedView,
   displayData = [],
 }) => {
   const [expandedCard, setExpandedCard] = useState([]);
   const [activeTab, setActiveTab] = useState("Overview");
+  const [selectedView, setSelectedView] = useState("ForYou");
   const [increments, setIncrements] = useState({});
   const router = useRouter();
 
@@ -480,7 +481,39 @@ const PortfolioWeeklyIndustry = ({
       )}
 
       {/* 🔁 MAIN PAGE (Industry List) */}
-      {!selectedIndustry && <h3 className={styles.headingH3}>Industry Feed</h3>}
+      {!selectedIndustry &&
+        <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "0rem",
+          flexWrap: "wrap",
+          gap: "0.5rem",
+        }}
+      >
+       <h3 className={styles.headingH3}>Industry Feed</h3>
+        <select
+          id="dataToggle"
+          value={selectedView}
+          onChange={(e) => setSelectedView(e.target.value)}
+          style={{
+            padding: "6px 12px",
+            borderRadius: "6px",
+            border: "1px solid rgba(255, 255, 255, 0.2)",
+            backgroundColor: "#000",
+            color: "#fff",
+            cursor: "pointer",
+            fontSize: "0.8rem",
+          }}
+        >
+          <option value="ForYou">For You</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+      </div>
+
+       }
 
       {!selectedIndustry ? (
         <div className={styles.weeklyGrid}>
