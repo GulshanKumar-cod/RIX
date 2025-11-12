@@ -269,6 +269,27 @@ const PortfolioWeeklyCompany = () => {
     }
   }, [isLoading]);
 
+useEffect(() => {
+  if (suggestedCompanies && suggestedCompanies.length > 0) {
+    const params = new URLSearchParams(window.location.search);
+    const companyName = params.get("insights");
+    if (companyName) {
+      const match = suggestedCompanies.find(
+        (c) => c.name.toLowerCase() === companyName.toLowerCase()
+      );
+      if (match) {
+        setCurrentCompany(match);
+        setShowInsights(true);
+        setIsLoading(true);
+        setProgress(0);
+
+        window.history.replaceState({}, document.title, "/companylist");
+      }
+    }
+  }
+}, [suggestedCompanies]);
+
+
   // Add company to portfolio
   const handleAddCompany = (company) => {
     try {

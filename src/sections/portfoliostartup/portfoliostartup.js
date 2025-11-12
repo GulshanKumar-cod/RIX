@@ -141,7 +141,7 @@ const PortfolioStartup = () => {
                   {c.increment}%
                 </td>
                 <td style={tdStyle}>
-                  <button
+                  <button className={styles.viewButton}
                     onClick={() =>
                       router.push(
                         `https://dyr.incubig.org/company-page/${encodeURIComponent(
@@ -189,6 +189,26 @@ const PortfolioStartup = () => {
           Delete
         </button>
       </div>
+
+<button
+  style={{
+    background: "linear-gradient(90deg, #007bff, #00bfff)",
+    color: "#fff",
+    border: "none",
+    padding: "0.5rem 1.25rem",
+    borderRadius: "8px",
+    fontSize: "0.8rem",
+    fontWeight: 500,
+    cursor: "pointer",
+    width: "100%",
+    // maxWidth: "200px",     
+    display: "block",
+    // margin: "0 auto",       
+  }}
+>
+  1-Click Insight
+</button>
+
     </div>
   );
 };

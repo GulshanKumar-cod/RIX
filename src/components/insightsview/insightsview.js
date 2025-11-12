@@ -72,19 +72,22 @@ const InsightsView = ({ company }) => {
     fetchInsights();
   }, [company]);
 
- const handleShareInsights = async () => {
+ // UPDATED SHARE FUNCTION
+const handleShareInsights = async () => {
   try {
-    const textToShare = `Check out innovation insights for ${company.name} on RIX! 🚀\nVisit: https://rix.incubig.org/companylist`;
+    const shareUrl = `${window.location.origin}/companylist?insights=${encodeURIComponent(company.name)}`;
+    const textToShare = `Check out innovation insights for ${company.name} 🚀`;
+
     const shareData = {
       title: `Insights for ${company.name}`,
       text: textToShare,
-      url: "https://rix.incubig.org/companylist",
+      url: shareUrl,
     };
 
     if (navigator.share) {
       await navigator.share(shareData);
     } else {
-      await navigator.clipboard.writeText(textToShare);
+      await navigator.clipboard.writeText(`${textToShare}: ${shareUrl}`);
       alert("Insights link copied to clipboard 📋");
     }
   } catch (err) {
@@ -92,6 +95,8 @@ const InsightsView = ({ company }) => {
     alert("Unable to share insights.");
   }
 };
+
+
 
 
  const handleDownloadReport = async () => {
