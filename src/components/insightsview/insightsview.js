@@ -34,6 +34,8 @@ const InsightsView = ({ company }) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [apiData, setApiData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [downloading, setDownloading] = useState(false);
+
 
   const colors = ["#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f"];
   const year = new Date().getFullYear();
@@ -70,79 +72,100 @@ const InsightsView = ({ company }) => {
     fetchInsights();
   }, [company]);
 
-  const handleShareInsights = async () => {
-    const textToShare = `Insights for ${company.name}`;
+ const handleShareInsights = async () => {
+  try {
+    const textToShare = `Check out innovation insights for ${company.name} on Incubig! 🚀\nVisit: https://rix.incubig.org/companylist`;
     const shareData = {
       title: `Insights for ${company.name}`,
       text: textToShare,
-      url: window.location.href,
+      url: "https://rix.incubig.org/companylist",
     };
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else {
-        await navigator.clipboard.writeText(textToShare);
-        alert(
-          "Insights copied to clipboard (sharing not supported on this device)."
-        );
-      }
-    } catch (err) {
-      console.error("Error sharing insights:", err);
-      alert("Unable to share insights.");
+
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else {
+      await navigator.clipboard.writeText(textToShare);
+      alert("Insights link copied to clipboard 📋");
     }
-  };
+  } catch (err) {
+    console.error("Error sharing insights:", err);
+    alert("Unable to share insights.");
+  }
+};
 
-  const handleDownloadReport = async () => {
-    try {
-      const insightsElement = document.getElementById("insights-content");
-      if (!insightsElement) {
-        alert("Insights section not found. Please open the insights first.");
-        return;
-      }
-      const iconButtons = insightsElement.querySelector(
-        `.${styles.iconButtons}`
-      );
-      if (iconButtons) iconButtons.style.display = "none";
 
-      await new Promise((r) => setTimeout(r, 100));
+ const handleDownloadReport = async () => {
+  if (downloading) return; // Prevent double clicks
+  setDownloading(true);
 
-      const canvas = await html2canvas(insightsElement, {
-        scale: 2,
-        backgroundColor: "#000",
-        useCORS: true,
-        scrollX: 0,
-        scrollY: -window.scrollY,
-      });
+  try {
+    const insightsElement = document.getElementById("insights-content");
+    if (!insightsElement) {
+      alert("Insights section not found. Please open the insights first.");
+      setDownloading(false);
+      return;
+    }
 
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "pt", "a4");
+    const iconButtons = insightsElement.querySelector(`.${styles.iconButtons}`);
+    if (iconButtons) iconButtons.style.display = "none";
 
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgWidth = pageWidth;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    // Small delay before rendering
+    await new Promise((r) => setTimeout(r, 200));
 
-      let heightLeft = imgHeight;
-      let position = 0;
+    // Show loader
+    const loader = document.createElement("div");
+    loader.className = styles.loaderOverlay;
+    loader.innerHTML = `
+      <div class="${styles.loaderCircle}"></div>
+      <p style="color:white;margin-top:10px;">Preparing your download...</p>
+    `;
+    document.body.appendChild(loader);
 
+    const canvas = await html2canvas(insightsElement, {
+      scale: 2,
+      backgroundColor: "#000",
+      useCORS: true,
+      scrollX: 0,
+      scrollY: -window.scrollY,
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "pt", "a4");
+
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = pageWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+
+    while (heightLeft > 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
       pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
-
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-
-      if (iconButtons) iconButtons.style.display = "flex";
-
-      pdf.save(`${company.name}_Insights_Report.pdf`);
-    } catch (error) {
-      console.error("PDF generation failed:", error);
-      alert("Failed to generate PDF report.");
     }
-  };
+
+    if (iconButtons) iconButtons.style.display = "flex";
+
+    const fileName = `${company.name}_Insights_Report.pdf`;
+    pdf.save(fileName);
+
+    alert(`${fileName} downloaded ✔️`);
+  } catch (error) {
+    console.error("PDF generation failed:", error);
+    alert("Failed to generate PDF report.");
+  } finally {
+    const loader = document.querySelector(`.${styles.loaderOverlay}`);
+    if (loader) loader.remove();
+    setDownloading(false);
+  }
+};
+
 
   if (!company) return null;
   if (loading)
@@ -190,18 +213,27 @@ const InsightsView = ({ company }) => {
         <div className={styles.headerSection}>
           <div className={styles.headerRow}>
             <h3 className={styles.companyName}>{company.name}</h3>
-            <div className={styles.iconButtons}>
-              <Share2 aria-label="Share Insights"
-                title="Share Insights"
-                className={styles.actionIcon}
-                onClick={handleShareInsights}
-              />
-              <Download aria-label="Download Report"
-                title="Download PDF"
-                className={styles.actionIcon}
-                onClick={handleDownloadReport}
-              />
-            </div>
+          <div className={styles.iconButtons}>
+  {downloading ? (
+    <div className={styles.loader}></div>
+  ) : (
+    <>
+      <Share2
+        aria-label="Share Insights"
+        title="Share Insights"
+        className={styles.actionIcon}
+        onClick={handleShareInsights}
+      />
+      <Download
+        aria-label="Download Report"
+        title="Download PDF"
+        className={styles.actionIcon}
+        onClick={handleDownloadReport}
+      />
+    </>
+  )}
+</div>
+
           </div>
           <p className={styles.subtitle}>
             Innovation intelligence — industries, technologies & people.
