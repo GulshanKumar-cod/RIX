@@ -28,14 +28,12 @@ ChartJS.register(
   Filler
 );
 
-
 const InsightsView = ({ company }) => {
   const [tooltip, setTooltip] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [apiData, setApiData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
-
 
   const colors = ["#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f"];
   const year = new Date().getFullYear();
@@ -47,7 +45,9 @@ const InsightsView = ({ company }) => {
       setLoading(true);
       try {
         const response = await fetch(
-          `https://api.incubig.org/analytics/assignee?assignee=${encodeURIComponent(company.name)}`,
+          `https://api.incubig.org/analytics/assignee?assignee=${encodeURIComponent(
+            company.name
+          )}`,
           {
             method: "GET",
             headers: {
@@ -72,36 +72,50 @@ const InsightsView = ({ company }) => {
     fetchInsights();
   }, [company]);
 
- // UPDATED SHARE FUNCTION
-const handleShareInsights = async () => {
-  try {
-    const shareUrl = `${window.location.origin}/companylist?insights=${encodeURIComponent(company.name)}`;
-    const textToShare = `Check out innovation insights for ${company.name} 🚀`;
+  // UPDATED SHARE FUNCTION
+  const handleShareInsights = async () => {
+    try {
+      const shareUrl = `${
+        window.location.origin
+      }/companylist?insights=${encodeURIComponent(company.name)}`;
+      const textToShare = `Check out innovation insights for ${company.name} 🚀`;
 
-    const shareData = {
-      title: `Insights for ${company.name}`,
-      text: textToShare,
-      url: shareUrl,
-    };
+      const shareData = {
+        title: `Insights for ${company.name}`,
+        text: textToShare,
+        url: shareUrl,
+      };
 
-    if (navigator.share) {
-      await navigator.share(shareData);
-    } else {
-      await navigator.clipboard.writeText(`${textToShare}: ${shareUrl}`);
-      alert("Insights link copied to clipboard 📋");
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(`${textToShare}: ${shareUrl}`);
+        alert("Insights link copied to clipboard 📋");
+      }
+    } catch (err) {
+      console.error("Error sharing insights:", err);
+      alert("Unable to share insights.");
     }
-  } catch (err) {
-    console.error("Error sharing insights:", err);
-    alert("Unable to share insights.");
+  };
+
+  const handleDownloadReport = async () => {
+  if (downloading) return; // prevent double-clicks
+
+  const fileName = `${company.name}_Insights_Report.pdf`;
+
+  // ✅ Check if file already exists in localStorage
+  const downloadedFiles =
+    JSON.parse(localStorage.getItem("downloadedInsights")) || [];
+  if (downloadedFiles.includes(fileName)) {
+    alert(`${fileName} is already downloaded ✔️`);
+    return;
   }
-};
 
-
-
-
- const handleDownloadReport = async () => {
-  if (downloading) return; // Prevent double clicks
+  // ✅ Show loader immediately
   setDownloading(true);
+
+  // 🔹 Let React paint the loader first before heavy processing
+  await new Promise((resolve) => setTimeout(resolve, 0));
 
   try {
     const insightsElement = document.getElementById("insights-content");
@@ -111,30 +125,21 @@ const handleShareInsights = async () => {
       return;
     }
 
+    // Temporarily hide action buttons while capturing
     const iconButtons = insightsElement.querySelector(`.${styles.iconButtons}`);
-    if (iconButtons) iconButtons.style.display = "none";
+    if (iconButtons) iconButtons.style.visibility = "hidden";
 
-    // Small delay before rendering
-    await new Promise((r) => setTimeout(r, 200));
-
-    // Show loader
-    const loader = document.createElement("div");
-    loader.className = styles.loaderOverlay;
-    loader.innerHTML = `
-      <div class="${styles.loaderCircle}"></div>
-      <p style="color:white;margin-top:10px;">Preparing your download...</p>
-    `;
-    document.body.appendChild(loader);
-
+    // Capture screenshot of insights section
     const canvas = await html2canvas(insightsElement, {
-      scale: 2,
+      scale: 1.5,
       backgroundColor: "#000",
       useCORS: true,
       scrollX: 0,
       scrollY: -window.scrollY,
     });
 
-    const imgData = canvas.toDataURL("image/png");
+    // 🧩 Compress image quality to reduce file size
+    const imgData = canvas.toDataURL("image/jpeg", 0.6);
     const pdf = new jsPDF("p", "pt", "a4");
 
     const pageWidth = pdf.internal.pageSize.getWidth();
@@ -145,38 +150,42 @@ const handleShareInsights = async () => {
     let heightLeft = imgHeight;
     let position = 0;
 
-    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
     heightLeft -= pageHeight;
 
     while (heightLeft > 0) {
       position = heightLeft - imgHeight;
       pdf.addPage();
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
     }
 
-    if (iconButtons) iconButtons.style.display = "flex";
+    if (iconButtons) iconButtons.style.visibility = "visible";
 
-    const fileName = `${company.name}_Insights_Report.pdf`;
     pdf.save(fileName);
 
-    alert(`${fileName} downloaded ✔️`);
+    // ✅ Mark as downloaded
+    downloadedFiles.push(fileName);
+    localStorage.setItem("downloadedInsights", JSON.stringify(downloadedFiles));
+
+    alert(`${fileName} downloaded successfully ✔️`);
   } catch (error) {
     console.error("PDF generation failed:", error);
-    alert("Failed to generate PDF report.");
+    alert("Failed to generate PDF report ❌");
   } finally {
-    const loader = document.querySelector(`.${styles.loaderOverlay}`);
-    if (loader) loader.remove();
     setDownloading(false);
   }
 };
 
 
   if (!company) return null;
-  if (loading)
-    return <p className={styles.loadingText}>Loading Insights...</p>;
+  if (loading) return <p className={styles.loadingText}>Loading Insights...</p>;
   if (!apiData)
-    return <p className={styles.loadingText}>No insights available for this company.</p>;
+    return (
+      <p className={styles.loadingText}>
+        No insights available for this company.
+      </p>
+    );
 
   const summary = apiData.summary || {};
   const industries = apiData.top_industries || [];
@@ -187,10 +196,9 @@ const handleShareInsights = async () => {
   const industryData = industries.map((ind, idx) => ({
     rank: idx + 1,
     name: ind.industry,
-    percentage: (
-      (ind.count / (apiData.total_applications || 1)) *
-      100
-    ).toFixed(1),
+    percentage: ((ind.count / (apiData.total_applications || 1)) * 100).toFixed(
+      1
+    ),
   }));
 
   const lastFiveYears = trends.slice(-5);
@@ -220,7 +228,7 @@ const handleShareInsights = async () => {
             <h3 className={styles.companyName}>{company.name}</h3>
           <div className={styles.iconButtons}>
   {downloading ? (
-    <div className={styles.loader}></div>
+    <div className={styles.downloadLoader} title="Preparing PDF..."></div>
   ) : (
     <>
       <Share2
@@ -246,22 +254,24 @@ const handleShareInsights = async () => {
         </div>
 
         {/* ===== Executive Summary ===== */}
-      <h3 className={styles.sectionTitle}>Executive Summary</h3>
-<p className={styles.summaryText}>
-  {company.name} recorded{" "}
-  {summary.applications?.toLocaleString() || "—"} patent filings,
-  contributed by{" "}
-  {apiData.inventor_analysis?.total_inventors?.toLocaleString() || "—"}{" "}
-  inventors across {summary.industries || "—"} industries and{" "}
-  {summary.technologies || "—"} technology areas. 
-  Innovation activity shows steady year-over-year trends, with key
-  concentrations in {industryData[0]?.name} and growing focus in{" "}
-  {industryData[1]?.name}. Emerging technologies such as{" "}
-  {techList.slice(0, 3).map((t) => t.name).join(", ") || "—"} are shaping
-  the current development landscape, while top innovators continue to drive
-  contributions across multiple domains.
-</p>
-
+        <h3 className={styles.sectionTitle}>Executive Summary</h3>
+        <p className={styles.summaryText}>
+          {company.name} recorded{" "}
+          {summary.applications?.toLocaleString() || "—"} patent filings,
+          contributed by{" "}
+          {apiData.inventor_analysis?.total_inventors?.toLocaleString() || "—"}{" "}
+          inventors across {summary.industries || "—"} industries and{" "}
+          {summary.technologies || "—"} technology areas. Innovation activity
+          shows steady year-over-year trends, with key concentrations in{" "}
+          {industryData[0]?.name} and growing focus in {industryData[1]?.name}.
+          Emerging technologies such as{" "}
+          {techList
+            .slice(0, 3)
+            .map((t) => t.name)
+            .join(", ") || "—"}{" "}
+          are shaping the current development landscape, while top innovators
+          continue to drive contributions across multiple domains.
+        </p>
 
         {/* ===== Stats Section ===== */}
         <section className={styles.statsSection}>
@@ -269,7 +279,8 @@ const handleShareInsights = async () => {
             ["Innovations", summary.applications?.toLocaleString() || "—"],
             [
               "Inventors",
-              apiData.inventor_analysis?.total_inventors?.toLocaleString() || "—",
+              apiData.inventor_analysis?.total_inventors?.toLocaleString() ||
+                "—",
             ],
             ["Industries", summary.industries || "—"],
             ["Technologies", summary.technologies || "—"],
@@ -282,78 +293,77 @@ const handleShareInsights = async () => {
         </section>
 
         {/* ===== Innovation Trends ===== */}
-      <h3 className={styles.sectionTitle}>Innovation Trends</h3>
-<div className={styles.chartWrapper}>
-  <Line
-    data={{
-      labels: trendPoints.map((p) => p.year),
-      datasets: [
-        {
-          label: "YoY Innovation Activity",
-          data: trendPoints.map((p) => p.count),
-          borderColor: "#00bfff",
-          backgroundColor: "rgba(0, 191, 255, 0.2)",
-          fill: false,
-          tension: 0.3,
-          pointRadius: 4,
-          pointHoverRadius: 5,
-          pointBackgroundColor: "#007bff",
-          pointBorderColor: "#fff",
-        },
-      ],
-    }}
-    options={{
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-         x: {
-      grid: { color: "rgba(255,255,255,0.1)" },
-      ticks: {
-        color: "#aaa",
-        font: {
-          size: 12, 
-        },
-      },
-    },
-        y: {
-      beginAtZero: true,
-      grid: { color: "rgba(255,255,255,0.1)" },
-      ticks: {
-        color: "#aaa",
-        font: {
-          size: 12, 
-        },
-        callback: (val) => `${val}`,
-      },
-    },
-      },
-      plugins: {
-        legend: {
-          display: false,
-        },
-        tooltip: {
-          callbacks: {
-            label: (context) => `${context.raw} Published`,
-          },
-        },
-      },
-    }}
-  />
+        <h3 className={styles.sectionTitle}>Innovation Trends</h3>
+        <div className={styles.chartWrapper}>
+          <Line
+            data={{
+              labels: trendPoints.map((p) => p.year),
+              datasets: [
+                {
+                  label: "YoY Innovation Activity",
+                  data: trendPoints.map((p) => p.count),
+                  borderColor: "#00bfff",
+                  backgroundColor: "rgba(0, 191, 255, 0.2)",
+                  fill: false,
+                  tension: 0.3,
+                  pointRadius: 4,
+                  pointHoverRadius: 5,
+                  pointBackgroundColor: "#007bff",
+                  pointBorderColor: "#fff",
+                },
+              ],
+            }}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x: {
+                  grid: { color: "rgba(255,255,255,0.1)" },
+                  ticks: {
+                    color: "#aaa",
+                    font: {
+                      size: 12,
+                    },
+                  },
+                },
+                y: {
+                  beginAtZero: true,
+                  grid: { color: "rgba(255,255,255,0.1)" },
+                  ticks: {
+                    color: "#aaa",
+                    font: {
+                      size: 12,
+                    },
+                    callback: (val) => `${val}`,
+                  },
+                },
+              },
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                tooltip: {
+                  callbacks: {
+                    label: (context) => `${context.raw} Published`,
+                  },
+                },
+              },
+            }}
+          />
 
-  {/* Label below chart */}
-  <div
-    style={{
-      marginTop: "10px",
-      textAlign: "center",
-      color: "#fff",
-      fontSize: "11px",
-      fontWeight: 500,
-    }}
-  >
-    YoY Innovation Activity
-  </div>
-</div>
-
+          {/* Label below chart */}
+          <div
+            style={{
+              marginTop: "10px",
+              textAlign: "center",
+              color: "#fff",
+              fontSize: "11px",
+              fontWeight: 500,
+            }}
+          >
+            YoY Innovation Activity
+          </div>
+        </div>
 
         {/* ===== Extra Stat Cards Below Chart ===== */}
         {/* <div className={styles.extraStatsSection}>
@@ -374,41 +384,42 @@ const handleShareInsights = async () => {
         {/* ===== Industry Distribution Section ===== */}
         <h3 className={styles.sectionTitle}>Industry Distribution</h3>
         <div className={styles.industrySection}>
-         <div className={styles.pieChartWrapper}>
-  <Pie
-    data={{
-      labels: industryData.map((item) => item.name),
-      datasets: [
-        {
-          label: "Industry Distribution",
-          data: industryData.map((item) => parseFloat(item.percentage)),
-          backgroundColor: colors,
-          borderColor: "#000", // keeps consistent dark theme
-          borderWidth: 0,
-        },
-      ],
-    }}
-    options={{
-      responsive: true,
-      plugins: {
-        legend: {
-          display: false, // we'll use your custom legend below
-        },
-        tooltip: {
-          enabled: true,
-          callbacks: {
-            label: (context) =>
-              `${context.label}: ${context.formattedValue}%`,
-          },
-        },
-      },
-      layout: {
-        padding: 0,
-      },
-    }}
-  />
-</div>
-
+          <div className={styles.pieChartWrapper}>
+            <Pie
+              data={{
+                labels: industryData.map((item) => item.name),
+                datasets: [
+                  {
+                    label: "Industry Distribution",
+                    data: industryData.map((item) =>
+                      parseFloat(item.percentage)
+                    ),
+                    backgroundColor: colors,
+                    borderColor: "#000", // keeps consistent dark theme
+                    borderWidth: 0,
+                  },
+                ],
+              }}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    display: false, // we'll use your custom legend below
+                  },
+                  tooltip: {
+                    enabled: true,
+                    callbacks: {
+                      label: (context) =>
+                        `${context.label}: ${context.formattedValue}%`,
+                    },
+                  },
+                },
+                layout: {
+                  padding: 0,
+                },
+              }}
+            />
+          </div>
 
           <div className={styles.legendWrapper}>
             {industryData.map((item, i) => (
@@ -456,7 +467,7 @@ const handleShareInsights = async () => {
         </p>
 
         {/* ===== Technologies Developed Section ===== */}
-       {techList.length > 0 && (
+        {techList.length > 0 && (
           <>
             <h3 className={styles.sectionTitle}>Technologies Developed</h3>
             <div className={styles.techSection}>
@@ -473,9 +484,7 @@ const handleShareInsights = async () => {
                     </span>
                   </div>
                   {tech.description && (
-                    <p className={styles.techDescription}>
-                      {tech.description}
-                    </p>
+                    <p className={styles.techDescription}>{tech.description}</p>
                   )}
                   <p className={styles.techPatents}>
                     {tech.patents.toLocaleString()} patents
@@ -499,8 +508,9 @@ const handleShareInsights = async () => {
                 .slice(0, 1)
                 .join(", ");
               const summaryText = `
-                Emerging focus areas include ${topTechs ||
-                  "next-gen innovation clusters"}.
+                Emerging focus areas include ${
+                  topTechs || "next-gen innovation clusters"
+                }.
                 Several previously dominant areas like ${
                   decliningTechs || "traditional hardware"
                 } show stabilization, while ${
@@ -538,9 +548,7 @@ const handleShareInsights = async () => {
                     <tr key={i}>
                       <td className={styles.personName}>{p.name}</td>
                       <td className={styles.personFocus}>{p.focus}</td>
-                      <td className={styles.personPatents}>
-                        {p.patents}
-                      </td>
+                      <td className={styles.personPatents}>{p.patents}</td>
                     </tr>
                   ))}
                 </tbody>
