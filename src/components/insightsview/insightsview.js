@@ -246,14 +246,22 @@ const handleShareInsights = async () => {
         </div>
 
         {/* ===== Executive Summary ===== */}
-        <h3 className={styles.sectionTitle}>Executive Summary</h3>
-        <p className={styles.summaryText}>
-          {company.name} remains a top global innovator with a strong inventor
-          base. Over the last year, it filed{" "}
-          {summary.applications?.toLocaleString() || "—"} patent applications
-          across {summary.industries || "—"} industries and{" "}
-          {summary.technologies || "—"} technologies.
-        </p>
+      <h3 className={styles.sectionTitle}>Executive Summary</h3>
+<p className={styles.summaryText}>
+  {company.name} recorded{" "}
+  {summary.applications?.toLocaleString() || "—"} patent filings,
+  contributed by{" "}
+  {apiData.inventor_analysis?.total_inventors?.toLocaleString() || "—"}{" "}
+  inventors across {summary.industries || "—"} industries and{" "}
+  {summary.technologies || "—"} technology areas. 
+  Innovation activity shows steady year-over-year trends, with key
+  concentrations in {industryData[0]?.name} and growing focus in{" "}
+  {industryData[1]?.name}. Emerging technologies such as{" "}
+  {techList.slice(0, 3).map((t) => t.name).join(", ") || "—"} are shaping
+  the current development landscape, while top innovators continue to drive
+  contributions across multiple domains.
+</p>
+
 
         {/* ===== Stats Section ===== */}
         <section className={styles.statsSection}>

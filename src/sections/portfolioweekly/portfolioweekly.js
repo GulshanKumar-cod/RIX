@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PortfolioWeeklyIndustry from '../portfolioweeklyindustry/portfolioweeklyindustry';
 import PortfolioWeeklyTechnologies from '../portfolioweeklytechnologies/portfolioweeklytechnologies';
 import styles from "../companylist/companylist.module.css";
@@ -9,6 +9,14 @@ import PortfolioWeeklyCompany from '../portfolioweeklycompany/portfolioweeklycom
 const PortfolioWeekly = () => {
   const [activeTab, setActiveTab] = useState('industry');
   const [selectedIndustry, setSelectedIndustry] = useState(null);
+
+  useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  const sharedCompany = params.get("insights");
+  if (sharedCompany) {
+    setActiveTab("company"); 
+  }
+}, []);
 
   const renderTabContent = () => {
     switch (activeTab) {
