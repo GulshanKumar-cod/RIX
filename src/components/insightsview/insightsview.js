@@ -74,7 +74,7 @@ const InsightsView = ({ company }) => {
 
  const handleShareInsights = async () => {
   try {
-    const textToShare = `Check out innovation insights for ${company.name} on Incubig! 🚀\nVisit: https://rix.incubig.org/companylist`;
+    const textToShare = `Check out innovation insights for ${company.name} on RIX! 🚀\nVisit: https://rix.incubig.org/companylist`;
     const shareData = {
       title: `Insights for ${company.name}`,
       text: textToShare,
