@@ -97,6 +97,27 @@ margin-top: 2rem;
   margin-bottom: 2rem;
 }
 
+.summaryContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; 
+  margin-bottom: 2rem;
+}
+
+.summaryParagraph {
+  color: #ddd;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  /* text-align: justify; */
+   font-family: DM Sans, sans-serif;
+}
+
+.summaryParagraph strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+
 .statsSection{
   display: flex;
   gap: 1rem;

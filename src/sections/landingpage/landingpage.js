@@ -11,18 +11,17 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className={styles.heroSection}>
         <div className={styles.tagline}>
-          ✨ The Future of Research Intelligence
+          ✨ The Future of Research
         </div>
 
         <h1 className={styles.title}>
-          <span className={styles.lineGray}>Navigate Innovation.</span> <br />
-          <span className={styles.gradientText}>Discover Your Edge.</span>
+          <span className={styles.lineGray}>Billions of data points.</span> <br />
+          <span className={styles.gradientText}>One click.</span> <br/>
+          <span className={styles.gradientText}>Instant intelligence.</span>
         </h1>
 
         <p className={styles.subtitle}>
-          RIX is the premier platform for uncovering deep insights into
-          companies, technologies, and market trends to fuel your strategic
-          growth.
+          Whether you’re exploring ideas, technologies, or industries — or driving innovation — RIX gives you instant access to global research intelligence.
         </p>
 
         <div className={styles.actions}>

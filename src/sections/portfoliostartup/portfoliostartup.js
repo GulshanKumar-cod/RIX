@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "../companylist/companylist.module.css";
+import { Plus, Trash2 } from 'lucide-react';
 
 const PortfolioStartup = () => {
   const [companies, setCompanies] = useState([]);
@@ -89,7 +90,50 @@ const PortfolioStartup = () => {
     <div style={{ color: "#fff" }}>
       <hr className="mb-3" />
 
-      <h3 className={styles.headingH3}>Your Portfolio</h3>
+    <div className={styles.headerContainer}>
+  <h3 className={styles.headingH3}>Your Portfolio</h3>
+
+  <div className={styles.startupButtons}>
+    <button
+      onClick={() => router.push("/companylist?tab=search")}
+      title="Add More"
+      style={{
+        backgroundColor: "#0070f3",
+        border: "none",
+        borderRadius: "8px",
+        color: "#fff",
+        cursor: "pointer",
+        padding: "6px 12px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Plus size={20} />
+    </button>
+
+    <button
+      onClick={handleDelete}
+      title="Delete"
+      disabled={selectedCompanies.length === 0}
+      style={{
+        backgroundColor: "#e00",
+        border: "none",
+        borderRadius: "8px",
+        color: "#fff",
+        cursor: selectedCompanies.length === 0 ? "not-allowed" : "pointer",
+        padding: "6px 12px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        marginLeft: "8px",
+      }}
+    >
+      <Trash2 size={20} />
+    </button>
+  </div>
+</div>
+
 
       {/* Company Table */}
       <div style={{ overflowX: "auto" }}>
@@ -159,36 +203,7 @@ const PortfolioStartup = () => {
         </table>
       </div>
 
-      {/* Action Buttons */}
-      
-      <div className={styles.startupButtons}>
-        <button
-          onClick={() => router.push("/companylist?tab=search")}
-          style={{
-            backgroundColor: "#0070f3",
-            border: "none",
-            borderRadius: "8px",
-            color: "#fff",
-            cursor: "pointer",
-          }}
-        >
-          + Add More
-        </button>
-
-        <button
-          onClick={handleDelete}
-          disabled={selectedCompanies.length === 0}
-          style={{
-            backgroundColor: "#e00",
-            border: "none",
-            borderRadius: "8px",
-            color: "#fff",
-            cursor: selectedCompanies.length === 0 ? "not-allowed" : "pointer",
-          }}
-        >
-          Delete
-        </button>
-      </div>
+    
 
 <button
   style={{
@@ -203,7 +218,9 @@ const PortfolioStartup = () => {
     width: "100%",
     // maxWidth: "200px",     
     display: "block",
-    // margin: "0 auto",       
+    // margin: "0 auto", 
+    marginBottom: "5rem",    
+    marginTop: "1rem",  
   }}
 >
   1-Click Insight

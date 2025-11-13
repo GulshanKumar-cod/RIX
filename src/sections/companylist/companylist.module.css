@@ -3,7 +3,7 @@
   flex-direction: column;
   min-height: 100vh;
   background-color: #0a0a0a;
-  font-family: "Manrope", sans-serif;
+  font-family: DM Sans, sans-serif;
   color: #fff;
   margin: 0;
   padding: 0;
@@ -1208,13 +1208,22 @@ margin-top: 30px;
 }
 
 /* Portfolio Startup  */
+
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  margin-bottom: 1rem;
+}
+
 .startupButtons{
-   margin-bottom: 1rem;
-          display: flex;
-          gap: 10px;
-          justify-content: flex-end;
-          flex-wrap: wrap;
-          margin-top: 2rem;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+  /* flex-wrap: wrap;
+  margin-bottom: 1rem;
+          margin-top: 2rem; */
 }
 
  .startupButtons button {
@@ -1230,14 +1239,14 @@ margin-top: 30px;
   .startupButtons {
     /* margin-bottom: 5rem; */
           display: flex;
-          gap: 10px;
+          gap: 0px;
           justify-content: flex-end;
-          flex-wrap: wrap;
+          /* flex-wrap: wrap; */
   }
 
   .startupButtons button {
-    flex: 1 1 50px;
-            min-width: 120px;
+    /* flex: 1 1 50px;
+            min-width: 120px; */
             font-size: 0.8rem;
   }
 }

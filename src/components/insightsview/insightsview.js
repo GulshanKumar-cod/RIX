@@ -28,7 +28,7 @@ ChartJS.register(
   Filler
 );
 
-const InsightsView = ({ company }) => {
+const InsightsView = ({ company, prefetchedData }) => {
   const [tooltip, setTooltip] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [apiData, setApiData] = useState(null);
@@ -38,39 +38,42 @@ const InsightsView = ({ company }) => {
   const colors = ["#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f"];
   const year = new Date().getFullYear();
 
-  useEffect(() => {
-    if (!company?.name) return;
+ useEffect(() => {
+  if (!company?.name) return;
 
-    const fetchInsights = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `https://api.incubig.org/analytics/assignee?assignee=${encodeURIComponent(
-            company.name
-          )}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "x-api-key":
-                "60PKCZgn3smuESHN9e8vbVHxiXVS/8H+vXeFC4ruW1d0YAc1UczQlTQ/C2JlnwlEOKjtnLB0N2I0oheAHJGZeB2bVURMQRC1GvM0k45kyrSmiK98bPPlJPu8q1N/TlK4",
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error(`API request failed: ${response.status}`);
-        }
-        const data = await response.json();
-        setApiData(data);
-      } catch (error) {
-        console.error("Error fetching insights data:", error);
-      } finally {
-        setLoading(false);
+  const fetchInsights = async () => {
+    setLoading(true);
+    try {
+      if (prefetchedData) {
+        // ✅ Use prefetched data instantly
+        setApiData(prefetchedData);
+        return;
       }
-    };
 
-    fetchInsights();
-  }, [company]);
+      const response = await fetch(
+        `https://api.incubig.org/analytics/assignee?assignee=${encodeURIComponent(company.name)}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key":
+              "60PKCZgn3smuESHN9e8vbVHxiXVS/8H+vXeFC4ruW1d0YAc1UczQlTQ/C2JlnwlEOKjtnLB0N2I0oheAHJGZeB2bVURMQRC1GvM0k45kyrSmiK98bPPlJPu8q1N/TlK4",
+          },
+        }
+      );
+      if (!response.ok) throw new Error(`API request failed: ${response.status}`);
+      const data = await response.json();
+      setApiData(data);
+    } catch (error) {
+      console.error("Error fetching insights data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchInsights();
+}, [company, prefetchedData]);
+
 
   // UPDATED SHARE FUNCTION
   const handleShareInsights = async () => {
@@ -78,7 +81,9 @@ const InsightsView = ({ company }) => {
       const shareUrl = `${
         window.location.origin
       }/companylist?insights=${encodeURIComponent(company.name)}`;
-      const textToShare = `Check out innovation insights for ${company.name} 🚀`;
+      const textToShare = `Generated this Innovation Intelligence Report on RIX – Incubig — one click, and it pulled incredible insights.
+Really impressive.
+ ${company.name} 🚀`;
 
       const shareData = {
         title: `Insights for ${company.name}`,
@@ -99,87 +104,91 @@ const InsightsView = ({ company }) => {
   };
 
   const handleDownloadReport = async () => {
-  if (downloading) return; // prevent double-clicks
+    if (downloading) return; // prevent double-clicks
 
-  const fileName = `${company.name}_Insights_Report.pdf`;
+    const fileName = `${company.name}_Insights_Report.pdf`;
 
-  // ✅ Check if file already exists in localStorage
-  const downloadedFiles =
-    JSON.parse(localStorage.getItem("downloadedInsights")) || [];
-  if (downloadedFiles.includes(fileName)) {
-    alert(`${fileName} is already downloaded ✔️`);
-    return;
-  }
-
-  // ✅ Show loader immediately
-  setDownloading(true);
-
-  // 🔹 Let React paint the loader first before heavy processing
-  await new Promise((resolve) => setTimeout(resolve, 0));
-
-  try {
-    const insightsElement = document.getElementById("insights-content");
-    if (!insightsElement) {
-      alert("Insights section not found. Please open the insights first.");
-      setDownloading(false);
+    // Check if file already exists in localStorage
+    const downloadedFiles =
+      JSON.parse(localStorage.getItem("downloadedInsights")) || [];
+    if (downloadedFiles.includes(fileName)) {
+      alert(`${fileName} is already downloaded ✔️`);
       return;
     }
 
-    // Temporarily hide action buttons while capturing
-    const iconButtons = insightsElement.querySelector(`.${styles.iconButtons}`);
-    if (iconButtons) iconButtons.style.visibility = "hidden";
+    // Show loader immediately
+    setDownloading(true);
 
-    // Capture screenshot of insights section
-    const canvas = await html2canvas(insightsElement, {
-      scale: 1.5,
-      backgroundColor: "#000",
-      useCORS: true,
-      scrollX: 0,
-      scrollY: -window.scrollY,
-    });
+    // Let React paint the loader first before heavy processing
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
-    // 🧩 Compress image quality to reduce file size
-    const imgData = canvas.toDataURL("image/jpeg", 0.6);
-    const pdf = new jsPDF("p", "pt", "a4");
+    try {
+      const insightsElement = document.getElementById("insights-content");
+      if (!insightsElement) {
+        alert("Insights section not found. Please open the insights first.");
+        setDownloading(false);
+        return;
+      }
 
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      // Temporarily hide action buttons while capturing
+      const iconButtons = insightsElement.querySelector(
+        `.${styles.iconButtons}`
+      );
+      if (iconButtons) iconButtons.style.visibility = "hidden";
 
-    let heightLeft = imgHeight;
-    let position = 0;
+      // Capture screenshot of insights section
+      const canvas = await html2canvas(insightsElement, {
+        scale: 1.5,
+        backgroundColor: "#000",
+        useCORS: true,
+        scrollX: 0,
+        scrollY: -window.scrollY,
+      });
 
-    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
+      //  Compress image quality to reduce file size
+      const imgData = canvas.toDataURL("image/jpeg", 0.6);
+      const pdf = new jsPDF("p", "pt", "a4");
 
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 0;
+
       pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      if (iconButtons) iconButtons.style.visibility = "visible";
+
+      pdf.save(fileName);
+
+      // Mark as downloaded
+      downloadedFiles.push(fileName);
+      localStorage.setItem(
+        "downloadedInsights",
+        JSON.stringify(downloadedFiles)
+      );
+
+      alert(`${fileName} downloaded successfully ✔️`);
+    } catch (error) {
+      console.error("PDF generation failed:", error);
+      alert("Failed to generate PDF report ❌");
+    } finally {
+      setDownloading(false);
     }
-
-    if (iconButtons) iconButtons.style.visibility = "visible";
-
-    pdf.save(fileName);
-
-    // ✅ Mark as downloaded
-    downloadedFiles.push(fileName);
-    localStorage.setItem("downloadedInsights", JSON.stringify(downloadedFiles));
-
-    alert(`${fileName} downloaded successfully ✔️`);
-  } catch (error) {
-    console.error("PDF generation failed:", error);
-    alert("Failed to generate PDF report ❌");
-  } finally {
-    setDownloading(false);
-  }
-};
-
+  };
 
   if (!company) return null;
-  if (loading) return <p className={styles.loadingText}>Loading Insights...</p>;
+  if (loading) return <p className={styles.loadingText}></p>;
   if (!apiData)
     return (
       <p className={styles.loadingText}>
@@ -226,27 +235,29 @@ const InsightsView = ({ company }) => {
         <div className={styles.headerSection}>
           <div className={styles.headerRow}>
             <h3 className={styles.companyName}>{company.name}</h3>
-          <div className={styles.iconButtons}>
-  {downloading ? (
-    <div className={styles.downloadLoader} title="Preparing PDF..."></div>
-  ) : (
-    <>
-      <Share2
-        aria-label="Share Insights"
-        title="Share Insights"
-        className={styles.actionIcon}
-        onClick={handleShareInsights}
-      />
-      <Download
-        aria-label="Download Report"
-        title="Download PDF"
-        className={styles.actionIcon}
-        onClick={handleDownloadReport}
-      />
-    </>
-  )}
-</div>
-
+            <div className={styles.iconButtons}>
+              {downloading ? (
+                <div
+                  className={styles.downloadLoader}
+                  title="Preparing PDF..."
+                ></div>
+              ) : (
+                <>
+                  <Share2
+                    aria-label="Share Insights"
+                    title="Share Insights"
+                    className={styles.actionIcon}
+                    onClick={handleShareInsights}
+                  />
+                  <Download
+                    aria-label="Download Report"
+                    title="Download PDF"
+                    className={styles.actionIcon}
+                    onClick={handleDownloadReport}
+                  />
+                </>
+              )}
+            </div>
           </div>
           <p className={styles.subtitle}>
             Innovation intelligence — industries, technologies & people.
@@ -255,23 +266,95 @@ const InsightsView = ({ company }) => {
 
         {/* ===== Executive Summary ===== */}
         <h3 className={styles.sectionTitle}>Executive Summary</h3>
-        <p className={styles.summaryText}>
-          {company.name} recorded{" "}
-          {summary.applications?.toLocaleString() || "—"} patent filings,
-          contributed by{" "}
-          {apiData.inventor_analysis?.total_inventors?.toLocaleString() || "—"}{" "}
-          inventors across {summary.industries || "—"} industries and{" "}
-          {summary.technologies || "—"} technology areas. Innovation activity
-          shows steady year-over-year trends, with key concentrations in{" "}
-          {industryData[0]?.name} and growing focus in {industryData[1]?.name}.
-          Emerging technologies such as{" "}
-          {techList
-            .slice(0, 3)
-            .map((t) => t.name)
-            .join(", ") || "—"}{" "}
-          are shaping the current development landscape, while top innovators
-          continue to drive contributions across multiple domains.
-        </p>
+        <div className={styles.summaryContainer}>
+          {/* 1️⃣ General Stats Paragraph */}
+          <p className={styles.summaryParagraph}>
+            {company.name} has recorded a total of{" "}
+            <strong>{summary.applications?.toLocaleString() || "—"}</strong>{" "}
+            innovations, contributed by{" "}
+            <strong>
+              {" "}
+              {apiData.inventor_analysis?.total_inventors?.toLocaleString() ||
+                "—"}
+            </strong>{" "}
+            inventors. These innovations span across{" "}
+            <strong>{summary.industries || "—"}</strong> industries and{" "}
+            <strong>{summary.technologies || "—"}</strong> technology domains.
+          </p>
+
+          {/* 2️⃣ Innovation Trends Paragraph */}
+          {trendPoints.length > 0 &&
+            (() => {
+              const peak = trendPoints.reduce(
+                (max, t) => (t.count > max.count ? t : max),
+                trendPoints[0]
+              );
+              const firstYear = trendPoints[0]?.year;
+              const lastYear = trendPoints[trendPoints.length - 1]?.year;
+              const change = (
+                ((trendPoints[trendPoints.length - 1].count -
+                  trendPoints[0].count) /
+                  (trendPoints[0].count || 1)) *
+                100
+              ).toFixed(1);
+              return (
+                <p className={styles.summaryParagraph}>
+                  Innovation activity peaked in <strong>{peak.year}</strong>{" "}
+                  with <strong>{peak.count.toLocaleString()}</strong> filings.
+                  From <strong>{firstYear}</strong> to{" "}
+                  <strong>{lastYear}</strong>, innovation volume has shown a{" "}
+                  <strong>
+                    {change > 0
+                      ? `growth of ${change}%`
+                      : `decline of ${Math.abs(change)}%`}
+                  </strong>
+                  , indicating {change > 0 ? "an accelerating" : "a moderating"}{" "}
+                  trend in R&D engagement.
+                </p>
+              );
+            })()}
+
+          {/* 3️⃣ Industry Distribution Paragraph */}
+          {industryData.length > 0 && (
+            <p className={styles.summaryParagraph}>
+              Industry-wise, {company.name} shows the highest innovation
+              concentration in <strong>{industryData[0]?.name}</strong>,
+              accounting for <strong>{industryData[0]?.percentage}%</strong> of
+              total activity. The second-largest share is in{" "}
+              <strong>{industryData[1]?.name}</strong>, representing{" "}
+              <strong>{industryData[1]?.percentage}%</strong>. Together, these
+              sectors define the company’s core innovation footprint.
+            </p>
+          )}
+
+          {/* 4️⃣ Technologies Paragraph */}
+          {techList.length > 0 && (
+            <p className={styles.summaryParagraph}>
+              Technologically, the company’s major focus areas include{" "}
+              <strong>{techList[0]?.name}</strong> and{" "}
+              <strong>{techList[1]?.name}</strong>. These domains represent
+              emerging opportunities with measurable growth, reflecting the
+              company’s commitment to forward-looking innovation pathways.
+            </p>
+          )}
+
+          {/* 5️⃣ Innovators Paragraph (now includes top 2 names) */}
+          {peopleList.length > 0 &&
+            (() => {
+              const top1 = peopleList[0]?.name;
+              const top2 = peopleList[1]?.name;
+              return (
+                <p className={styles.summaryParagraph}>
+                  The innovation landscape is powered by a strong team of
+                  inventors, with <strong>{peopleList.length}</strong> key
+                  contributors driving the majority of filings. Leading
+                  contributors such as <strong>{top1}</strong> and{" "}
+                  <strong>{top2}</strong> exemplify the company’s diverse
+                  expertise.
+                </p>
+              );
+            })()}
+        </div>
 
         {/* ===== Stats Section ===== */}
         <section className={styles.statsSection}>
@@ -441,7 +524,7 @@ const InsightsView = ({ company }) => {
                 <tr>
                   <th>Rank</th>
                   <th>Industry</th>
-                  <th>Patent Share (%)</th>
+                  <th>Innovation Share (%)</th>
                 </tr>
               </thead>
               <tbody>
@@ -460,8 +543,8 @@ const InsightsView = ({ company }) => {
         {/* ===== Summary Paragraph ===== */}
         <p className={styles.summaryText}>
           {company.name} demonstrates a well-diversified innovation strategy,
-          with significant patent concentration in {industryData[0]?.name} and
-          emerging interest in {industryData[1]?.name}. This balance across
+          with significant innovation concentration in {industryData[0]?.name}{" "}
+          and emerging interest in {industryData[1]?.name}. This balance across
           sectors reflects a proactive approach toward future technologies and
           market adaptability.
         </p>
@@ -487,7 +570,7 @@ const InsightsView = ({ company }) => {
                     <p className={styles.techDescription}>{tech.description}</p>
                   )}
                   <p className={styles.techPatents}>
-                    {tech.patents.toLocaleString()} patents
+                    {tech.patents.toLocaleString()} innovations
                   </p>
                 </div>
               ))}

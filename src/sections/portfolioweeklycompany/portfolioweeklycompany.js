@@ -93,6 +93,22 @@ const suggestedCompanies = [
     ],
   },
   {
+ name: "Nvidia corporation",
+    industry: "Computational Technology",
+    country: "USA",
+    patents: 2357,
+    industries: 23,
+    technologies: 571,
+    inventors: 2696,
+    change: "+20%",
+    technologiesDeveloped: [
+      { name: "Graphical or visual programming", patents: 1799, change: "+7%", trend: "up" },
+      { name: "Key distribution or management, e.g. generation, sharing or updating, of cryptographic keys or passwords", patents: 393, change: "+6%", trend: "up" },
+      { name: "Navigation", patents: 97, change: "-4%", trend: "down" },
+      { name: "Related to drivers or passengers", patents: 96, change: "+3%", trend: "up" },
+    ],
+  },
+  {
     name: "Space exploration technologies corp.",
     industry: "Electrical Instruments",
     country: "USA",
@@ -235,6 +251,8 @@ const PortfolioWeeklyCompany = () => {
   const [progressMessage, setProgressMessage] = useState(
     "Fetching innovation activity data..."
   );
+  const [prefetchedInsights, setPrefetchedInsights] = useState(null);
+
 
   // Simulate progress bar before showing insights
   useEffect(() => {
@@ -309,6 +327,29 @@ useEffect(() => {
     }
   };
 
+  const fetchCompanyInsights = async (companyName) => {
+  try {
+    const response = await fetch(
+      `https://api.incubig.org/analytics/assignee?assignee=${encodeURIComponent(companyName)}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key":
+            "60PKCZgn3smuESHN9e8vbVHxiXVS/8H+vXeFC4ruW1d0YAc1UczQlTQ/C2JlnwlEOKjtnLB0N2I0oheAHJGZeB2bVURMQRC1GvM0k45kyrSmiK98bPPlJPu8q1N/TlK4",
+        },
+      }
+    );
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching insights:", error);
+    return null;
+  }
+};
+
+
   return (
     <div>
       <hr className="mb-4" />
@@ -356,7 +397,7 @@ useEffect(() => {
                 <div
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  <h4 style={{ margin: "0.5rem 0", fontSize: "18px" }}>
+                  <h4 style={{ margin: "0.5rem 0", fontSize: "18px", fontFamily: "DM Sans, sans-serif" }}>
                     {company.name}
                   </h4>
                   <span
@@ -464,25 +505,65 @@ useEffect(() => {
 
               {/* 1-Click Insights Button */}
               <div style={{ marginTop: "15px", textAlign: "center" }}>
-                <button
-                  onClick={() => {
-                    setCurrentCompany(company);
-                    setShowInsights(true);
-                    setIsLoading(true);
-                    setProgress(0);
-                  }}
-                  style={{
-                    color: "#fff",
-                    cursor: "pointer",
-                    background: "linear-gradient(90deg, #007bff, #00bfff)",
-                    border: "none",
-                    borderRadius: "8px",
-                    padding: "8px 16px",
-                    fontSize: ".8rem",
-                  }}
-                >
-                  1-Click Insights
-                </button>
+        <button
+  onClick={async () => {
+    setCurrentCompany(company);
+    setShowInsights(true);
+    setIsLoading(true);
+    setProgress(0);
+
+    // Start fetching immediately
+    const dataPromise = fetchCompanyInsights(company.name);
+
+    let progressValue = 0;
+    let fetchDone = false;
+
+    // Track when API finishes
+    const fetchWatcher = (async () => {
+      try {
+        const insightsData = await dataPromise;
+        setPrefetchedInsights(insightsData);
+        fetchDone = true;
+      } catch (err) {
+        console.error("Error fetching insights:", err);
+        fetchDone = true;
+      }
+    })();
+
+    // Progress animation
+    const progressInterval = setInterval(() => {
+  if (progressValue < 90) {
+    progressValue += 1.2;
+    setProgress(Math.round(progressValue)); 
+  } else if (fetchDone) {
+    progressValue += 2;
+    setProgress(Math.round(progressValue)); 
+    if (progressValue >= 100) {
+      clearInterval(progressInterval);
+      setIsLoading(false);
+    }
+  }
+}, 80);
+
+
+    // Wait for both animation + fetch to end
+    await fetchWatcher;
+  }}
+  style={{
+    color: "#fff",
+    cursor: "pointer",
+    background: "linear-gradient(90deg, #007bff, #00bfff)",
+    border: "none",
+    borderRadius: "8px",
+    padding: "8px 16px",
+    fontSize: ".8rem",
+  }}
+>
+  1-Click Insights
+</button>
+
+
+
               </div>
             </div>
           ))}
@@ -619,11 +700,11 @@ useEffect(() => {
                       color: "#4da6ff",
                     }}
                   >
-                    {progress}%
+                    {Math.round(progress)}%
                   </p>
                 </div>
               ) : (
-                <InsightsView company={currentCompany} />
+                <InsightsView company={currentCompany} prefetchedData={prefetchedInsights} />
               )}
             </div>
 
