@@ -34,9 +34,46 @@ const InsightsView = ({ company, prefetchedData }) => {
   const [apiData, setApiData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
+  const [technologies, setTechnologies] = useState([]);
+
 
   const colors = ["#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f"];
   const year = new Date().getFullYear();
+
+  const processCpcDefinitions = async (data) => {
+  const topIndustries = data.top_industries?.filter(i => i.cpc) || [];
+
+  if (topIndustries.length === 0) {
+    setTechnologies([]);
+    return;
+  }
+
+  try {
+    const resp = await fetch("https://api.incubig.org/analytics/cpc-definition", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": "60PKCZgn3smuESHN9e8vbVHxiXVS/8H+vXeFC4ruW1d0YAc1UczQlTQ/C2JlnwlEOKjtnLB0N2I0oheAHJGZeB2bVURMQRC1GvM0k45kyrSmiK98bPPlJPu8q1N/TlK4"
+      },
+      body: JSON.stringify(topIndustries.map(i => i.cpc))
+    });
+
+    const cpcDefs = await resp.json();
+
+    const mapped = topIndustries.map(ind => ({
+      name: cpcDefs.find(c => c.cpc === ind.cpc)?.definition || ind.cpc,
+      patents: ind.count,
+      trend: "up",
+      change: "—"
+    }));
+
+    setTechnologies(mapped);
+  } catch (err) {
+    console.error("CPC processing failed:", err);
+    setTechnologies([]);
+  }
+};
+
 
  useEffect(() => {
   if (!company?.name) return;
@@ -47,6 +84,7 @@ const InsightsView = ({ company, prefetchedData }) => {
       if (prefetchedData) {
         // ✅ Use prefetched data instantly
         setApiData(prefetchedData);
+        await processCpcDefinitions(prefetchedData);
         return;
       }
 
@@ -64,6 +102,40 @@ const InsightsView = ({ company, prefetchedData }) => {
       if (!response.ok) throw new Error(`API request failed: ${response.status}`);
       const data = await response.json();
       setApiData(data);
+      await processCpcDefinitions(data); 
+      // === NEW: Fetch technologies from CPC codes ===
+const topIndustries = data.top_industries?.filter(i => i.cpc) || [];
+
+if (topIndustries.length > 0) {
+  try {
+    const cpcResponse = await fetch("https://api.incubig.org/analytics/cpc-definition", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": "60PKCZgn3smuESHN9e8vbVHxiXVS/8H+vXeFC4ruW1d0YAc1UczQlTQ/C2JlnwlEOKjtnLB0N2I0oheAHJGZeB2bVURMQRC1GvM0k45kyrSmiK98bPPlJPu8q1N/TlK4"
+      },
+      body: JSON.stringify(topIndustries.map(i => i.cpc))
+    });
+
+    const cpcDefs = await cpcResponse.json();
+
+    const techMapped = topIndustries.map(ind => {
+      const def = cpcDefs.find(d => d.cpc === ind.cpc);
+      return {
+        name: def?.definition || ind.cpc,  // full text technology name
+        patents: ind.count,
+        trend: "up",      // (optional) can calculate real trend later
+        change: "—",      // placeholder
+        cpc: ind.cpc
+      };
+    });
+
+    setTechnologies(techMapped);
+  } catch (err) {
+    console.error("CPC definition fetch failed:", err);
+  }
+}
+
     } catch (error) {
       console.error("Error fetching insights data:", error);
     } finally {
@@ -220,7 +292,7 @@ Really impressive.
   });
 
   // Fallback static technologies + people if none in API
-  const techList = company.technologiesDeveloped || [];
+  const techList = technologies;   
   const peopleList =
     inventors.slice(0, 10).map((p) => ({
       name: p.inventor,

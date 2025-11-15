@@ -696,7 +696,7 @@ useEffect(() => {
                   <p
                     style={{
                       marginTop: "5px",
-                      fontSize: "0.75rem",
+                      fontSize: "0.8rem",
                       color: "#4da6ff",
                     }}
                   >

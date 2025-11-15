@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "../companylist/companylist.module.css";
+import InsightsView from "@/components/insightsview/insightsview";
 
 const dummyData = [
   {
@@ -14,6 +15,13 @@ const dummyData = [
     country: "USA",
     industry: "Communication Technique",
     top_inventor: "Dawei zhang",
+    // Example placeholder data required by InsightsView (for static display)
+    technologiesDeveloped: [
+      { name: "Digital input", patents: 14166, change: "+9%", trend: "up" },
+      { name: "Arrangements", patents: 3697, change: "+7%", trend: "up" },
+      { name: "Photonic quantum", patents: 3240, change: "-2%", trend: "down" },
+      { name: "Ion-sensitive", patents: 539, change: "+4%", trend: "up" },
+    ],
   },
   {
     name: "Google llc",
@@ -24,6 +32,12 @@ const dummyData = [
     country: "USA",
     industry: "Computational Technology",
     top_inventor: "Alexandre duarte",
+    technologiesDeveloped: [
+      { name: "Machine Learning", patents: 5621, change: "+8%", trend: "up" },
+      { name: "AI Algorithms", patents: 4284, change: "+11%", trend: "up" },
+      { name: "Data Centers", patents: 3209, change: "-6%", trend: "down" },
+      { name: "Networking", patents: 330, change: "+5%", trend: "up" },
+    ],
   },
   {
     name: "Huawei technologies co., ltd.",
@@ -34,6 +48,12 @@ const dummyData = [
     country: "China",
     industry: "Communication Technique",
     top_inventor: "Ming gan",
+    technologiesDeveloped: [
+      { name: "5G Communication", patents: 1799, change: "+7%", trend: "up" },
+      { name: "Security", patents: 393, change: "+6%", trend: "up" },
+      { name: "Navigation", patents: 97, change: "-4%", trend: "down" },
+      { name: "Related to drivers", patents: 96, change: "+3%", trend: "up" },
+    ],
   },
   {
     name: "Tencent technology (shenzhen) company limited",
@@ -44,6 +64,12 @@ const dummyData = [
     country: "China",
     industry: "Computational Technology",
     top_inventor: "Wei liu",
+    technologiesDeveloped: [
+      { name: "Social Media Tech", patents: 238, change: "+10%", trend: "up" },
+      { name: "Mobile Gaming", patents: 229, change: "+8%", trend: "up" },
+      { name: "Estimation", patents: 58, change: "+12%", trend: "up" },
+      { name: "Bus networks", patents: 22, change: "-5%", trend: "down" },
+    ],
   },
   {
     name: "Toyota jidosha kabushiki kaisha",
@@ -54,6 +80,12 @@ const dummyData = [
     country: "Japan",
     industry: "Vehicles",
     top_inventor: "Daiki yokoyama",
+    technologiesDeveloped: [
+      { name: "Charging Converters", patents: 3409, change: "+7%", trend: "up" },
+      { name: "Neural Networks", patents: 575, change: "+6%", trend: "up" },
+      { name: "Liquid Cooling", patents: 518, change: "-4%", trend: "down" },
+      { name: "Safety Devices", patents: 427, change: "+3%", trend: "up" },
+    ],
   },
   {
     name: "Sony corporation",
@@ -64,6 +96,12 @@ const dummyData = [
     country: "Japan",
     industry: "Communication Technique",
     top_inventor: "Shin horng wong",
+    technologiesDeveloped: [
+      { name: "Operating Mode", patents: 6356, change: "+10%", trend: "up" },
+      { name: "Construction", patents: 4621, change: "+6%", trend: "up" },
+      { name: "Manufacture", patents: 785, change: "+12%", trend: "up" },
+      { name: "Prisms", patents: 591, change: "-4%", trend: "down" },
+    ],
   },
   {
     name: "Tata consultancy services limited",
@@ -74,6 +112,12 @@ const dummyData = [
     country: "India",
     industry: "Computational Technology",
     top_inventor: "Arpan pal",
+    technologiesDeveloped: [
+      { name: "Drones", patents: 596, change: "+11%", trend: "up" },
+      { name: "Health Indices", patents: 92, change: "+9%", trend: "up" },
+      { name: "Authentication", patents: 64, change: "+4%", trend: "up" },
+      { name: "Radar Systems", patents: 61, change: "-2%", trend: "down" },
+    ],
   },
   {
     name: "Infosys limited",
@@ -84,8 +128,18 @@ const dummyData = [
     country: "India",
     industry: "Computational Technology",
     top_inventor: "Steven schilders",
+    technologiesDeveloped: [
+      { name: "Cloud Computing", patents: 38, change: "+12%", trend: "up" },
+      { name: "Enterprise Systems", patents: 36, change: "+9%", trend: "up" },
+      { name: "Data Security", patents: 5, change: "-3%", trend: "down" },
+      { name: "IoT Devices", patents: 4, change: "+7%", trend: "up" },
+    ],
   },
 ];
+
+
+// REMOVED REDUNDANT fetchCompanyInsights from here (it is now inside InsightsView)
+
 
 const PortfolioSearch = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -100,9 +154,21 @@ const PortfolioSearch = () => {
   const [expandedCard, setExpandedCard] = useState(() => {
     return dummyData.map((item, i) => `${item.name ?? "company"}_${i}`);
   });
-
   const [combinedFilterValue, setCombinedFilterValue] = useState("");
 
+  // --- INSIGHTS STATE ---
+  const [showInsights, setShowInsights] = useState(false);
+  const [currentCompany, setCurrentCompany] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [progressMessage, setProgressMessage] = useState(
+    "Fetching innovation activity data..."
+  );
+  const [prefetchedInsights, setPrefetchedInsights] = useState(null); 
+
+
+
+  // Initial increments/setup
   useEffect(() => {
     const newIncrements = {};
     dummyData.forEach((company) => {
@@ -115,6 +181,41 @@ const PortfolioSearch = () => {
     });
     setIncrements(newIncrements);
   }, []);
+
+
+  // Simulate progress bar before showing insights
+    useEffect(() => {
+      if (isLoading) {
+        let progressInterval = setInterval(() => {
+          setProgress((prev) => {
+            let next = prev + 1;
+            if (next >= 100) {
+              clearInterval(progressInterval);
+              setIsLoading(false);
+              next = 100;
+            }
+  
+            // 🔹 Update message based on progress stage
+            if (next < 25) {
+              setProgressMessage("Fetching innovation activity data...");
+            } else if (next < 50) {
+              setProgressMessage(
+                "Analyzing industries and emerging technologies..."
+              );
+            } else if (next < 75) {
+              setProgressMessage("Processing inventor networks...");
+            } else {
+              setProgressMessage("Generating intelligence report...");
+            }
+  
+            return next;
+          });
+        }, 100);
+  
+        return () => clearInterval(progressInterval);
+      }
+    }, [isLoading]);
+
 
   const handleAddCompany = (company) => {
     try {
@@ -217,10 +318,7 @@ const PortfolioSearch = () => {
         }
 
         const data = await res.json();
-
-        // Data is an array, use it directly
         const suggestions = Array.isArray(data) ? data : [];
-
         setSuggestions(suggestions.slice(0, 5));
       } catch (error) {
         console.error("Error fetching suggestions:", error);
@@ -230,10 +328,6 @@ const PortfolioSearch = () => {
       setSuggestions([]);
     }
   };
-
-  // const goToCompanyPage = (companyName) => {
-  //   window.location.href = `https://dyr.incubig.org/company-page/${encodeURIComponent(companyName)}/overview`;
-  // };
 
   const goToCompanyPage = (companyName) => {
     router.push(
@@ -263,6 +357,28 @@ const PortfolioSearch = () => {
     }
   };
 
+   const fetchCompanyInsights = async (companyName) => {
+  try {
+    const response = await fetch(
+      `https://api.incubig.org/analytics/assignee?assignee=${encodeURIComponent(companyName)}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key":
+            "60PKCZgn3smuESHN9e8vbVHxiXVS/8H+vXeFC4ruW1d0YAc1UczQlTQ/C2JlnwlEOKjtnLB0N2I0oheAHJGZeB2bVURMQRC1GvM0k45kyrSmiK98bPPlJPu8q1N/TlK4",
+        },
+      }
+    );
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching insights:", error);
+    return null;
+  }
+};
+
   const industryOptions = [
     "All",
     ...new Set(dummyData.map((item) => item.industry)),
@@ -279,18 +395,7 @@ const PortfolioSearch = () => {
     <div className={styles.bodyCompany}>
       <div className={styles.companyContainer}>
         <div className={styles.pagePadding}>
-
-{/* <div style={{ marginBottom: '1.5rem', marginTop: "1.5rem" }}>
-    <h2 style={{ color: '#fff', fontSize: '1.5rem', fontWeight: 600, marginBottom: '0.5rem' }}>
-     Search
-    </h2>
-    <p style={{ fontSize: '0.8rem', margin: 0 }}>
-      Access comprehensive research data.
-    </p>
-  </div> */}
-
           <hr className="mb-3" />
-          {/* <h3 className={styles.headingH3}>Search any company</h3> */}
 
           {/* Search + Filters Row */}
           <div className={styles.searchFilters}>
@@ -311,7 +416,7 @@ const PortfolioSearch = () => {
                 <span
                   className={styles.quickSearchItem}
                   onClick={() => handleSuggestionClick("Apple")}
-                  tabIndex={0} // for keyboard accessibility
+                  tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       handleSuggestionClick("Apple");
@@ -344,7 +449,6 @@ const PortfolioSearch = () => {
                 >
                   Tesla
                 </span>
-                {/* Add more quick searches here */}
               </div>
 
               {suggestions.length > 0 && (
@@ -459,7 +563,6 @@ const PortfolioSearch = () => {
                             <span className={styles.tagSearch}>
                               {item.industry}
                             </span>
-                            {/* <span className={styles.tagSearch}>{item.patents} Patents</span> */}
                           </div>
                         </div>
 
@@ -510,29 +613,28 @@ const PortfolioSearch = () => {
                         </button>
 
                         {/* 🔹 Expandable Section */}
-                    <div
-  className={`${styles.expandedContent} ${
-    isExpanded ? styles.show : ""
-  }`}
->
-  <div className={styles.detailRow}>
-    <span>Industries</span>
-    <span>{item.industries}</span>
-  </div>
-  <div className={styles.detailRow}>
-    <span>Technologies</span>
-    <span>{item.technologies}</span>
-  </div>
-  <div className={styles.detailRow}>
-    <span>Inventors</span>
-    <span>{item.inventors}</span>
-  </div>
-  <div className={styles.detailRow}>
-    <span>Top Inventor</span>
-    <span>{item.top_inventor}</span>
-  </div>
-</div>
-
+                        <div
+                          className={`${styles.expandedContent} ${
+                            isExpanded ? styles.show : ""
+                          }`}
+                        >
+                          <div className={styles.detailRow}>
+                            <span>Industries</span>
+                            <span>{item.industries}</span>
+                          </div>
+                          <div className={styles.detailRow}>
+                            <span>Technologies</span>
+                            <span>{item.technologies}</span>
+                          </div>
+                          <div className={styles.detailRow}>
+                            <span>Inventors</span>
+                            <span>{item.inventors}</span>
+                          </div>
+                          <div className={styles.detailRow}>
+                            <span>Top Inventor</span>
+                            <span>{item.top_inventor}</span>
+                          </div>
+                        </div>
 
                         {/* 🔹 Action */}
                         <div className={styles.cardAction}>
@@ -552,6 +654,66 @@ const PortfolioSearch = () => {
                             + Add
                           </button>
                         </div>
+
+                        {/*  1-Click Insights Button */}
+                        <div style={{ marginTop: "15px", textAlign: "center" }}>
+                          <button
+  onClick={async () => {
+    setCurrentCompany(item);
+    setShowInsights(true);
+    setIsLoading(true);
+    setProgress(0);
+
+    // Start fetching immediately
+    const dataPromise = fetchCompanyInsights(item.name);
+
+    let progressValue = 0;
+    let fetchDone = false;
+
+    // Track when API finishes
+    const fetchWatcher = (async () => {
+      try {
+        const insightsData = await dataPromise;
+        setPrefetchedInsights(insightsData);
+        fetchDone = true;
+      } catch (err) {
+        console.error("Error fetching insights:", err);
+        fetchDone = true;
+      }
+    })();
+
+    // Progress animation
+    const progressInterval = setInterval(() => {
+  if (progressValue < 90) {
+    progressValue += 1.2;
+    setProgress(Math.round(progressValue)); 
+  } else if (fetchDone) {
+    progressValue += 2;
+    setProgress(Math.round(progressValue)); 
+    if (progressValue >= 100) {
+      clearInterval(progressInterval);
+      setIsLoading(false);
+    }
+  }
+}, 80);
+
+
+    // Wait for both animation + fetch to end
+    await fetchWatcher;
+  }}
+  style={{
+    color: "#fff",
+    cursor: "pointer",
+    background: "linear-gradient(90deg, #007bff, #00bfff)",
+    border: "none",
+    borderRadius: "8px",
+    padding: "8px 16px",
+    fontSize: ".8rem",
+  }}
+>
+  1-Click Insights
+</button>
+                        </div>
                       </div>
                     );
                   })}
@@ -561,6 +723,112 @@ const PortfolioSearch = () => {
           </section>
         </div>
       </div>
+      
+      {/*  INSIGHTS MODAL OVERLAY (Now calling the real InsightsView) */}
+      {showInsights && currentCompany && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              background: "#000",
+              color: "#fff",
+              border: "1px solid #4da6ff",
+              boxShadow: "0 0 12px rgba(77, 166, 255, .3)",
+              borderRadius: "10px",
+              width: "90%",
+              maxWidth: "900px",
+              height: "80vh",
+              overflowY: "auto",
+              position: "relative",
+            }}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowInsights(false)}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "15px",
+                background: "none",
+                border: "none",
+                fontSize: "1.2rem",
+                cursor: "pointer",
+                color: "#4da6ff",
+              }}
+            >
+              ×
+            </button>
+
+            {/* Loading / Insights Content */}
+            <div
+              style={{
+                marginTop: "40px",
+                textAlign: "center",
+                fontSize: "0.8rem",
+              }}
+            >
+              {isLoading ? (
+                <div>
+                  <p
+                    style={{
+                      marginBottom: "10px",
+                      color: "#fff",
+                      fontSize: "0.8rem",
+                    }}
+                  >
+                    {progressMessage}
+                  </p>
+                  <div
+                    style={{
+                      height: "10px",
+                      width: "100%",
+                      background: "#1a1a1a",
+                      borderRadius: "5px",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: `${progress}%`,
+                        height: "100%",
+                        background: "linear-gradient(90deg, #007bff, #00bfff)",
+                        transition: "width 0.2s ease",
+                      }}
+                    ></div>
+                  </div>
+                  <p
+                    style={{
+                      marginTop: "5px",
+                      fontSize: "0.8rem",
+                      color: "#4da6ff",
+                    }}
+                  >
+                    {Math.round(progress)}%
+                  </p>
+                </div>
+              ) : (
+                // CALLING THE ACTUAL InsightsView COMPONENT
+                <InsightsView
+                    company={currentCompany} 
+                    prefetchedData={prefetchedInsights} 
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
