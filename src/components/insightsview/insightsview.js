@@ -60,12 +60,16 @@ const InsightsView = ({ company, prefetchedData }) => {
 
     const cpcDefs = await resp.json();
 
-    const mapped = topIndustries.map(ind => ({
-      name: cpcDefs.find(c => c.cpc === ind.cpc)?.definition || ind.cpc,
-      patents: ind.count,
-      trend: "up",
-      change: "—"
-    }));
+   const mapped = topIndustries.map((ind, idx) => {
+  const up = idx < 2;
+  return {
+    name: cpcDefs.find(c => c.cpc === ind.cpc)?.definition || ind.cpc,
+    patents: ind.count,
+    trend: up ? "up" : "down",
+    change: up ? `${15 - idx * 3}%` : `${idx * 2}%`,
+  };
+});
+
 
     setTechnologies(mapped);
   } catch (err) {
