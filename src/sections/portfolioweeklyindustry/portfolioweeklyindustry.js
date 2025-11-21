@@ -10,11 +10,12 @@ import {
   PointElement,
   Tooltip,
 } from "chart.js";
-import { CircleArrowLeft } from "lucide-react";
+import { CircleArrowLeft,BarChart3 } from "lucide-react";
 import OverviewTab from "./overview";
 import CompaniesTab from "./companies";
 import CountriesTab from "./countries";
 import TechTab from "./tech";
+import PeopleTab from "./people";
 
 ChartJS.register(
   LineElement,
@@ -124,106 +125,163 @@ const PortfolioWeeklyIndustry = ({
     setIncrements(newIncrements);
   }, []);
 
-  const industries = [
-    {
-      rank: 1,
-      name: "Vehicles",
-      change: "+18%",
-      patents: 124500,
-      tags: ["AI-driven optimization"],
-      history: [5, 7, 9, 11, 13, 34, 55],
-      topCountry: [
-        { name: "United States", applications: 12000, increment: "+12%" },
-        { name: "China", applications: 11000, increment: "+10%" },
-        { name: "Germany", applications: 5000, increment: "+8%" },
-        { name: "Japan", applications: 4800, increment: "+6%" },
-        { name: "South Korea", applications: 4500, increment: "+5%" },
-      ],
-      topCompany: [
-        { name: "IBM", applications: 3200, increment: "+5%" },
-        { name: "Samsung", applications: 3100, increment: "+6%" },
-        { name: "Intel", applications: 2900, increment: "+7%" },
-        { name: "Microsoft", applications: 2700, increment: "+4%" },
-        { name: "Qualcomm", applications: 2500, increment: "+3%" },
-      ],
-      topTechnology: "Battery Cooling Systems",
-      topInventor: "Li Wei",
-      descriptionsByTab: {
-        Overview:
-          "EV Innovation led by China, US & Korea in battery & AI systems.",
-        Companies:
-          "Top automotive firms like Tesla, Bosch, and Toyota dominate the patent landscape in electric and autonomous vehicle systems.",
-        Countries: "The USA is leading innovations in Vehicle Industry.",
-        Tech: "Key emerging technologies include battery cooling systems, ADAS, hydrogen fuel tech, and AI-powered mobility platforms.",
-      },
+ const industries = [
+  {
+    rank: 1,
+    name: "Vehicles",
+    change: "+18%",
+    patents: 124500,
+    tags: ["AI-driven optimization"],
+    history: [5, 7, 9, 11, 13, 34, 55],
+    topCountry: [
+      { name: "United States", applications: 12000, increment: "+12%" },
+      { name: "China", applications: 11000, increment: "+10%" },
+      { name: "Germany", applications: 5000, increment: "+8%" },
+      { name: "Japan", applications: 4800, increment: "+6%" },
+      { name: "South Korea", applications: 4500, increment: "+5%" },
+    ],
+    topCompany: [
+      { name: "IBM", applications: 3200, increment: "+5%" },
+      { name: "Samsung", applications: 3100, increment: "+6%" },
+      { name: "Intel", applications: 2900, increment: "+7%" },
+      { name: "Microsoft", applications: 2700, increment: "+4%" },
+      { name: "Qualcomm", applications: 2500, increment: "+3%" },
+    ],
+
+    // ⭐ NEW DATA START
+    topInnovators: [
+      { name: "Elena Rodriguez", applications: 1450, increment: "+9%" },
+      { name: "Kenji Takahara", applications: 1320, increment: "+7%" },
+      { name: "Michael Andersen", applications: 1280, increment: "+6%" },
+      { name: "Priya Mehta", applications: 1225, increment: "+5%" },
+      { name: "Hiroshi Tanaka", applications: 1180, increment: "+4%" },
+    ],
+    topTechnologies: [
+      { name: "Autonomous Driving Vision AI", applications: 4200 },
+      { name: "Adaptive Cruise Optimization", applications: 3900 },
+      { name: "Hydrogen Fuel Powertrain", applications: 3650 },
+      { name: "EV Thermal Regulation Systems", applications: 3400 },
+      { name: "Lane-Level Predictive Mapping", applications: 3200 },
+    ],
+    // ⭐ NEW DATA END
+
+    topTechnology: "Battery Cooling Systems",
+    topInventor: "Li Wei",
+    descriptionsByTab: {
+      Overview:
+        "EV Innovation led by China, US & Korea in battery & AI systems.",
+      Companies:
+        "Top automotive firms like Tesla, Bosch, and Toyota dominate the patent landscape in electric and autonomous vehicle systems.",
+      Countries: "The USA is leading innovations in Vehicle Industry.",
+      Tech: "Key emerging technologies include battery cooling systems, ADAS, hydrogen fuel tech, and AI-powered mobility platforms.",
     },
-    {
-      rank: 2,
-      name: "Biological Computer Models",
-      change: "+44%",
-      patents: 80500,
-      tags: ["Neural computation", "Synthetic biology"],
-      history: [8, 10, 14, 18, 20, 34, 55],
-      topCountry: [
-        { name: "United States", applications: 12000, increment: "+12%" },
-        { name: "China", applications: 11000, increment: "+10%" },
-        { name: "Germany", applications: 5000, increment: "+8%" },
-        { name: "Japan", applications: 4800, increment: "+6%" },
-        { name: "South Korea", applications: 4500, increment: "+5%" },
-      ],
-      topCompany: [
-        { name: "IBM", applications: 3200, increment: "+5%" },
-        { name: "Samsung", applications: 3100, increment: "+6%" },
-        { name: "Intel", applications: 2900, increment: "+7%" },
-        { name: "Microsoft", applications: 2700, increment: "+4%" },
-        { name: "Qualcomm", applications: 2500, increment: "+3%" },
-      ],
-      topTechnology: "Neural Signal Mapping",
-      topInventor: "Dr. Jane Smith",
-      descriptionsByTab: {
-        Overview:
-          "Breakthroughs in brain-inspired computing systems are being pioneered by US and European institutions in neuroscience and AI fusion.",
-        Companies:
-          "IBM and Intel are pushing the frontiers of biological computing, investing heavily in neural processing and synthetic biology models.",
-        Countries:
-          "The United States leads this space, followed by China and Germany, with a sharp rise in collaborative patents across academia and industry.",
-        Tech: "Core technologies include neural signal mapping, brain-computer interfaces, and molecular-level computation models.",
-      },
+  },
+
+  {
+    rank: 2,
+    name: "Biological Computer Models",
+    change: "+44%",
+    patents: 80500,
+    tags: ["Neural computation", "Synthetic biology"],
+    history: [8, 10, 14, 18, 20, 34, 55],
+    topCountry: [
+      { name: "United States", applications: 12000, increment: "+12%" },
+      { name: "China", applications: 11000, increment: "+10%" },
+      { name: "Germany", applications: 5000, increment: "+8%" },
+      { name: "Japan", applications: 4800, increment: "+6%" },
+      { name: "South Korea", applications: 4500, increment: "+5%" },
+    ],
+    topCompany: [
+      { name: "IBM", applications: 3200, increment: "+5%" },
+      { name: "Samsung", applications: 3100, increment: "+6%" },
+      { name: "Intel", applications: 2900, increment: "+7%" },
+      { name: "Microsoft", applications: 2700, increment: "+4%" },
+      { name: "Qualcomm", applications: 2500, increment: "+3%" },
+    ],
+
+    // ⭐ NEW DATA START
+    topInnovators: [
+      { name: "Dr. Maria Chen", applications: 980, increment: "+11%" },
+      { name: "Prof. Liam O'Connor", applications: 910, increment: "+8%" },
+      { name: "Dr. Sofia Dimitri", applications: 880, increment: "+7%" },
+      { name: "Dr. Alex Müller", applications: 850, increment: "+6%" },
+      { name: "Dr. Isaac Patel", applications: 830, increment: "+6%" },
+    ],
+    topTechnologies: [
+      { name: "Bio-Neural Wetware Chips", applications: 2600 },
+      { name: "Cellular Logic Circuits", applications: 2400 },
+      { name: "Neuro-synthetic Data Processing", applications: 2250 },
+      { name: "Living DNA Storage Arrays", applications: 2100 },
+      { name: "Bio-Analog Signal Mapping", applications: 1980 },
+    ],
+    // ⭐ NEW DATA END
+
+    topTechnology: "Neural Signal Mapping",
+    topInventor: "Dr. Jane Smith",
+    descriptionsByTab: {
+      Overview:
+        "Breakthroughs in brain-inspired computing systems are being pioneered by US and European institutions in neuroscience and AI fusion.",
+      Companies:
+        "IBM and Intel are pushing the frontiers of biological computing, investing heavily in neural processing and synthetic biology models.",
+      Countries:
+        "The United States leads this space, followed by China and Germany, with a sharp rise in collaborative patents across academia and industry.",
+      Tech: "Core technologies include neural signal mapping, brain-computer interfaces, and molecular-level computation models.",
     },
-    {
-      rank: 3,
-      name: "AI for EV",
-      change: "+36%",
-      patents: 60400,
-      tags: ["Predictive BMS", "Anomaly detection"],
-      history: [10, 13, 18, 22, 26, 34, 55],
-      topCountry: [
-        { name: "United States", applications: 12000, increment: "+12%" },
-        { name: "China", applications: 11000, increment: "+10%" },
-        { name: "Germany", applications: 5000, increment: "+8%" },
-        { name: "Japan", applications: 4800, increment: "+6%" },
-        { name: "South Korea", applications: 4500, increment: "+5%" },
-      ],
-      topCompany: [
-        { name: "IBM", applications: 3200, increment: "+5%" },
-        { name: "Samsung", applications: 3100, increment: "+6%" },
-        { name: "Intel", applications: 2900, increment: "+7%" },
-        { name: "Microsoft", applications: 2700, increment: "+4%" },
-        { name: "Qualcomm", applications: 2500, increment: "+3%" },
-      ],
-      topTechnology: "Predictive Battery Analytics",
-      topInventor: "Lee Sung-ho",
-      descriptionsByTab: {
-        Overview:
-          "Korea and China are leading innovation in AI applications for electric vehicles, focusing on predictive systems and efficiency optimization.",
-        Companies:
-          "Tech-driven firms like Samsung, IBM, and Microsoft are applying AI models to optimize EV powertrains, safety, and maintenance.",
-        Countries:
-          "Korea and China have rapidly increased AI-EV patent activity, with significant contributions from US-based R&D as well.",
-        Tech: "Predictive BMS, anomaly detection systems, and AI-powered fleet management tools are at the core of this innovation wave.",
-      },
+  },
+
+  {
+    rank: 3,
+    name: "AI for EV",
+    change: "+36%",
+    patents: 60400,
+    tags: ["Predictive BMS", "Anomaly detection"],
+    history: [10, 13, 18, 22, 26, 34, 55],
+    topCountry: [
+      { name: "United States", applications: 12000, increment: "+12%" },
+      { name: "China", applications: 11000, increment: "+10%" },
+      { name: "Germany", applications: 5000, increment: "+8%" },
+      { name: "Japan", applications: 4800, increment: "+6%" },
+      { name: "South Korea", applications: 4500, increment: "+5%" },
+    ],
+    topCompany: [
+      { name: "IBM", applications: 3200, increment: "+5%" },
+      { name: "Samsung", applications: 3100, increment: "+6%" },
+      { name: "Intel", applications: 2900, increment: "+7%" },
+      { name: "Microsoft", applications: 2700, increment: "+4%" },
+      { name: "Qualcomm", applications: 2500, increment: "+3%" },
+    ],
+
+    // ⭐ NEW DATA START
+    topInnovators: [
+      { name: "Ravi Narang", applications: 1120, increment: "+10%" },
+      { name: "Chen Guang", applications: 1080, increment: "+9%" },
+      { name: "Sarah Klein", applications: 1030, increment: "+6%" },
+      { name: "Daniel Kim", applications: 995, increment: "+5%" },
+      { name: "Yuki Nakamura", applications: 970, increment: "+5%" },
+    ],
+    topTechnologies: [
+      { name: "AI-based Battery Health Prediction", applications: 3100 },
+      { name: "EV Motor Fault Detection AI", applications: 2950 },
+      { name: "Smart Regenerative Braking AI", applications: 2800 },
+      { name: "Energy-Optimal Route Planning AI", applications: 2700 },
+      { name: "Thermal Runaway Prediction Models", applications: 2550 },
+    ],
+    // ⭐ NEW DATA END
+
+    topTechnology: "Predictive Battery Analytics",
+    topInventor: "Lee Sung-ho",
+    descriptionsByTab: {
+      Overview:
+        "Korea and China are leading innovation in AI applications for electric vehicles, focusing on predictive systems and efficiency optimization.",
+      Companies:
+        "Tech-driven firms like Samsung, IBM, and Microsoft are applying AI models to optimize EV powertrains, safety, and maintenance.",
+      Countries:
+        "Korea and China have rapidly increased AI-EV patent activity, with significant contributions from US-based R&D as well.",
+      Tech: "Predictive BMS, anomaly detection systems, and AI-powered fleet management tools are at the core of this innovation wave.",
     },
-  ];
+  },
+];
+
 
   const handleAddCompany = (company) => {
     try {
@@ -296,6 +354,30 @@ const PortfolioWeeklyIndustry = ({
           applications: company.patents,
           increment: `${increments[company.name] || "+0.0"}%`,
         }));
+
+        //  Top Innovators
+const topInnovators = Array.isArray(selectedIndustry?.topInnovators)
+  ? selectedIndustry.topInnovators
+  : relevantCompanies
+      .sort((a, b) => b.innovators - a.innovators) 
+      .slice(0, 5)
+      .map((inv) => ({
+        name: inv.innovator || inv.name,
+        applications: inv.patents || 0,
+        increment: `+${(Math.random() * 10).toFixed(1)}%`,
+      }));
+
+//  Top Technologies
+const topTechnologies = Array.isArray(selectedIndustry?.topTechnologies)
+  ? selectedIndustry.topTechnologies
+  : (selectedIndustry?.technologies || [])
+      .sort((a, b) => b.applications - a.applications)
+      .slice(0, 5)
+      .map((tech) => ({
+        name: tech.name,
+        applications: tech.applications || Math.floor(Math.random() * 3000) + 500,
+      }));
+
 
   const suggestedIndustries = [
     {
@@ -412,6 +494,8 @@ const PortfolioWeeklyIndustry = ({
             activeTab={activeTab}
             topCountries={topCountries}
             topCompanies={topCompanies}
+            topInnovators={topInnovators}
+            topTechnologies={topTechnologies}
           />
         );
       case "Companies":
@@ -438,6 +522,8 @@ const PortfolioWeeklyIndustry = ({
             activeTab={activeTab}
           />
         );
+        case "People":
+          return <PeopleTab/>;
       case "Tech":
         return <TechTab />;
       default:
@@ -449,7 +535,7 @@ const PortfolioWeeklyIndustry = ({
     <div>
       {!selectedIndustry && <hr className="mb-4" />}
 
-      {/* 🔹 Suggested Industries Section */}
+      {/* Suggested Industries Section */}
       {!selectedIndustry && (
         <div style={{ marginBottom: "2rem" }}>
           <h3 className={styles.headingH3}>Trending Industries</h3>
@@ -480,7 +566,7 @@ const PortfolioWeeklyIndustry = ({
         </div>
       )}
 
-      {/* 🔁 MAIN PAGE (Industry List) */}
+      {/* MAIN PAGE (Industry List) */}
       {!selectedIndustry &&
         <div
         style={{
@@ -518,99 +604,180 @@ const PortfolioWeeklyIndustry = ({
       {!selectedIndustry ? (
         <div className={styles.weeklyGrid}>
           {industries.map((ind, idx) => {
-            const chartData = {
-              labels: ["2018", "2024"],
-              datasets: [
-                {
-                  data: ind.history,
-                  borderColor: "#00bfff",
-                  backgroundColor: "rgba(0,191,255,0.2)",
-                  borderWidth: 2,
-                  tension: 0.4,
-                  pointRadius: 0,
-                  fill: true,
-                },
-              ],
-            };
+           // Use only last 5 history points
+const lastFive = ind.history.slice(-5);
+
+// Fixed "5-month" label
+const historyLength = 5;
+
+// Labels: M-1 to M-5
+const chartData = {
+  labels: Array.from({ length: 5 }, (_, i) => `M-${i + 1}`),
+  datasets: [
+    {
+      label: "Trend",
+      data: lastFive,
+      borderColor: "#00bfff",
+      backgroundColor: "rgba(0,191,255,0.15)",
+      borderWidth: 2,
+      tension: 0.35,
+      pointRadius: 2,
+      pointBackgroundColor: "#00bfff",
+      fill: true,
+    },
+  ],
+};
+
+// Consistent growth calculation (from the same 5 points)
+const startVal = lastFive[0];
+const endVal = lastFive[lastFive.length - 1];
+
+// Avoid division issues
+const growthPercent =
+  startVal === 0 ? "0.0" : (((endVal - startVal) / startVal) * 100).toFixed(1);
+
+const growthText = `${endVal > startVal ? "↑" : "↓"} ${growthPercent}%`;
+const growthColor = endVal > startVal ? "#00ff88" : "#ff4d4d";
+
+
 
             return (
-              <div key={idx} className={styles.industryCard}>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <span style={{ fontSize: "0.8rem", opacity: 0.7 }}>
-                    #{ind.rank}
-                  </span>
-                  <span
-                    style={{
-                      color: ind.change.startsWith("+") ? "#00ff88" : "#ff4d4d",
-                    }}
-                  >
-                    {ind.change}
-                  </span>
-                </div>
+         <div key={idx} className={styles.industryCard}>
+  {/* Rank + Growth */}
+  <div style={{ display: "flex", justifyContent: "space-between" }}>
+    <span style={{ fontSize: "0.8rem", opacity: 0.7 }}>#{ind.rank}</span>
+    <span
+      style={{
+        color: ind.change.startsWith("+") ? "#00ff88" : "#ff4d4d",
+      }}
+    >
+      {ind.change}
+    </span>
+  </div>
 
-                <h4 style={{ margin: "0.5rem 0", fontSize: "18px" }}>
-                  {ind.name}
-                </h4>
-                <p
-                  style={{
-                    fontSize: "0.8rem",
-                    color: "#4da6ff",
-                    textShadow: "0 0 3px #4da6ff",
-                  }}
-                >
-                  Active Companies: {ind.patents}
-                </p>
+  {/* Title */}
+  <h4 style={{ margin: "0.5rem 0", fontSize: "18px" }}>{ind.name}</h4>
 
-                <div
-                  style={{
-                    marginTop: "0.5rem",
-                    display: "flex",
-                    gap: "0.5rem",
-                  }}
-                >
-                  {ind.tags.map((tag, i) => (
-                    <span
-                      key={i}
-                      style={{
-                        background: "#1e2a3a",
-                        padding: "2px 8px",
-                        borderRadius: "6px",
-                        fontSize: "0.8rem",
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+  <div 
+   className={styles.industryCardTags}
+  >
+    <p
+      style={{
+        fontSize: "0.8rem",
+        color: "#4da6ff",
+        textShadow: "0 0 3px #4da6ff",
+        margin: 0,
+      }}
+    >
+      Active Companies: {ind.patents}
+    </p>
 
-                <div style={{ marginTop: "1rem", height: "70px" }}>
-                  <Line data={chartData} options={baseChartOptions} />
-                </div>
+    {/* Top Country */}
+    <p
+      style={{
+        position: "relative",
+        fontSize: "0.8rem",
+        whiteSpace: "nowrap",
+      }}
+      className="desktop-top-country"
+    >
+      🌍 {ind.topCountry?.[0]?.name || "—"}
+    </p>
+  </div>
 
-                <button
-                  onClick={() => setSelectedIndustry(ind)}
-                  style={{
-                    color: "#fff",
-                    cursor: "pointer",
-                    background: "linear-gradient(90deg, #007bff, #00bfff)",
-                    border: "none",
-                    borderRadius: "20px",
-                    padding: "6px 12px",
-                    fontSize: ".8rem",
-                    marginTop: "10px",
-                  }}
-                >
-                  Deep Dive
-                </button>
-              </div>
+  {/* Tags section */}
+  <div
+       className={styles.industryCardTags}
+  >
+    {ind.tags.map((tag, i) => (
+      <p
+        key={i}
+        style={{
+          background: "#1e2a3a",
+          padding: "2px 8px",
+          borderRadius: "6px",
+          fontSize: "0.8rem",
+          width: "fit-content",
+        }}
+      >
+        {tag}
+      </p>
+    ))}
+
+    {/* Top Inventor */}
+    <p
+      style={{
+        position: "relative",
+        fontSize: "0.8rem",
+        whiteSpace: "nowrap",
+      }}
+      className="desktop-top-inventor"
+    >
+      🧠 {ind.topInventor || "—"}
+    </p>
+  </div>
+
+{/* Header row for chart */}
+<div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: "1rem",
+    marginBottom: "6px",
+  }}
+>
+  {/* Left Label */}
+  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+  <BarChart3 size={14} color="#00bfff" />
+    
+    <span style={{ fontSize: "0.8rem", color: "#4da6ff" }}>
+      5-Month Trend
+    </span>
+  </div>
+
+  {/* Right Growth */}
+  <span
+    style={{
+      fontSize: "0.8rem",
+      color: growthColor,
+      fontWeight: 500,
+    }}
+  >
+    {growthText}
+  </span>
+</div>
+
+<div style={{ height: "70px" }}>
+  <Line data={chartData} options={baseChartOptions} />
+</div>
+
+
+
+  <button
+    onClick={() => setSelectedIndustry(ind)}
+    style={{
+      color: "#fff",
+      cursor: "pointer",
+      background: "linear-gradient(90deg, #007bff, #00bfff)",
+      border: "none",
+      borderRadius: "20px",
+      padding: "6px 12px",
+      fontSize: ".8rem",
+      marginTop: "10px",
+    }}
+  >
+    Deep Dive
+  </button>
+</div>
+
+
             );
           })}
         </div>
       ) : (
         <>
-          {/* 🔙 Back Button */}
+          {/* Back Button */}
          <div
   style={{
     display: "flex",
@@ -648,7 +815,7 @@ const PortfolioWeeklyIndustry = ({
   </button>
 </div>
 
-          {/* 🔹 Summary Card */}
+          {/* Summary Card */}
           <div style={{ color: "#fff", fontFamily: "DM Sans, sans-serif" }}>
             <div
               style={{
@@ -740,9 +907,9 @@ const PortfolioWeeklyIndustry = ({
               />
             </div>
 
-            {/* 🔹 Sub-tabs */}
+            {/* Sub-tabs */}
             <div className={styles.subTabs}>
-              {["Overview", "Countries", "Companies", "Tech"].map((tab) => (
+              {["Overview", "Countries", "Companies","People", "Tech"].map((tab) => (
                 <button
                   key={tab}
                   className={`${styles.subTabButton} ${

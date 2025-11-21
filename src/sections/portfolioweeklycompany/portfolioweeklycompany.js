@@ -7,7 +7,7 @@ import html2canvas from "html2canvas";
 import PortfolioSuggestions from "../portfoliosuggestions/portfoliosuggestions";
 
 const suggestedCompanies = [
-   {
+  {
     name: "International business machines corporation",
     industry: "Computational Technology",
     country: "USA",
@@ -17,8 +17,18 @@ const suggestedCompanies = [
     inventors: 20212,
     change: "+8%",
     technologiesDeveloped: [
-      { name: "Digital input from or digital output to record carriers , e.g. raid, emulated record carriers, networked record carriers", patents: 14166, change: "+9%", trend: "up" },
-      { name: "Arrangements for conducting electric current to or from the solid state body in operation, e.g. leads, terminal arrangements", patents: 3697, change: "+7%", trend: "up" },
+      {
+        name: "Digital input from or digital output to record carriers , e.g. raid, emulated record carriers, networked record carriers",
+        patents: 14166,
+        change: "+9%",
+        trend: "up",
+      },
+      {
+        name: "Arrangements for conducting electric current to or from the solid state body in operation, e.g. leads, terminal arrangements",
+        patents: 3697,
+        change: "+7%",
+        trend: "up",
+      },
       {
         name: "Photonic quantum communication",
         patents: 3240,
@@ -40,10 +50,15 @@ const suggestedCompanies = [
     patents: 14024,
     industries: 41,
     technologies: 2034,
-     inventors: 12878,
+    inventors: 12878,
     change: "+15%",
     technologiesDeveloped: [
-      { name: "Power saving characterised by the action undertaken", patents: 5621, change: "+8%", trend: "up" },
+      {
+        name: "Power saving characterised by the action undertaken",
+        patents: 5621,
+        change: "+8%",
+        trend: "up",
+      },
       { name: "Mis technology,", patents: 4284, change: "+11%", trend: "up" },
       {
         name: "At the transmitting station",
@@ -51,10 +66,15 @@ const suggestedCompanies = [
         change: "-6%",
         trend: "down",
       },
-      { name: "Switching arrangements with several input- or output-terminals, e.g. multiplexers, distributors", patents: 330, change: "+5%", trend: "up" },
+      {
+        name: "Switching arrangements with several input- or output-terminals, e.g. multiplexers, distributors",
+        patents: 330,
+        change: "+5%",
+        trend: "up",
+      },
     ],
   },
-   {
+  {
     name: "Apple inc.",
     industry: "Communication Technique",
     country: "USA",
@@ -64,9 +84,24 @@ const suggestedCompanies = [
     inventors: 13020,
     change: "+12%",
     technologiesDeveloped: [
-      { name: "For selecting or indicating operating mode", patents: 6356, change: "+10%", trend: "up" },
-      { name: "Constructional details or arrangements", patents: 4621, change: "+6%", trend: "up" },
-      { name: "Construction or manufacture in general", patents: 785, change: "+12%", trend: "up" },
+      {
+        name: "For selecting or indicating operating mode",
+        patents: 6356,
+        change: "+10%",
+        trend: "up",
+      },
+      {
+        name: "Constructional details or arrangements",
+        patents: 4621,
+        change: "+6%",
+        trend: "up",
+      },
+      {
+        name: "Construction or manufacture in general",
+        patents: 785,
+        change: "+12%",
+        trend: "up",
+      },
       {
         name: "Prisms",
         patents: 591,
@@ -75,7 +110,7 @@ const suggestedCompanies = [
       },
     ],
   },
- 
+
   {
     name: "Ford global technologies, llc",
     industry: "Vehicles",
@@ -86,14 +121,29 @@ const suggestedCompanies = [
     inventors: 6537,
     change: "+20%",
     technologiesDeveloped: [
-      { name: "Constructional details or arrangements of charging converters specially adapted for charging electric vehicles", patents: 3409, change: "+7%", trend: "up" },
-      { name: "Using neural networks", patents: 575, change: "+6%", trend: "up" },
+      {
+        name: "Constructional details or arrangements of charging converters specially adapted for charging electric vehicles",
+        patents: 3409,
+        change: "+7%",
+        trend: "up",
+      },
+      {
+        name: "Using neural networks",
+        patents: 575,
+        change: "+6%",
+        trend: "up",
+      },
       { name: "Liquid cooling", patents: 518, change: "-4%", trend: "down" },
-      { name: "Safety or indicating devices for abnormal conditions", patents: 427, change: "+3%", trend: "up" },
+      {
+        name: "Safety or indicating devices for abnormal conditions",
+        patents: 427,
+        change: "+3%",
+        trend: "up",
+      },
     ],
   },
   {
- name: "Nvidia corporation",
+    name: "Nvidia corporation",
     industry: "Computational Technology",
     country: "USA",
     patents: 2357,
@@ -102,10 +152,25 @@ const suggestedCompanies = [
     inventors: 2696,
     change: "+20%",
     technologiesDeveloped: [
-      { name: "Graphical or visual programming", patents: 1799, change: "+7%", trend: "up" },
-      { name: "Key distribution or management, e.g. generation, sharing or updating, of cryptographic keys or passwords", patents: 393, change: "+6%", trend: "up" },
+      {
+        name: "Graphical or visual programming",
+        patents: 1799,
+        change: "+7%",
+        trend: "up",
+      },
+      {
+        name: "Key distribution or management, e.g. generation, sharing or updating, of cryptographic keys or passwords",
+        patents: 393,
+        change: "+6%",
+        trend: "up",
+      },
       { name: "Navigation", patents: 97, change: "-4%", trend: "down" },
-      { name: "Related to drivers or passengers", patents: 96, change: "+3%", trend: "up" },
+      {
+        name: "Related to drivers or passengers",
+        patents: 96,
+        change: "+3%",
+        trend: "up",
+      },
     ],
   },
   {
@@ -115,7 +180,7 @@ const suggestedCompanies = [
     patents: 83,
     industries: 6,
     technologies: 39,
-    inventors: 129 ,
+    inventors: 129,
     change: "+18%",
     technologiesDeveloped: [
       { name: "Supports", patents: 38, change: "+12%", trend: "up" },
@@ -131,7 +196,12 @@ const suggestedCompanies = [
         change: "-3%",
         trend: "down",
       },
-      { name: "Using several loops, e.g. for redundant clock signal generation", patents: 4, change: "+7%", trend: "up" },
+      {
+        name: "Using several loops, e.g. for redundant clock signal generation",
+        patents: 4,
+        change: "+7%",
+        trend: "up",
+      },
     ],
   },
   {
@@ -144,9 +214,24 @@ const suggestedCompanies = [
     inventors: 913,
     change: "+44%",
     technologiesDeveloped: [
-      { name: "Adapted for protecting batteries against vibrations, collision impact or swelling", patents: 238, change: "+10%", trend: "up" },
-      { name: "Of the electric storage means for propulsion", patents: 229, change: "+8%", trend: "up" },
-      { name: "Estimation or adaptation of motor parameters, e.g. rotor time constant, flux, speed, current or voltage", patents: 58, change: "+12%", trend: "up" },
+      {
+        name: "Adapted for protecting batteries against vibrations, collision impact or swelling",
+        patents: 238,
+        change: "+10%",
+        trend: "up",
+      },
+      {
+        name: "Of the electric storage means for propulsion",
+        patents: 229,
+        change: "+8%",
+        trend: "up",
+      },
+      {
+        name: "Estimation or adaptation of motor parameters, e.g. rotor time constant, flux, speed, current or voltage",
+        patents: 58,
+        change: "+12%",
+        trend: "up",
+      },
       {
         name: "Bus networks",
         patents: 22,
@@ -165,9 +250,24 @@ const suggestedCompanies = [
     inventors: 1543,
     change: "+36%",
     technologiesDeveloped: [
-      { name: "Taken from planes or by drones", patents: 596, change: "+11%", trend: "up" },
-      { name: "For calculating health indices", patents: 92, change: "+9%", trend: "up" },
-      { name: "Including means for verifying the identity or authority of a user of the system or for message authentication, e.g. authorization, entity authentication, data integrity or data verification, non-repudiation, key authentication or verification of credentials", patents: 64, change: "+4%", trend: "up" },
+      {
+        name: "Taken from planes or by drones",
+        patents: 596,
+        change: "+11%",
+        trend: "up",
+      },
+      {
+        name: "For calculating health indices",
+        patents: 92,
+        change: "+9%",
+        trend: "up",
+      },
+      {
+        name: "Including means for verifying the identity or authority of a user of the system or for message authentication, e.g. authorization, entity authentication, data integrity or data verification, non-repudiation, key authentication or verification of credentials",
+        patents: 64,
+        change: "+4%",
+        trend: "up",
+      },
       {
         name: "Radar or analogous systems specially adapted for specific applications",
         patents: 61,
@@ -176,7 +276,6 @@ const suggestedCompanies = [
       },
     ],
   },
- 
 ];
 
 const sampleData = [
@@ -253,7 +352,6 @@ const PortfolioWeeklyCompany = () => {
   );
   const [prefetchedInsights, setPrefetchedInsights] = useState(null);
 
-
   // Simulate progress bar before showing insights
   useEffect(() => {
     if (isLoading) {
@@ -287,26 +385,25 @@ const PortfolioWeeklyCompany = () => {
     }
   }, [isLoading]);
 
-useEffect(() => {
-  if (suggestedCompanies && suggestedCompanies.length > 0) {
-    const params = new URLSearchParams(window.location.search);
-    const companyName = params.get("insights");
-    if (companyName) {
-      const match = suggestedCompanies.find(
-        (c) => c.name.toLowerCase() === companyName.toLowerCase()
-      );
-      if (match) {
-        setCurrentCompany(match);
-        setShowInsights(true);
-        setIsLoading(true);
-        setProgress(0);
+  useEffect(() => {
+    if (suggestedCompanies && suggestedCompanies.length > 0) {
+      const params = new URLSearchParams(window.location.search);
+      const companyName = params.get("insights");
+      if (companyName) {
+        const match = suggestedCompanies.find(
+          (c) => c.name.toLowerCase() === companyName.toLowerCase()
+        );
+        if (match) {
+          setCurrentCompany(match);
+          setShowInsights(true);
+          setIsLoading(true);
+          setProgress(0);
 
-        window.history.replaceState({}, document.title, "/companylist");
+          window.history.replaceState({}, document.title, "/companylist");
+        }
       }
     }
-  }
-}, [suggestedCompanies]);
-
+  }, [suggestedCompanies]);
 
   // Add company to portfolio
   const handleAddCompany = (company) => {
@@ -328,27 +425,28 @@ useEffect(() => {
   };
 
   const fetchCompanyInsights = async (companyName) => {
-  try {
-    const response = await fetch(
-      `https://api.incubig.org/analytics/assignee?assignee=${encodeURIComponent(companyName)}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "x-api-key":
-            "60PKCZgn3smuESHN9e8vbVHxiXVS/8H+vXeFC4ruW1d0YAc1UczQlTQ/C2JlnwlEOKjtnLB0N2I0oheAHJGZeB2bVURMQRC1GvM0k45kyrSmiK98bPPlJPu8q1N/TlK4",
-        },
-      }
-    );
-    if (!response.ok) throw new Error(`API error: ${response.status}`);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching insights:", error);
-    return null;
-  }
-};
-
+    try {
+      const response = await fetch(
+        `https://api.incubig.org/analytics/assignee?assignee=${encodeURIComponent(
+          companyName
+        )}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key":
+              "60PKCZgn3smuESHN9e8vbVHxiXVS/8H+vXeFC4ruW1d0YAc1UczQlTQ/C2JlnwlEOKjtnLB0N2I0oheAHJGZeB2bVURMQRC1GvM0k45kyrSmiK98bPPlJPu8q1N/TlK4",
+          },
+        }
+      );
+      if (!response.ok) throw new Error(`API error: ${response.status}`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching insights:", error);
+      return null;
+    }
+  };
 
   return (
     <div>
@@ -397,7 +495,13 @@ useEffect(() => {
                 <div
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  <h4 style={{ margin: "0.5rem 0", fontSize: "18px", fontFamily: "DM Sans, sans-serif" }}>
+                  <h4
+                    style={{
+                      margin: "0.5rem 0",
+                      fontSize: "18px",
+                      fontFamily: "DM Sans, sans-serif",
+                    }}
+                  >
                     {company.name}
                   </h4>
                   <span
@@ -505,65 +609,61 @@ useEffect(() => {
 
               {/* 1-Click Insights Button */}
               <div style={{ marginTop: "15px", textAlign: "center" }}>
-        <button
-  onClick={async () => {
-    setCurrentCompany(company);
-    setShowInsights(true);
-    setIsLoading(true);
-    setProgress(0);
+                <button
+                  onClick={async () => {
+                    setCurrentCompany(company);
+                    setShowInsights(true);
+                    setIsLoading(true);
+                    setProgress(0);
 
-    // Start fetching immediately
-    const dataPromise = fetchCompanyInsights(company.name);
+                    // Start fetching immediately
+                    const dataPromise = fetchCompanyInsights(company.name);
 
-    let progressValue = 0;
-    let fetchDone = false;
+                    let progressValue = 0;
+                    let fetchDone = false;
 
-    // Track when API finishes
-    const fetchWatcher = (async () => {
-      try {
-        const insightsData = await dataPromise;
-        setPrefetchedInsights(insightsData);
-        fetchDone = true;
-      } catch (err) {
-        console.error("Error fetching insights:", err);
-        fetchDone = true;
-      }
-    })();
+                    // Track when API finishes
+                    const fetchWatcher = (async () => {
+                      try {
+                        const insightsData = await dataPromise;
+                        setPrefetchedInsights(insightsData);
+                        fetchDone = true;
+                      } catch (err) {
+                        console.error("Error fetching insights:", err);
+                        fetchDone = true;
+                      }
+                    })();
 
-    // Progress animation
-    const progressInterval = setInterval(() => {
-  if (progressValue < 90) {
-    progressValue += 1.2;
-    setProgress(Math.round(progressValue)); 
-  } else if (fetchDone) {
-    progressValue += 2;
-    setProgress(Math.round(progressValue)); 
-    if (progressValue >= 100) {
-      clearInterval(progressInterval);
-      setIsLoading(false);
-    }
-  }
-}, 80);
+                    // Progress animation
+                    const progressInterval = setInterval(() => {
+                      if (progressValue < 90) {
+                        progressValue += 1.2;
+                        setProgress(Math.round(progressValue));
+                      } else if (fetchDone) {
+                        progressValue += 2;
+                        setProgress(Math.round(progressValue));
+                        if (progressValue >= 100) {
+                          clearInterval(progressInterval);
+                          setIsLoading(false);
+                        }
+                      }
+                    }, 80);
 
-
-    // Wait for both animation + fetch to end
-    await fetchWatcher;
-  }}
-  style={{
-    color: "#fff",
-    cursor: "pointer",
-    background: "linear-gradient(90deg, #007bff, #00bfff)",
-    border: "none",
-    borderRadius: "8px",
-    padding: "8px 16px",
-    fontSize: ".8rem",
-  }}
->
-  1-Click Insights
-</button>
-
-
-
+                    // Wait for both animation + fetch to end
+                    await fetchWatcher;
+                  }}
+                  style={{
+                    color: "#fff",
+                    cursor: "pointer",
+                    background: "linear-gradient(90deg, #007bff, #00bfff)",
+                    border: "none",
+                    borderRadius: "8px",
+                    padding: "8px 16px",
+                    fontSize: ".8rem",
+                  }}
+                >
+                  1-Click Insights
+                </button>
               </div>
             </div>
           ))}
@@ -704,7 +804,10 @@ useEffect(() => {
                   </p>
                 </div>
               ) : (
-                <InsightsView company={currentCompany} prefetchedData={prefetchedInsights} />
+                <InsightsView
+                  company={currentCompany}
+                  prefetchedData={prefetchedInsights}
+                />
               )}
             </div>
 

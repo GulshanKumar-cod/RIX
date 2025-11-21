@@ -2,9 +2,16 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 import styles from "../companylist/companylist.module.css";
 
-const OverviewTab = ({ selectedIndustry,activeTab, topCountries, topCompanies }) => {
+const OverviewTab = ({
+  selectedIndustry,
+  activeTab,
+  topCountries,
+  topCompanies,
+  topInnovators,
+  topTechnologies
+}) => {
   return (
-    <div style={{marginBottom: "5rem"}}>
+    <div style={{ marginBottom: "5rem" }}>
       {/* Description */}
       <p
         style={{
@@ -12,10 +19,10 @@ const OverviewTab = ({ selectedIndustry,activeTab, topCountries, topCompanies })
           margin: "0 0 1.5rem 0",
           lineHeight: "1.4",
         }}
-         className={styles.statsLabel}
+        className={styles.statsLabel}
       >
-      {selectedIndustry?.descriptionsByTab?.[activeTab] ??
-    "No description available for this section."}
+        {selectedIndustry?.descriptionsByTab?.[activeTab] ??
+          "No description available for this section."}
       </p>
 
       {/* Info Grid */}
@@ -32,6 +39,10 @@ const OverviewTab = ({ selectedIndustry,activeTab, topCountries, topCompanies })
           {
             label: "Companies",
             value: "34",
+          },
+          {
+            label: "Innovators",
+            value: "256",
           },
           {
             label: "Technologies",
@@ -59,15 +70,7 @@ const OverviewTab = ({ selectedIndustry,activeTab, topCountries, topCompanies })
         <div style={{ height: "180px" }}>
           <Line
             data={{
-              labels: [
-                "2018",
-                "2019",
-                "2020",
-                "2021",
-                "2022",
-                "2023",
-                "2024",
-              ],
+              labels: ["2018", "2019", "2020", "2021", "2022", "2023", "2024"],
               datasets: [
                 {
                   data: [100, 30, 50, 170, 200, 230, 260],
@@ -127,19 +130,29 @@ const OverviewTab = ({ selectedIndustry,activeTab, topCountries, topCompanies })
       </div>
 
       <div className={styles.countryCompany}>
-        {/* 🌍 Top Countries Section */}
+        {/*  Top Countries Section */}
         <div className={styles.countriesSection}>
-          <h4 style={{ marginBottom: "0.8rem", fontSize: "0.8rem", color: "#00bfff" }}>
+          <h4
+            style={{
+              marginBottom: "0.8rem",
+              fontSize: "0.8rem",
+              color: "#00bfff",
+            }}
+          >
             Top Countries
           </h4>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}
+          >
             {topCountries.map((country, index) => (
               <div key={index} className={styles.dataRow}>
                 <span>{country.name}</span>
                 <span>{country.applications.toLocaleString()}</span>
                 <span
                   style={{
-                    color: country.increment.startsWith("+") ? "#00ff88" : "#ff4d4d",
+                    color: country.increment.startsWith("+")
+                      ? "#00ff88"
+                      : "#ff4d4d",
                     fontWeight: 500,
                   }}
                 >
@@ -150,19 +163,29 @@ const OverviewTab = ({ selectedIndustry,activeTab, topCountries, topCompanies })
           </div>
         </div>
 
-        {/* 🏢 Leading Organizations Section */}
+        {/*  Leading Organizations Section */}
         <div className={styles.organizationsSection}>
-          <h4 style={{ marginBottom: "0.8rem", fontSize: "0.8rem", color: "#00bfff" }}>
+          <h4
+            style={{
+              marginBottom: "0.8rem",
+              fontSize: "0.8rem",
+              color: "#00bfff",
+            }}
+          >
             Leading Organizations
           </h4>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}
+          >
             {topCompanies.map((company, index) => (
               <div key={index} className={styles.dataRow}>
                 <span>{company.name}</span>
                 <span>{company.applications.toLocaleString()}</span>
                 <span
                   style={{
-                    color: company.increment.startsWith("+") ? "#00ff88" : "#ff4d4d",
+                    color: company.increment.startsWith("+")
+                      ? "#00ff88"
+                      : "#ff4d4d",
                     fontWeight: 500,
                   }}
                 >
@@ -174,25 +197,92 @@ const OverviewTab = ({ selectedIndustry,activeTab, topCountries, topCompanies })
         </div>
       </div>
 
- <button
-  style={{
-    background: "linear-gradient(90deg, #007bff, #00bfff)",
-    color: "#fff",
-    border: "none",
-    padding: "0.5rem 1.25rem",
-    borderRadius: "8px",
-    fontSize: "0.8rem",
-    fontWeight: 500,
-    cursor: "pointer",
-    width: "100%",
-    maxWidth: "200px",     
-    display: "block",
-    margin: "0 auto",       
-  }}
->
-  1-Click Insight
-</button>
+      <div className={styles.countryCompany}>
+        {/* Top People Section */}
+        <div className={styles.countriesSection}>
+          <h4
+            style={{
+              marginBottom: "0.8rem",
+              fontSize: "0.8rem",
+              color: "#00bfff",
+            }}
+          >
+            Top Innovators
+          </h4>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}
+          >
+            {topInnovators.map((country, index) => (
+              <div key={index} className={styles.dataRow}>
+                <span>{country.name}</span>
+                <span>{country.applications.toLocaleString()}</span>
+                <span
+                  style={{
+                    color: country.increment.startsWith("+")
+                      ? "#00ff88"
+                      : "#ff4d4d",
+                    fontWeight: 500,
+                  }}
+                >
+                  {country.increment}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
 
+        {/*  Top technology Section */}
+        <div className={styles.organizationsSection}>
+          <h4
+            style={{
+              marginBottom: "0.8rem",
+              fontSize: "0.8rem",
+              color: "#00bfff",
+            }}
+          >
+          Top Technologies
+          </h4>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}
+          >
+            {topTechnologies.map((company, index) => (
+              <div key={index} className={styles.dataRow}>
+                <span>{company.name}</span>
+                <span style={{flex: "none"}}>{company.applications.toLocaleString()}</span>
+                {/* <span
+                  style={{
+                    color: company.increment.startsWith("+")
+                      ? "#00ff88"
+                      : "#ff4d4d",
+                    fontWeight: 500,
+                  }}
+                >
+                  {company.increment}
+                </span> */}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <button
+        style={{
+          background: "linear-gradient(90deg, #007bff, #00bfff)",
+          color: "#fff",
+          border: "none",
+          padding: "0.5rem 1.25rem",
+          borderRadius: "8px",
+          fontSize: "0.8rem",
+          fontWeight: 500,
+          cursor: "pointer",
+          width: "100%",
+          maxWidth: "200px",
+          display: "block",
+          margin: "0 auto",
+        }}
+      >
+        1-Click Insight
+      </button>
     </div>
   );
 };
