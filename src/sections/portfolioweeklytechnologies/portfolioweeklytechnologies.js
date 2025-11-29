@@ -85,10 +85,10 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
     {
       id: 3,
       title:
-        "Micro-electromechanical systems (MEMS) for inertial sensing or pressure detection",
+        "Details of, or accessories for, apparatus for measuring steady or quasi-steady pressure of a fluent medium insofar as such details or accessories are not special to particular types of pressure gauges",
       metrics: {
-        organizations: 66,
-        innovations: 301,
+        organizations: 258,
+        innovations: 450,
       },
       trend: {
         percent: "49.2%",
