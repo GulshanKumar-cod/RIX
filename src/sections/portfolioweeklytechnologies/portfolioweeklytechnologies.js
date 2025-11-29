@@ -29,8 +29,8 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
       title:
         "Adapted for proprietary or special purpose networking environments, e.g. medical networks, sensor networks, networks in a car or remote metering networks",
       metrics: {
-        organizations: 147,
-        innovations: 892,
+        organizations: 861,
+        innovations: 2020,
       },
       trend: {
         percent: "34.5%",
@@ -58,8 +58,8 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
       title:
         "Constructional details or arrangements of charging converters specially adapted for charging electric vehicles",
       metrics: {
-        organizations: 89,
-        innovations: 420,
+        organizations: 148,
+        innovations: 378,
       },
       trend: {
         percent: "27.8%",
