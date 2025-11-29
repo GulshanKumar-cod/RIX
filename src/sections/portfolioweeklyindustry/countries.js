@@ -5,14 +5,14 @@ import SimpleMap from "@/components/worldmap/worldmap";
 import styles from "../companylist/companylist.module.css";
 
 const CountriesTab = ({ selectedIndustry, activeTab}) => {
-  // --- Sample summary data ---
+  // Sample summary data 
   const summary = {
     totalCountries: 72,
     topCountry: "USA",
     growth: "+18% YoY",
   };
 
-  // --- Map data (ISO codes + patent values) ---
+  // Map data (ISO codes + patent values) 
   const mapData = [
     ["US", 28450],
     ["CN", 25300],
@@ -21,7 +21,7 @@ const CountriesTab = ({ selectedIndustry, activeTab}) => {
     ["KR", 12200],
   ];
 
-  // --- Table data ---
+  // Table data 
   const countryData = [
     {
       rank: 1,
@@ -67,7 +67,7 @@ const CountriesTab = ({ selectedIndustry, activeTab}) => {
         marginBottom: "5rem"
       }}
     >
-      {/* --------- HEADER --------- */}
+      {/* HEADER */}
       <p
         style={{
           color: "#fff",
@@ -79,7 +79,7 @@ const CountriesTab = ({ selectedIndustry, activeTab}) => {
     "No description available for this section."}
       </p>
 
-     {/* --------- SUMMARY BOXES --------- */}
+     {/* SUMMARY BOXES  */}
 <section className={styles.statsSection}>
   {[
     { label: "Active Countries", value: summary.totalCountries },
@@ -94,7 +94,7 @@ const CountriesTab = ({ selectedIndustry, activeTab}) => {
 </section>
 
 
-      {/* --------- INTERACTIVE WORLD MAP --------- */}
+      {/*  INTERACTIVE WORLD MAP */}
      <div
   style={{
     background: "transparent",
@@ -115,7 +115,7 @@ const CountriesTab = ({ selectedIndustry, activeTab}) => {
 
       </div>
 
-      {/* --------- TABLE --------- */}
+      {/* TABLE */}
      <div style={{ overflowX: "auto", marginBottom: "1.5rem"}}>
         <h3 className={styles.headingH3} style={{marginBottom: "1rem"}}>Global Rankings</h3>
   <table
@@ -150,7 +150,7 @@ const CountriesTab = ({ selectedIndustry, activeTab}) => {
 </div>
 
 
-      {/* --------- INSIGHT TEXT --------- */}
+      {/* INSIGHT TEXT */}
       <p
         className={styles.statsLabel} style={{fontWeight: "normal",lineHeight: "1.6", marginBottom: "1.5rem",}}
       >
@@ -161,7 +161,7 @@ const CountriesTab = ({ selectedIndustry, activeTab}) => {
         mobility platforms.
       </p>
 
-      {/* --------- CTA BUTTON --------- */}
+      {/* CTA BUTTON  */}
      <button
   style={{
     background: "linear-gradient(90deg, #007bff, #00bfff)",

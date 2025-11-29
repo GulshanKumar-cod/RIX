@@ -99,9 +99,9 @@ const companies = Array.isArray(data) && data.length > 0 ? data : defaultData;
           industries: company.tags
             ?.filter((tag) => !["USA", "Germany", "UK"].includes(tag))
             .join(", "),
-          patents: Math.floor(Math.random() * 100), // mock
-          technologies: Math.floor(Math.random() * 50), // mock
-          inventors: Math.floor(Math.random() * 20), // mock
+          patents: Math.floor(Math.random() * 100), 
+          technologies: Math.floor(Math.random() * 50), 
+          inventors: Math.floor(Math.random() * 20), 
         };
 
         const updated = [...existing, companyWithDetails];

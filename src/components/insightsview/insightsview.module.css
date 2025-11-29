@@ -363,7 +363,7 @@ margin-top: 2rem;
   border-radius: 50%;
 }
 
-/* ==== Technologies Developed Section ==== */
+/* Technologies Developed Section */
 .techSection {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react"; // optional icon
+import { ArrowLeft } from "lucide-react";
 
 const UserProfile = () => {
   const router = useRouter();
@@ -47,7 +47,7 @@ useEffect(() => {
         fontFamily: "Inter, sans-serif",
       }}
     >
-      {/* ===== Back Button Header ===== */}
+      {/* Back Button Header */}
       <div
         style={{
           display: "flex",
@@ -79,7 +79,7 @@ useEffect(() => {
       </h2>
 
       <form onSubmit={handleSubmit}>
-        {/* ========== BASIC INFO ========== */}
+        {/* BASIC INFO */}
         <section style={{ marginBottom: "2rem" }}>
           <h3 style={{ fontSize: "1rem", marginBottom: "1rem" }}>Basic Info</h3>
 
@@ -122,7 +122,7 @@ useEffect(() => {
           </div>
         </section>
 
-        {/* ========== FOCUS AREAS ========== */}
+        {/* FOCUS AREAS */}
        <section style={{ marginBottom: "2rem" }}>
   <h3 style={{ fontSize: "1rem", marginBottom: "1rem" }}>
     Focus Areas
@@ -220,7 +220,7 @@ useEffect(() => {
           </div> */}
         </section>
 
-        {/* ========== PREFERENCES ========== */}
+        {/* PREFERENCES */}
         <section style={{ marginBottom: "2rem" }}>
           <h3 style={{ fontSize: "1rem", marginBottom: "1rem" }}>
             Preferences
@@ -278,7 +278,7 @@ useEffect(() => {
           </div>
         </section>
 
-        {/* ========== BUTTON ========== */}
+        {/*  BUTTON */}
         <div style={{ textAlign: "right" }}>
           <button
             type="submit"
@@ -303,7 +303,7 @@ useEffect(() => {
 
 export default UserProfile;
 
-/* ---------- Styles ---------- */
+/* Styles */
 const inputStyle = {
   width: "100%",
   padding: "8px 10px",
@@ -340,7 +340,7 @@ const multiSelectStyle = {
   fontFamily: "Inter, sans-serif",
   boxShadow: "inset 0 1px 3px rgba(0,0,0,0.3)",
   outline: "none",
-  scrollbarColor: "#666 #121212", // Firefox
+  scrollbarColor: "#666 #121212",
 };
 
 const optionStyle = {
@@ -366,7 +366,7 @@ const checkboxLabelStyle = {
 
 
 
-/* ---------- MultiSelect ---------- */
+/* MultiSelect */
 const MultiSelect = ({ options, values, onChange }) => {
   const handleChange = (e) => {
     const selectedOptions = Array.from(e.target.selectedOptions).map(

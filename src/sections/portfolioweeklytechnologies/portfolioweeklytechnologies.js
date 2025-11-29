@@ -22,7 +22,7 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // technologyDataList.js (or place inside your component file)
+
   const technologyDataList = [
     {
       id: 1,
@@ -56,7 +56,7 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
     {
       id: 2,
       title:
-        "AI-driven edge computing technologies for ultra-low latency environments",
+        "For integrated circuit devices, e.g. power bus, number of leads",
       metrics: {
         organizations: 89,
         innovations: 420,
@@ -85,7 +85,7 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
     {
       id: 3,
       title:
-        "Quantum-safe communication protocols with next-gen cryptographic systems",
+        "Micro-electromechanical systems (MEMS) for inertial sensing or pressure detection",
       metrics: {
         organizations: 66,
         innovations: 301,

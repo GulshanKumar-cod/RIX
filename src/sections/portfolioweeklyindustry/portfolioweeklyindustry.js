@@ -148,7 +148,7 @@ const PortfolioWeeklyIndustry = ({
       { name: "Qualcomm", applications: 2500, increment: "+3%" },
     ],
 
-    // ⭐ NEW DATA START
+    // NEW DATA START
     topInnovators: [
       { name: "Elena Rodriguez", applications: 1450, increment: "+9%" },
       { name: "Kenji Takahara", applications: 1320, increment: "+7%" },
@@ -163,7 +163,7 @@ const PortfolioWeeklyIndustry = ({
       { name: "EV Thermal Regulation Systems", applications: 3400 },
       { name: "Lane-Level Predictive Mapping", applications: 3200 },
     ],
-    // ⭐ NEW DATA END
+    // NEW DATA END
 
     topTechnology: "Battery Cooling Systems",
     topInventor: "Li Wei",
@@ -199,7 +199,7 @@ const PortfolioWeeklyIndustry = ({
       { name: "Qualcomm", applications: 2500, increment: "+3%" },
     ],
 
-    // ⭐ NEW DATA START
+    // NEW DATA START
     topInnovators: [
       { name: "Dr. Maria Chen", applications: 980, increment: "+11%" },
       { name: "Prof. Liam O'Connor", applications: 910, increment: "+8%" },
@@ -214,7 +214,7 @@ const PortfolioWeeklyIndustry = ({
       { name: "Living DNA Storage Arrays", applications: 2100 },
       { name: "Bio-Analog Signal Mapping", applications: 1980 },
     ],
-    // ⭐ NEW DATA END
+    //  NEW DATA END
 
     topTechnology: "Neural Signal Mapping",
     topInventor: "Dr. Jane Smith",
@@ -251,7 +251,7 @@ const PortfolioWeeklyIndustry = ({
       { name: "Qualcomm", applications: 2500, increment: "+3%" },
     ],
 
-    // ⭐ NEW DATA START
+    //  NEW DATA START
     topInnovators: [
       { name: "Ravi Narang", applications: 1120, increment: "+10%" },
       { name: "Chen Guang", applications: 1080, increment: "+9%" },
@@ -266,7 +266,7 @@ const PortfolioWeeklyIndustry = ({
       { name: "Energy-Optimal Route Planning AI", applications: 2700 },
       { name: "Thermal Runaway Prediction Models", applications: 2550 },
     ],
-    // ⭐ NEW DATA END
+    // NEW DATA END
 
     topTechnology: "Predictive Battery Analytics",
     topInventor: "Lee Sung-ho",
@@ -324,7 +324,7 @@ const PortfolioWeeklyIndustry = ({
     (company) => company.industry === selectedIndustry?.name
   );
 
-  // 🔹 Group by Country
+  // Group by Country
   const countryMap = {};
   relevantCompanies.forEach((c) => {
     if (!countryMap[c.country]) {
@@ -628,11 +628,9 @@ const chartData = {
   ],
 };
 
-// Consistent growth calculation (from the same 5 points)
 const startVal = lastFive[0];
 const endVal = lastFive[lastFive.length - 1];
 
-// Avoid division issues
 const growthPercent =
   startVal === 0 ? "0.0" : (((endVal - startVal) / startVal) * 100).toFixed(1);
 
@@ -821,7 +819,7 @@ const growthColor = endVal > startVal ? "#00ff88" : "#ff4d4d";
               style={{
                 position: "relative",
                 marginBottom: "0rem",
-                minHeight: "4rem", // Slightly taller to allow room
+                minHeight: "4rem", 
               }}
             >
 
@@ -833,9 +831,6 @@ const growthColor = endVal > startVal ? "#00ff88" : "#ff4d4d";
                   fontWeight: 600,
                   paddingTop: "1.5rem",
                   maxWidth: "100%",
-                  // overflow: "hidden",
-                  // textOverflow: "ellipsis",
-                  // whiteSpace: "nowrap",
                 }}
               >
                 {selectedIndustry.name}

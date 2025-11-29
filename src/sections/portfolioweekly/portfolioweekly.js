@@ -55,7 +55,7 @@ const PortfolioWeekly = () => {
 
           
 
-          {/* 🔁 Tabs */}
+          {/* Tabs */}
        {!selectedIndustry && (
             <div className={styles.tabButtonContainer}>
               <button
@@ -79,7 +79,7 @@ const PortfolioWeekly = () => {
             </div>
           )}
 
-          {/* 🔁 Tab Content */}
+          {/* Tab Content */}
           <div>{renderTabContent()}</div>
         </div>
       </div>

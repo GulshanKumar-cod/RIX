@@ -195,7 +195,7 @@ const PortfolioSearch = () => {
               next = 100;
             }
   
-            // 🔹 Update message based on progress stage
+            // Update message based on progress stage
             if (next < 25) {
               setProgressMessage("Fetching innovation activity data...");
             } else if (next < 50) {
@@ -527,7 +527,7 @@ const PortfolioSearch = () => {
                           isExpanded ? styles.expanded : ""
                         }`}
                       >
-                        {/* 🔹 Header */}
+                        {/* Header */}
                         <div
                           className={styles.cardHeader}
                           // onClick={() => goToCompanyPage(item.name)}
@@ -580,7 +580,7 @@ const PortfolioSearch = () => {
 
                         <hr className={styles.divider} />
 
-                        {/* 🔹 Toggle for details */}
+                        {/* Toggle for details */}
                         <button
                           type="button"
                           className={styles.detailsToggle}
@@ -612,7 +612,7 @@ const PortfolioSearch = () => {
                           </span>
                         </button>
 
-                        {/* 🔹 Expandable Section */}
+                        {/* Expandable Section */}
                         <div
                           className={`${styles.expandedContent} ${
                             isExpanded ? styles.show : ""
@@ -636,7 +636,7 @@ const PortfolioSearch = () => {
                           </div>
                         </div>
 
-                        {/* 🔹 Action */}
+                        {/* Action */}
                         <div className={styles.cardAction}>
                           <button
                             className={styles.viewButton}

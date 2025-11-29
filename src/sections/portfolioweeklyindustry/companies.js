@@ -42,7 +42,7 @@ const CompaniesTab = ({
                       isExpanded ? styles.expanded : ""
                     }`}
                   >
-                    {/* 🔹 Header */}
+                    {/* Header */}
                     <div className={styles.cardHeader}>
                       <div
                         style={{
@@ -84,7 +84,7 @@ const CompaniesTab = ({
                       </div>
                     </div>
 
-                    {/* 🔹 Summary Line */}
+                    {/*  Summary Line */}
                     <p
                       style={{
                         marginTop: "15px",
@@ -99,7 +99,7 @@ const CompaniesTab = ({
 
                     <hr className={styles.divider} />
 
-                    {/* 🔹 Toggle for details */}
+                    {/*  Toggle for details */}
                     <button
                       type="button"
                       className={styles.detailsToggle}
@@ -133,7 +133,7 @@ const CompaniesTab = ({
                       </span>
                     </button>
 
-                    {/* 🔹 Expandable Section */}
+                    {/*  Expandable Section */}
                     <div
                       className={`${styles.expandedContent} ${
                         isExpanded ? styles.show : ""
@@ -157,7 +157,7 @@ const CompaniesTab = ({
                       </div>
                     </div>
 
-                    {/* 🔹 Action Buttons */}
+                    {/*  Action Buttons */}
                     <div className={styles.cardAction}>
                       <button
                         className={styles.viewButton}

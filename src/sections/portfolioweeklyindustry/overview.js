@@ -56,7 +56,7 @@ const OverviewTab = ({
         ))}
       </section>
 
-      {/* 📈 YoY Innovation Activity Line Graph */}
+      {/* YoY Innovation Activity Line Graph */}
       <div style={{ marginBottom: "2rem" }}>
         <h4
           style={{

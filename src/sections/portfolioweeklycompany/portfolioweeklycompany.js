@@ -364,7 +364,7 @@ const PortfolioWeeklyCompany = () => {
             next = 100;
           }
 
-          // 🔹 Update message based on progress stage
+          // Update message based on progress stage
           if (next < 25) {
             setProgressMessage("Fetching innovation activity data...");
           } else if (next < 50) {
@@ -670,7 +670,7 @@ const PortfolioWeeklyCompany = () => {
         </div>
       </div>
 
-      {/* 🔹 Toggle Dropdown */}
+      {/* Toggle Dropdown */}
       {/* <div
         style={{
           display: "flex",

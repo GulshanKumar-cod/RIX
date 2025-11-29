@@ -86,7 +86,7 @@ const InsightsView = ({ company, prefetchedData }) => {
     setLoading(true);
     try {
       if (prefetchedData) {
-        // ✅ Use prefetched data instantly
+        // Use prefetched data instantly
         setApiData(prefetchedData);
         await processCpcDefinitions(prefetchedData);
         return;
@@ -107,7 +107,7 @@ const InsightsView = ({ company, prefetchedData }) => {
       const data = await response.json();
       setApiData(data);
       await processCpcDefinitions(data); 
-      // === NEW: Fetch technologies from CPC codes ===
+      // NEW: Fetch technologies from CPC codes 
 const topIndustries = data.top_industries?.filter(i => i.cpc) || [];
 
 if (topIndustries.length > 0) {
@@ -128,7 +128,7 @@ if (topIndustries.length > 0) {
       return {
         name: def?.definition || ind.cpc,  // full text technology name
         patents: ind.count,
-        trend: "up",      // (optional) can calculate real trend later
+        trend: "up",      // can calculate real trend later
         change: "—",      // placeholder
         cpc: ind.cpc
       };
@@ -307,7 +307,7 @@ Really impressive.
   return (
     <div id="insights-content">
       <div className={styles.insightsContainer}>
-        {/* ===== Header ===== */}
+        {/* Header */}
         <div className={styles.headerSection}>
           <div className={styles.headerRow}>
             <h3 className={styles.companyName}>{company.name}</h3>
@@ -340,10 +340,10 @@ Really impressive.
           </p>
         </div>
 
-        {/* ===== Executive Summary ===== */}
+        {/*Executive Summary */}
         <h3 className={styles.sectionTitle}>Executive Summary</h3>
         <div className={styles.summaryContainer}>
-          {/* 1️⃣ General Stats Paragraph */}
+          {/* General Stats Paragraph */}
           <p className={styles.summaryParagraph}>
             {company.name} has recorded a total of{" "}
             <strong>{summary.applications?.toLocaleString() || "—"}</strong>{" "}
@@ -358,7 +358,7 @@ Really impressive.
             <strong>{summary.technologies || "—"}</strong> technology domains.
           </p>
 
-          {/* 2️⃣ Innovation Trends Paragraph */}
+          {/*  Innovation Trends Paragraph */}
           {trendPoints.length > 0 &&
             (() => {
               const peak = trendPoints.reduce(
@@ -390,7 +390,7 @@ Really impressive.
               );
             })()}
 
-          {/* 3️⃣ Industry Distribution Paragraph */}
+          {/*  Industry Distribution Paragraph */}
           {industryData.length > 0 && (
             <p className={styles.summaryParagraph}>
               Industry-wise, {company.name} shows the highest innovation
@@ -403,7 +403,7 @@ Really impressive.
             </p>
           )}
 
-          {/* 4️⃣ Technologies Paragraph */}
+          {/*  Technologies Paragraph */}
           {techList.length > 0 && (
             <p className={styles.summaryParagraph}>
               Technologically, the company’s major focus areas include{" "}
@@ -414,7 +414,7 @@ Really impressive.
             </p>
           )}
 
-          {/* 5️⃣ Innovators Paragraph (now includes top 2 names) */}
+          {/*  Innovators Paragraph (now includes top 2 names) */}
           {peopleList.length > 0 &&
             (() => {
               const top1 = peopleList[0]?.name;
@@ -432,7 +432,7 @@ Really impressive.
             })()}
         </div>
 
-        {/* ===== Stats Section ===== */}
+        {/* Stats Section */}
         <section className={styles.statsSection}>
           {[
             ["Innovations", summary.applications?.toLocaleString() || "—"],
@@ -451,7 +451,7 @@ Really impressive.
           ))}
         </section>
 
-        {/* ===== Innovation Trends ===== */}
+        {/*Innovation Trends */}
         <h3 className={styles.sectionTitle}>Innovation Trends</h3>
         <div className={styles.chartWrapper}>
           <Line
@@ -524,7 +524,7 @@ Really impressive.
           </div>
         </div>
 
-        {/* ===== Extra Stat Cards Below Chart ===== */}
+        {/*Extra Stat Cards Below Chart */}
         {/* <div className={styles.extraStatsSection}>
           <div className={styles.extraStatCard}>
             <h4 className={styles.extraStatValue}>+9.4%</h4>

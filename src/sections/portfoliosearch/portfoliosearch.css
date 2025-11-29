@@ -337,7 +337,7 @@ border: 1px solid;
   }
 }
 
-/* ✅ Responsive layout for small screens */
+/* Responsive layout for small screens */
 @media (max-width: 768px) {
   .signals-layout {
     flex-direction: column;
@@ -421,7 +421,7 @@ border: 1px solid;
   }
 }
 
-/* ✅ Optional: Improve readability on very large screens */
+/*  Optional: Improve readability on very large screens */
 @media (min-width: 1200px) {
   .signals-layout {
     gap: 40px;

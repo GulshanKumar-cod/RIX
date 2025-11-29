@@ -1391,7 +1391,7 @@ flex-wrap: wrap;
   }
 }
 
-/* 🔹 Each data row (Country/Company) */
+/* Each data row (Country/Company) */
 .dataRow {
   display: flex;
   justify-content: space-between;
@@ -1554,7 +1554,7 @@ flex-wrap: wrap;
   color: #00bfff;
 }
 
-/* 📱 Responsive Design */
+/* Responsive Design */
 @media (max-width: 1024px) {
   .weeklyGrid {
     grid-template-columns: repeat(2, 1fr);

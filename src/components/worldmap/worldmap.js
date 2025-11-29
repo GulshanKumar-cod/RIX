@@ -25,7 +25,7 @@ const SimpleMap = (props) => {
     }
   }, [props.data]);
 
-  // ✅ Handle clicks on countries
+  //  Handle clicks on countries
   const onClick = (e) => {
     if (props.clickHandler) {
       props.clickHandler(e.countryCode, e.countryValue);

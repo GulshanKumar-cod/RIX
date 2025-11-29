@@ -95,7 +95,7 @@
   color: #000;
 }
 
-/* ================= Core Capabilities Section ================= */
+/*  Core Capabilities Section  */
 .capabilitiesSection {
   padding: 150px 20px;
   width: 100%;
@@ -207,7 +207,7 @@
   line-height: 1.6;
 }
 
-/* ================= Trusted at Scale Section ================= */
+/*Trusted at Scale Section */
 .trustedSection {
   padding: 20px 20px;
   text-align: center;
@@ -284,7 +284,7 @@
   font-weight: 500;
 }
 
-/* ================= Workflow Section ================= */
+/* Workflow Section */
 .workflowSection {
   padding: 150px 20px;
   text-align: center;
@@ -345,7 +345,7 @@
   line-height: 1.6;
 }
 
-/* ================= Innovators Section ================= */
+/* Innovators Section*/
 .innovatorsSection {
   padding: 20px 20px;
   text-align: center;
@@ -419,7 +419,7 @@
   }
 }
 
-/* ================= CTA Section ================= */
+/*  CTA Section */
 .ctaSection {
   padding: 120px 20px;
   text-align: center;
@@ -458,7 +458,7 @@
 }
 
 
-/* ================= Responsive Styling ================= */
+/*  Responsive Styling */
 @media (max-width: 1024px) {
   .title {
     font-size: 4rem;
