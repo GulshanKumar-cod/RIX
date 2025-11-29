@@ -27,7 +27,7 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
     {
       id: 1,
       title:
-        "Adapted for proprietary networking environments such as medical networks or sensor-based systems",
+        "Adapted for proprietary or special purpose networking environments, e.g. medical networks, sensor networks, networks in a car or remote metering networks",
       metrics: {
         organizations: 147,
         innovations: 892,
