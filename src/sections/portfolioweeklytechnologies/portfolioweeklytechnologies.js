@@ -56,7 +56,7 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
     {
       id: 2,
       title:
-        "For integrated circuit devices, e.g. power bus, number of leads",
+        "Constructional details or arrangements of charging converters specially adapted for charging electric vehicles",
       metrics: {
         organizations: 89,
         innovations: 420,
