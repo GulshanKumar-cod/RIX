@@ -70,9 +70,9 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
   };
 
   //  1-CLICK INSIGHTS HANDLER
-  const handleOneClickInsights = async (company, item) => {
+  const handleOneClickInsights = async (company, feedItem) => {
     setCurrentCompany(company);
-     setCurrentFeedItem(item);
+     setCurrentFeedItem(feedItem);
     setShowInsights(true);
     setIsLoading(true);
     setProgress(0);
@@ -340,7 +340,7 @@ const technologyDataList = [
 
   metrics: { organizations: 258, innovations: 450 },
 
-  company: { name: "Robert bosch gmbh " }
+  company: { name: "Robert bosch gmbh" }
 }
 
 ];
@@ -385,156 +385,170 @@ const technologyDataList = [
 
       {/* CARD LIST */}
       <div className={styles.featuredContainer}>
-        {technologyDataList.map((item) => {
-          const truncated =
-            item.title.split(" ").slice(0, 8).join(" ") + "...";
+      {technologyDataList.map((item) => {
+  const truncated =
+    item.title.split(" ").slice(0, 8).join(" ") + "...";
 
-          const showFull = expanded[item.id];
+  const showFull = expanded[item.id];
 
-          const trendData = {
-            labels: item.trend.labels,
-            datasets: [
-              {
-                label: "Monthly Growth",
-                data: item.trend.values,
-                backgroundColor: (ctx) => {
-                  const chart = ctx.chart;
-                  const { ctx: c, chartArea } = chart;
-                  if (!chartArea) return "#007bff";
-                  const g = c.createLinearGradient(
-                    chartArea.left,
-                    0,
-                    chartArea.right,
-                    0
-                  );
-                  g.addColorStop(0, "rgb(0,123,255)");
-                  g.addColorStop(1, "rgb(0,191,255)");
-                  return g;
-                },
-                borderRadius: 6,
-                barPercentage: 0.5,
-              },
-            ],
-          };
+  // 🟡 FIX: Define the data source securely
+  // We check if 'trendGraph' exists (where your labels/values are), otherwise try 'trend'
+  const graphSource = item.trendGraph || item.trend || {};
+  
+  // Safely extract arrays (default to empty if missing to prevent crash)
+  const chartLabels = graphSource.labels || [];
+  const chartValues = graphSource.values || [];
+  const chartPercent = graphSource.percent || item.change || "+0%";
 
-          return (
-            <div
-              key={item.id}
-              style={{
-                background: "transparent",
-                color: "#fff",
-                borderRadius: "16px",
-                padding: "1rem",
-                width: "100%",
-                maxWidth: "420px",
-                border: "1px solid rgba(255,255,255,0.08)",
-                marginBottom: "2rem",
-              }}
-            >
-              {/* TITLE */}
-              <h4 style={{ fontSize: "18px", fontWeight: 600 }}>
-                {showFull ? item.title : truncated}{" "}
-                <span
-                  onClick={() => toggleExpand(item.id)}
-                  style={{
-                    color: "#00bfff",
-                    cursor: "pointer",
-                    fontSize: "0.8rem",
-                  }}
-                >
-                  {showFull ? "Read less" : "Read more"}
-                </span>
-              </h4>
-
-              <hr style={{ borderColor: "rgba(255,255,255,0.08)" }} />
-
-              {/* METRICS */}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  textAlign: "center",
-                  marginBottom: "2rem",
-                }}
-              >
-                <p style={{ fontSize: "0.8rem", color: "#4da6ff" }}>
-                  Organizations: {item.metrics.organizations}
-                </p>
-                <p style={{ fontSize: "0.8rem", color: "#4da6ff" }}>
-                  Innovations: {item.metrics.innovations}
-                </p>
-              </div>
-
-              {/* TREND */}
-              <div style={{ marginBottom: "1.5rem" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginBottom: "0.6rem",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <BarChart3 size={14} color="#00bfff" />
-                    <span style={{ fontSize: "0.8rem", color: "#a5b0d0" }}>
-                      12-Month Trend
-                    </span>
-                  </div>
-
-                  <span style={{ color: "#00bfff", fontSize: "0.8rem" }}>
-                    ↑ {item.trend.percent}
-                  </span>
-                </div>
-
-                <div style={{ height: "90px" }}>
-                  <Bar data={trendData} options={{ responsive: true }} />
-                </div>
-              </div>
-
-              {/* ACTION BUTTONS */}
-              <div className={styles.cardAction} style={{ marginBottom: "1.5rem" }}>
-                <button
-                  className={styles.viewButton}
-                  onClick={() => goToCompanyPage(item.company.name)}
-                >
-                  Deep Dive
-                </button>
-
-                <button
-                  className={styles.addPortfolio}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddCompany(item.company);
-                  }}
-                >
-                  + Add
-                </button>
-              </div>
-
-              {/*  1-CLICK INSIGHTS BUTTON */}
-              <button
-                onClick={() => handleOneClickInsights(item.company,item)}
-                style={{
-                  background: "linear-gradient(90deg, #007bff, #00bfff)",
-                  color: "#fff",
-                  border: "none",
-                  padding: "0.5rem 1.25rem",
-                  borderRadius: "8px",
-                  fontSize: "0.8rem",
-                  width: "100%",
-                  maxWidth: "200px",
-                  margin: "0 auto",
-                  display: "block",
-                }}
-              >
-                1-Click Insights
-              </button>
-            </div>
+  const trendData = {
+    labels: chartLabels, // Use safe variable
+    datasets: [
+      {
+        label: "Monthly Growth",
+        data: chartValues, // Use safe variable
+        backgroundColor: (ctx) => {
+          const chart = ctx.chart;
+          const { ctx: c, chartArea } = chart;
+          if (!chartArea) return "#007bff";
+          const g = c.createLinearGradient(
+            chartArea.left,
+            0,
+            chartArea.right,
+            0
           );
-        })}
+          g.addColorStop(0, "rgb(0,123,255)");
+          g.addColorStop(1, "rgb(0,191,255)");
+          return g;
+        },
+        borderRadius: 6,
+        barPercentage: 0.5,
+      },
+    ],
+  };
+
+  return (
+    <div
+      key={item.id}
+      style={{
+        background: "transparent",
+        color: "#fff",
+        borderRadius: "16px",
+        padding: "1rem",
+        width: "100%",
+        maxWidth: "420px",
+        border: "1px solid rgba(255,255,255,0.08)",
+        marginBottom: "2rem",
+      }}
+    >
+      {/* TITLE */}
+      <h4 style={{ fontSize: "18px", fontWeight: 600 }}>
+        {showFull ? item.title : truncated}{" "}
+        <span
+          onClick={() => toggleExpand(item.id)}
+          style={{
+            color: "#00bfff",
+            cursor: "pointer",
+            fontSize: "0.8rem",
+          }}
+        >
+          {showFull ? "Read less" : "Read more"}
+        </span>
+      </h4>
+
+      <hr style={{ borderColor: "rgba(255,255,255,0.08)" }} />
+
+      {/* METRICS */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          textAlign: "center",
+          marginBottom: "2rem",
+        }}
+      >
+        <p style={{ fontSize: "0.8rem", color: "#4da6ff" }}>
+          Organizations: {item.metrics?.organizations || 0}
+        </p>
+        <p style={{ fontSize: "0.8rem", color: "#4da6ff" }}>
+          Innovations: {item.metrics?.innovations || 0}
+        </p>
       </div>
 
-      {/* ⭐ INSIGHTS MODAL */}
+      {/* TREND */}
+      <div style={{ marginBottom: "1.5rem" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: "0.6rem",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <BarChart3 size={14} color="#00bfff" />
+            <span style={{ fontSize: "0.8rem", color: "#a5b0d0" }}>
+              12-Month Trend
+            </span>
+          </div>
+
+          <span style={{ color: "#00bfff", fontSize: "0.8rem" }}>
+            ↑ {chartPercent}
+          </span>
+        </div>
+
+        <div style={{ height: "90px" }}>
+           {/* Only render chart if we actually have data */}
+           {chartValues.length > 0 ? (
+             <Bar data={trendData} options={{ responsive: true, maintainAspectRatio: false }} />
+           ) : (
+             <p style={{fontSize: "0.7rem", color: "#555", textAlign: "center", marginTop: "30px"}}>No trend data available</p>
+           )}
+        </div>
+      </div>
+
+      {/* ACTION BUTTONS */}
+      <div className={styles.cardAction} style={{ marginBottom: "1.5rem" }}>
+        <button
+          className={styles.viewButton}
+          onClick={() => goToCompanyPage(item.company?.name || "")}
+        >
+          Deep Dive
+        </button>
+
+        <button
+          className={styles.addPortfolio}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleAddCompany(item.company);
+          }}
+        >
+          + Add
+        </button>
+      </div>
+
+      {/* 1-CLICK INSIGHTS BUTTON */}
+      <button
+        onClick={() => handleOneClickInsights(item.company, item)}
+        style={{
+          background: "linear-gradient(90deg, #007bff, #00bfff)",
+          color: "#fff",
+          border: "none",
+          padding: "0.5rem 1.25rem",
+          borderRadius: "8px",
+          fontSize: "0.8rem",
+          width: "100%",
+          maxWidth: "200px",
+          margin: "0 auto",
+          display: "block",
+        }}
+      >
+        1-Click Insights
+      </button>
+    </div>
+  );
+})}
+      </div>
+
+      {/* INSIGHTS MODAL */}
       {showInsights && (
         <div
           style={{
