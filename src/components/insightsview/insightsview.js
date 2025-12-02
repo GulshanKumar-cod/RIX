@@ -28,13 +28,14 @@ ChartJS.register(
   Filler
 );
 
-const InsightsView = ({ company, prefetchedData }) => {
+const InsightsView = ({ company, prefetchedData, feedItem }) => {
   const [tooltip, setTooltip] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [apiData, setApiData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
   const [technologies, setTechnologies] = useState([]);
+const isTechMode = Boolean(feedItem);
 
 
   const colors = ["#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f"];
@@ -263,20 +264,62 @@ Really impressive.
     }
   };
 
+  // If shown from Technology Feed (no API values match)
+const feedFallback = feedItem
+  ? {
+      // Use technologyDataList fields exactly:
+      summary: {
+        applications: feedItem.metrics?.innovations ?? feedItem.patents ?? 0,
+        industries: feedItem.industriesCount ?? feedItem.summary?.industries ?? 0,
+        technologies: feedItem.technologiesCount ?? feedItem.summary?.technologies ?? 0,
+      },
+
+      publication_trends:
+        feedItem.trendGraph?.labels?.map((label, idx) => ({
+          year: label,
+          count: feedItem.trendGraph.values[idx],
+        })) ||
+        feedItem.publication_trends ||
+        [],
+
+      top_industries: feedItem.top_industries || [],
+
+      inventor_analysis: {
+        total_inventors:
+          feedItem.inventor_analysis?.total_inventors ??
+          feedItem.inventors ??
+          0,
+        top_inventors:
+          feedItem.inventor_analysis?.top_inventors || [],
+      },
+
+      technologies:
+        feedItem.relatedTechnologies?.map((t) => ({
+          name: t.name,
+          patents: t.patents,
+          trend: t.trend,
+          change: t.change,
+        })) || [],
+    }
+  : null;
+
+
+
   if (!company) return null;
   if (loading) return <p className={styles.loadingText}></p>;
-  if (!apiData)
-    return (
-      <p className={styles.loadingText}>
-        No insights available for this company.
-      </p>
-    );
+const effectiveData = apiData || feedFallback;
 
-  const summary = apiData.summary || {};
-  const industries = apiData.top_industries || [];
-  const trends = apiData.publication_trends || [];
-  const inventors =
-    apiData.inventor_analysis?.top_inventors?.slice(0, 10) || [];
+
+if (!effectiveData) {
+  return <p>No insights available for this company.</p>;
+}
+
+const summary = effectiveData.summary || {};
+const industries = effectiveData.top_industries || [];
+const trends = effectiveData.publication_trends || [];
+const inventors =
+  effectiveData.inventor_analysis?.top_inventors?.slice(0, 10) || [];
+
 
   const industryData = industries.map((ind, idx) => ({
     rank: idx + 1,
@@ -296,7 +339,19 @@ Really impressive.
   });
 
   // Fallback static technologies + people if none in API
-  const techList = technologies;   
+ const techList = technologies.length > 0
+    ? technologies
+    : feedItem
+    ? [
+        {
+           name: feedItem.title,
+           patents: feedItem.metrics.innovations,
+           trend: "up",
+           change: feedItem.trend.percent,
+        }
+      ]
+    : [];
+  
   const peopleList =
     inventors.slice(0, 10).map((p) => ({
       name: p.inventor,
@@ -310,7 +365,10 @@ Really impressive.
         {/* Header */}
         <div className={styles.headerSection}>
           <div className={styles.headerRow}>
-            <h3 className={styles.companyName}>{company.name}</h3>
+           <h3 className={styles.companyName}>
+  {isTechMode ? feedItem.title : company.name}
+</h3>
+
             <div className={styles.iconButtons}>
               {downloading ? (
                 <div
@@ -335,28 +393,50 @@ Really impressive.
               )}
             </div>
           </div>
-          <p className={styles.subtitle}>
-            Innovation intelligence — industries, technologies & people.
-          </p>
+        <p className={styles.subtitle}>
+  {isTechMode
+    ? "Technology intelligence — organizations, trends & people."
+    : "Innovation intelligence — industries, technologies & people."
+  }
+</p>
+
         </div>
 
         {/*Executive Summary */}
-        <h3 className={styles.sectionTitle}>Executive Summary</h3>
+       <h3 className={styles.sectionTitle}>
+  {isTechMode ? "Technology Overview" : "Executive Summary"}
+</h3>
+
         <div className={styles.summaryContainer}>
           {/* General Stats Paragraph */}
-          <p className={styles.summaryParagraph}>
-            {company.name} has recorded a total of{" "}
-            <strong>{summary.applications?.toLocaleString() || "—"}</strong>{" "}
-            innovations, contributed by{" "}
-            <strong>
-              {" "}
-              {apiData.inventor_analysis?.total_inventors?.toLocaleString() ||
-                "—"}
-            </strong>{" "}
-            inventors. These innovations span across{" "}
-            <strong>{summary.industries || "—"}</strong> industries and{" "}
-            <strong>{summary.technologies || "—"}</strong> technology domains.
-          </p>
+       <p className={styles.summaryParagraph}>
+  {isTechMode ? (
+    <>
+      <strong>{feedItem.title}</strong> has recorded{" "}
+      <strong>{summary.applications?.toLocaleString() || "—"}</strong>{" "}
+      innovations across{" "}
+      <strong>{summary.industries || "—"}</strong> industries.  
+      This technology shows active contribution from{" "}
+      <strong>
+        {effectiveData.inventor_analysis?.total_inventors?.toLocaleString() || "—"}
+      </strong>{" "}
+      inventors globally.
+    </>
+  ) : (
+    <>
+      {company.name} has recorded a total of{" "}
+      <strong>{summary.applications?.toLocaleString() || "—"}</strong>{" "}
+      innovations, contributed by{" "}
+      <strong>
+        {effectiveData.inventor_analysis?.total_inventors?.toLocaleString() || "—"}
+      </strong>{" "}
+      inventors. These innovations span across{" "}
+      <strong>{summary.industries || "—"}</strong> industries and{" "}
+      <strong>{summary.technologies || "—"}</strong> technology domains.
+    </>
+  )}
+</p>
+
 
           {/*  Innovation Trends Paragraph */}
           {trendPoints.length > 0 &&
@@ -435,15 +515,24 @@ Really impressive.
         {/* Stats Section */}
         <section className={styles.statsSection}>
           {[
-            ["Innovations", summary.applications?.toLocaleString() || "—"],
-            [
-              "Inventors",
-              apiData.inventor_analysis?.total_inventors?.toLocaleString() ||
-                "—",
-            ],
-            ["Industries", summary.industries || "—"],
-            ["Technologies", summary.technologies || "—"],
-          ].map(([label, val], i) => (
+  [
+    isTechMode ? "Publications" : "Innovations",
+    summary.applications?.toLocaleString() || "—",
+  ],
+  [
+    isTechMode ? "Contributing Inventors" : "Inventors",
+    effectiveData.inventor_analysis?.total_inventors?.toLocaleString() || "—",
+  ],
+  [
+    isTechMode ? "Industries Using This Tech" : "Industries",
+    summary.industries || "—",
+  ],
+  [
+    isTechMode ? "Technology Category Count" : "Technologies",
+    summary.technologies || "—",
+  ],
+]
+.map(([label, val], i) => (
             <div className={styles.statsCard} key={i}>
               <h3 className={styles.statsValue}>{val}</h3>
               <p className={styles.statsLabel}>{label}</p>
@@ -459,7 +548,7 @@ Really impressive.
               labels: trendPoints.map((p) => p.year),
               datasets: [
                 {
-                  label: "YoY Innovation Activity",
+                  label: isTechMode ? "Technology Trend Over Time" : "YoY Innovation Activity",
                   data: trendPoints.map((p) => p.count),
                   borderColor: "#00bfff",
                   backgroundColor: "rgba(0, 191, 255, 0.2)",
@@ -520,7 +609,7 @@ Really impressive.
               fontWeight: 500,
             }}
           >
-            YoY Innovation Activity
+            {isTechMode ? "Technology Trend Over Time" : "YoY Innovation Activity"}
           </div>
         </div>
 
@@ -541,7 +630,10 @@ Really impressive.
         </div> */}
 
         {/* ===== Industry Distribution Section ===== */}
-        <h3 className={styles.sectionTitle}>Industry Distribution</h3>
+       <h3 className={styles.sectionTitle}>
+  {isTechMode ? "Industry Distribution" : "Industry Distribution"}
+</h3>
+
         <div className={styles.industrySection}>
           <div className={styles.pieChartWrapper}>
             <Pie
@@ -628,7 +720,10 @@ Really impressive.
         {/* ===== Technologies Developed Section ===== */}
         {techList.length > 0 && (
           <>
-            <h3 className={styles.sectionTitle}>Technologies Developed</h3>
+          <h3 className={styles.sectionTitle}>
+  {isTechMode ? "Related Technologies" : "Technologies Developed"}
+</h3>
+
             <div className={styles.techSection}>
               {techList.map((tech, i) => (
                 <div key={i} className={styles.techCard}>
@@ -689,10 +784,13 @@ Really impressive.
         {peopleList.length > 0 && (
           <>
             <h3 className={styles.sectionTitle}>People & Innovators</h3>
-            <p className={styles.subtext}>
-              Top inventors and their activity trends — focused on industries
-              and innovation output.
-            </p>
+         <p className={styles.subtext}>
+  {isTechMode
+    ? "Inventors actively contributing to this technology."
+    : "Top inventors and their activity trends — focused on industries and innovation output."
+  }
+</p>
+
             <div className={styles.peopleSection}>
               <table className={styles.peopleTable}>
                 <thead>
