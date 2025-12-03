@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Share2, Download, Globe, Users } from "lucide-react";
+import { Share2, Download, Globe, Users, Lightbulb } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import styles from "./insightsview.module.css";
-import Footer from "../footer/footer";
 import { Pie, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -14,9 +13,12 @@ import {
   CategoryScale,
   LinearScale,
   PointElement,
+  BarElement,
   Filler,
 } from "chart.js";
 import SimpleMap from "../worldmap/worldmap";
+
+
 
 ChartJS.register(
   ArcElement,
@@ -26,36 +28,55 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
+  BarElement,
   Filler
 );
+
+// --- UPDATED TABLE STYLES (Tighter for Mobile/PDF) ---
+const thStyle = {
+  textAlign: "left",
+  padding: "8px 4px", // Reduced padding to close gaps
+  borderBottom: "1px solid rgba(255,255,255,0.1)",
+  color: "#a5b0d0",
+  fontSize: "0.8rem", // Slightly smaller font
+  fontWeight: "600",
+  whiteSpace: "normal", // Allow wrapping if needed
+  verticalAlign: "bottom"
+};
+
+const tdStyle = {
+  textAlign: "left",
+  padding: "8px 4px", // Reduced padding to close gaps
+  borderBottom: "1px solid rgba(255,255,255,0.05)",
+  color: "#fff",
+  fontSize: "0.8rem", // Slightly smaller font
+  verticalAlign: "middle"
+};
 
 const InsightsView = ({ company, prefetchedData, feedItem }) => {
   const [apiData, setApiData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [downloading, setDownloading] = useState(false);
   const [technologies, setTechnologies] = useState([]);
-  
+
   const isTechMode = Boolean(feedItem);
   const colors = ["#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f"];
   const year = new Date().getFullYear();
 
-  // Utility: safe parse numeric
   const toNum = (v, fallback = 0) => {
     const n = Number(v);
     return Number.isFinite(n) ? n : fallback;
   };
 
-  // --- 1. NEW DATA CONSTANTS FOR TECHNOLOGY VIEW ---
-  const mapData = [
-    ["US", 28450], ["CN", 25300], ["DE", 19800], ["JP", 16400], ["KR", 12200],
-  ];
+  // --- MOCK DATA FOR NEW SECTIONS ---
+  const mapData = [["US", 28450], ["CN", 25300], ["DE", 19800], ["JP", 16400], ["KR", 12200]];
 
   const countryData = [
-    { rank: 1, country: "USA", patents: "28,450", topCompanies: "Tesla, Ford, GM", hotTech: "EVs, ADAS" },
-    { rank: 2, country: "China", patents: "25,300", topCompanies: "BYD, NIO, CATL", hotTech: "Batteries, Charging" },
-    { rank: 3, country: "Germany", patents: "19,800", topCompanies: "BMW, Bosch", hotTech: "Autonomous" },
-    { rank: 4, country: "Japan", patents: "16,400", topCompanies: "Toyota, Honda", hotTech: "Hydrogen Vehicles" },
-    { rank: 5, country: "South Korea", patents: "12,200", topCompanies: "Hyundai, LG Chem", hotTech: "EV Components" },
+    { rank: 1, country: "USA", patents: "28.4k", topCompanies: "Tesla, Ford", hotTech: "EVs, ADAS" },
+    { rank: 2, country: "China", patents: "25.3k", topCompanies: "BYD, NIO", hotTech: "Batteries" },
+    { rank: 3, country: "Germany", patents: "19.8k", topCompanies: "BMW, Bosch", hotTech: "Autonomous" },
+    { rank: 4, country: "Japan", patents: "16.4k", topCompanies: "Toyota", hotTech: "Hydrogen" },
+    { rank: 5, country: "S. Korea", patents: "12.2k", topCompanies: "Hyundai", hotTech: "Components" },
   ];
 
   const topOrgsData = [
@@ -66,7 +87,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
     { rank: 5, name: "Canon", count: 7200 }
   ];
 
-  // --- API LOGIC (Kept Exactly as Original) ---
+  // --- API LOGIC ---
   const processCpcDefinitions = async (data) => {
     const topIndustries = data.top_industries?.filter((i) => i.cpc) || [];
     if (topIndustries.length === 0) {
@@ -191,10 +212,11 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
       applications: feedItem.metrics?.innovations ?? feedItem.patents ?? feedItem.summary?.applications ?? 0,
       industries: feedItem.industriesCount ?? feedItem.summary?.industries ?? 0,
       technologies: feedItem.technologiesCount ?? feedItem.summary?.technologies ?? 0,
-      // Fallback values for new sections
+      // Fallbacks for new stats
       totalCountries: 15,
       topCountry: "USA",
-      growth: feedItem.trend?.percent || "+12%"
+      growth: feedItem.trend?.percent || "+12%",
+      totalOrganizations: feedItem.metrics?.organizations ?? 120, // Fallback for stats
     },
     publication_trends: (feedItem.trendGraph?.labels ? (feedItem.trendGraph.labels || []).map((lab, i) => ({ year: lab, count: (feedItem.trendGraph.values && feedItem.trendGraph.values[i]) ?? 0 })) : null) || feedItem.publication_trends || [],
     top_industries: feedItem.top_industries || [],
@@ -222,16 +244,28 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
     industryData = industriesArr.map((ind, idx) => ({ rank: idx + 1, name: ind.industry || ind.name || "Unknown", percentage: ((toNum(ind.count, 0) / sum) * 100).toFixed(1) }));
   }
   const techList = (technologies && technologies.length > 0) ? technologies : effectiveData?.technologies?.length > 0 ? effectiveData.technologies : feedItem ? [{ name: feedItem.title || feedItem.name, patents: feedItem.metrics?.innovations ?? 0, trend: "up", change: feedItem.trend?.percent ?? "—" }] : [];
-  const peopleList = (effectiveData?.inventor_analysis?.top_inventors || [])
-  .slice(0, 10) 
-  .map((p) => ({
-    name: p.inventor || p.name || "Unknown",
-    focus: p.focus || "Advanced Computing, AI Systems",
-    patents: p.count || p.patents || 0
-  })) || [];
+  const peopleList = (effectiveData?.inventor_analysis?.top_inventors || []).slice(0, 10).map((p) => ({ name: p.inventor || p.name || "Unknown", focus: p.focus || "Advanced Computing, AI Systems", patents: p.count || p.patents || 0 })) || [];
   const summary = effectiveData?.summary || {};
 
   if (loading && company?.name) return <p className={styles.loadingText}>Loading insights…</p>;
+
+  // --- STATS CONFIGURATION ---
+  // Define stats based on Mode (Tech vs Company)
+  const statsToRender = isTechMode 
+    ? [
+        ["Total Innovations", summary.applications?.toLocaleString() || "—"],
+        ["YoY Innovation Growth", summary.growth || "+12%"],
+        ["Active Countries", summary.totalCountries || 15],
+        ["Active Organizations", summary.totalOrganizations || 120],
+        ["Active Inventors", effectiveData?.inventor_analysis?.total_inventors?.toLocaleString() || "—"],
+        ["Impacted Industries", summary.industries || "—"]
+      ]
+    : [
+        ["Innovations", summary.applications?.toLocaleString() || "—"],
+        ["Inventors", effectiveData?.inventor_analysis?.total_inventors?.toLocaleString() || "—"],
+        ["Industries", summary.industries || "—"],
+        ["Technologies", summary.technologies || "—"]
+      ];
 
   return (
     <div id="insights-content">
@@ -292,14 +326,9 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
           })()}
         </div>
 
-        {/* Stats Section */}
+        {/* Stats Section (Dynamic based on mode) */}
         <section className={styles.statsSection}>
-          {[
-            [isTechMode ? "Publications" : "Innovations", summary.applications?.toLocaleString() || "—"],
-            [isTechMode ? "Contributing Inventors" : "Inventors", effectiveData?.inventor_analysis?.total_inventors?.toLocaleString() || "—"],
-            [isTechMode ? "Industries Using This Tech" : "Industries", summary.industries || "—"],
-            [isTechMode ? "Technology Category Count" : "Technologies", summary.technologies || "—"],
-          ].map(([label, val], i) => (
+          {statsToRender.map(([label, val], i) => (
             <div className={styles.statsCard} key={i}>
               <h3 className={styles.statsValue}>{val}</h3>
               <p className={styles.statsLabel}>{label}</p>
@@ -337,29 +366,16 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
         {/* ================================================================================== */}
         
         {isTechMode && (
-          <div style={{ background: "transparent", marginTop: "5rem", marginBottom: "3rem" }}>
-            <h3 className={styles.sectionTitle}>Global Landscape</h3>
+          <div style={{ background: "transparent", marginTop: "3rem", marginBottom: "3rem" }}>
+            <h3 className={styles.sectionTitle}>Global Reach & Markets</h3>
             
             {/* 1. Header & Summary Boxes for Map */}
             <p style={{ color: "#fff", marginBottom: "1.5rem" }} className={styles.summaryParagraph}>
               {feedItem?.description || "High innovation density observed in North American and Asian markets."}
             </p>
 
-            <section className={styles.statsSection}>
-              {[
-                { label: "Active Countries", value: summary.totalCountries || 15 },
-                { label: "Leading Country", value: summary.topCountry || "USA" },
-                { label: "Innovation Growth", value: summary.growth || "+12%" },
-              ].map((item, index) => (
-                <div className={styles.statsCard} key={index}>
-                  <h3 className={styles.statsValue}>{item.value}</h3>
-                  <p className={styles.statsLabel}>{item.label}</p>
-                </div>
-              ))}
-            </section>
-
             {/* 2. Interactive Map */}
-            <div style={{ background: "transparent", borderRadius: "10px", display: "flex", justifyContent: "center" }}>
+            <div style={{ background: "transparent", borderRadius: "10px", marginBottom: "2rem", display: "flex", justifyContent: "center" }}>
               <SimpleMap
                 data={mapData}
                 color="#4a90e2"
@@ -369,58 +385,58 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
               />
             </div>
 
-            {/* 3. Global Rankings Table */}
+            {/* 3. Global Rankings Table (Updated with tight styles) */}
             <div style={{ overflowX: "auto", marginBottom: "3rem"}}>
-              <h3 className={styles.sectionTitle}>Global Rankings</h3>
-              {/* Using styles.peopleTable to leverage existing table CSS */}
-              <table className={styles.peopleTable} style={{ width: "100%", minWidth: "800px" }}>
+              <h3 className={styles.sectionTitle} style={{ marginBottom: "1rem", color:"#fff" }}>Global Rankings</h3>
+              {/* Removed minWidth to prevent forcing scroll on capture */}
+              <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
                   <tr>
-                    <th style={{width: "auto"}}>Rank</th>
-                    <th style={{width: "auto"}}>Country</th>
-                    <th style={{width: "auto"}}>Patents (5Y)</th>
-                    <th style={{width: "auto"}}>Top Companies</th>
-                    <th style={{width: "auto"}}>Hot Technologies</th>
+                    <th style={thStyle}>Rank</th>
+                    <th style={thStyle}>Country</th>
+                    <th style={thStyle}>Innovations</th>
+                    <th style={thStyle}>Companies</th>
+                    <th style={thStyle}>Hot Tech</th>
                   </tr>
                 </thead>
                 <tbody>
                   {countryData.map((row) => (
                     <tr key={row.rank}>
-                      <td className={styles.personName}>{row.rank}</td>
-                      <td className={styles.personFocus}>{row.country}</td>
-                      <td className={styles.personPatents}>{row.patents}</td>
-                      <td className={styles.personFocus}>{row.topCompanies}</td>
-                      <td className={styles.personFocus}>{row.hotTech}</td>
+                      <td style={tdStyle}>{row.rank}</td>
+                      <td style={tdStyle}>{row.country}</td>
+                      <td style={tdStyle}>{row.patents}</td>
+                      <td style={tdStyle}>{row.topCompanies}</td>
+                      <td style={tdStyle}>{row.hotTech}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            {/* 4. Leading Organizations Table (5 Organizations) */}
+            {/* 4. Leading Organizations Table (5 Organizations) (Updated with tight styles) */}
             <div style={{ overflowX: "auto", marginBottom: "1.5rem"}}>
                <h3 className={styles.sectionTitle}>Leading Organizations</h3>
                <p className={styles.subtext} style={{marginBottom: "1rem"}}>Top 5 organizations driving innovation in this domain.</p>
-               <table className={styles.peopleTable} style={{ width: "100%", minWidth: "600px" }}>
+               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
                   <tr>
-                    <th>Rank</th>
-                    <th>Organization</th>
-                    <th>Innovation Count</th>
-                    <th>Share</th>
+                    <th style={thStyle}>Rank</th>
+                    <th style={thStyle}>Organization</th>
+                    <th style={thStyle}>Count</th>
+                    <th style={thStyle}>Share</th>
                   </tr>
                 </thead>
                 <tbody>
                   {topOrgsData.map((org) => (
                     <tr key={org.rank}>
-                      <td className={styles.personName}>{org.rank}</td>
-                      <td className={styles.personFocus}>
+                      <td style={tdStyle}>{org.rank}</td>
+                      <td style={tdStyle}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                           <Users size={14} color="#4da6ff"/> {org.name}
+                           {org.name}
                         </div>
                       </td>
-                      <td className={styles.personPatents}>{org.count.toLocaleString()}</td>
-                      <td className={styles.personFocus}>
+                      <td style={tdStyle}>{org.count.toLocaleString()}</td>
+                      <td style={tdStyle}>
                         <div style={{ width: '80px', height: '6px', background: '#333', borderRadius: '3px' }}>
                            <div style={{ width: `${(org.count / 15000) * 100}%`, height: '100%', background: '#00bfff', borderRadius: '3px' }}></div>
                         </div>
