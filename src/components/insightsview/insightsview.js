@@ -365,7 +365,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
         {/* ================================================================================== */}
         
         {isTechMode && (
-          <div style={{ background: "transparent", marginTop: "3rem", marginBottom: "3rem" }}>
+          <div style={{ background: "transparent", marginTop: "5rem", marginBottom: "3rem" }}>
             <h3 className={styles.sectionTitle}>Global Reach & Markets</h3>
             
             {/* 1. Header & Summary Boxes for Map */}
@@ -380,7 +380,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
                 color="#4a90e2"
                 backgroundColor="transparent"
                 borderColor="#ccc"
-                label={`${feedItem?.title || "Industry"} Innovation Density`}
+                label="Global Innovation Map"
               />
             </div>
 
@@ -394,7 +394,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
                     <th style={thStyle}>Rank</th>
                     <th style={thStyle}>Country</th>
                     <th style={thStyle}>Global Share (%)</th>
-                    <th style={thStyle}>Active Organizations</th>
+                    {/* <th style={thStyle}>Active Organizations</th> */}
                     <th style={thStyle}>YoY Growth (%)</th>
                   </tr>
                 </thead>
@@ -404,7 +404,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
                       <td style={tdStyle}>{row.rank}</td>
                       <td style={tdStyle}>{row.country}</td>
                       <td style={tdStyle}>{row.share}</td>
-                      <td style={tdStyle}>{row.activeOrgs}</td>
+                      {/* <td style={tdStyle}>{row.activeOrgs}</td> */}
                       <td style={tdStyle}>
                         <span style={{ color: row.growth.startsWith('+') ? '#4da6ff' : '#ff4d4d' }}>
                           {row.growth}
