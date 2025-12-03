@@ -167,20 +167,38 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
     fetchInsights();
   }, [company, prefetchedData]);
 
-  const handleShareInsights = async () => {
-    try {
-      const shareTargetName = company?.name || feedItem?.title || "Insights Report";
-      const shareUrl = `${window.location.origin}/companylist?insights=${encodeURIComponent(shareTargetName)}`;
-      const textToShare = `Generated this Innovation Intelligence Report on RIX – Incubig. ${shareTargetName} 🚀`;
-      const shareData = { title: `Insights for ${shareTargetName}`, text: textToShare, url: shareUrl };
-      if (navigator.share) { await navigator.share(shareData); } 
-      else { await navigator.clipboard.writeText(`${textToShare}: ${shareUrl}`); alert("Insights link copied to clipboard 📋"); }
-    } catch (err) { console.error(err); alert("Unable to share insights."); }
-  };
+ const handleShareInsights = async () => {
+  try {
+    const shareTargetName = company?.name || feedItem?.title || "Insights Report";
+
+    //  NEW — technology mode uses tech-specific URL
+    const shareUrl = isTechMode
+      ? `${window.location.origin}/technology?insights=${encodeURIComponent(shareTargetName)}`
+      : `${window.location.origin}/companylist?insights=${encodeURIComponent(shareTargetName)}`;
+
+    const textToShare = `Generated this Innovation Intelligence Report on RIX – Incubig. ${shareTargetName} 🚀`;
+
+    const shareData = { title: `Insights for ${shareTargetName}`, text: textToShare, url: shareUrl };
+
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else {
+      await navigator.clipboard.writeText(`${textToShare}: ${shareUrl}`);
+      alert("Insights link copied to clipboard 📋");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Unable to share insights.");
+  }
+};
+
 
   const handleDownloadReport = async () => {
     if (downloading) return;
-    const fileName = `${company?.name || feedItem?.title || "insights"}_Report.pdf`;
+    const fileName = isTechMode
+  ? `${feedItem?.title || feedItem?.name || "technology"}_Technology_Report.pdf`
+  : `${company?.name || "insights"}_Report.pdf`;
+
     setDownloading(true);
     await new Promise((resolve) => setTimeout(resolve, 0));
     try {
