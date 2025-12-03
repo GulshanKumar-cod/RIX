@@ -18,8 +18,6 @@ import {
 } from "chart.js";
 import SimpleMap from "../worldmap/worldmap";
 
-
-
 ChartJS.register(
   ArcElement,
   Tooltip,
@@ -35,21 +33,21 @@ ChartJS.register(
 // --- UPDATED TABLE STYLES (Tighter for Mobile/PDF) ---
 const thStyle = {
   textAlign: "left",
-  padding: "8px 4px", // Reduced padding to close gaps
+  padding: "8px 4px",
   borderBottom: "1px solid rgba(255,255,255,0.1)",
   color: "#a5b0d0",
-  fontSize: "0.8rem", // Slightly smaller font
+  fontSize: "0.8rem",
   fontWeight: "600",
-  whiteSpace: "normal", // Allow wrapping if needed
+  whiteSpace: "normal",
   verticalAlign: "bottom"
 };
 
 const tdStyle = {
   textAlign: "left",
-  padding: "8px 4px", // Reduced padding to close gaps
+  padding: "8px 4px",
   borderBottom: "1px solid rgba(255,255,255,0.05)",
   color: "#fff",
-  fontSize: "0.8rem", // Slightly smaller font
+  fontSize: "0.8rem",
   verticalAlign: "middle"
 };
 
@@ -71,12 +69,13 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
   // --- MOCK DATA FOR NEW SECTIONS ---
   const mapData = [["US", 28450], ["CN", 25300], ["DE", 19800], ["JP", 16400], ["KR", 12200]];
 
+  // UPDATED: Country Data to match "Rank | Country | Global Share | Active Orgs | YoY Growth"
   const countryData = [
-    { rank: 1, country: "USA", patents: "28.4k", topCompanies: "Tesla, Ford", hotTech: "EVs, ADAS" },
-    { rank: 2, country: "China", patents: "25.3k", topCompanies: "BYD, NIO", hotTech: "Batteries" },
-    { rank: 3, country: "Germany", patents: "19.8k", topCompanies: "BMW, Bosch", hotTech: "Autonomous" },
-    { rank: 4, country: "Japan", patents: "16.4k", topCompanies: "Toyota", hotTech: "Hydrogen" },
-    { rank: 5, country: "S. Korea", patents: "12.2k", topCompanies: "Hyundai", hotTech: "Components" },
+    { rank: 1, country: "USA", share: "32.4%", activeOrgs: "1,240", growth: "+14.2%" },
+    { rank: 2, country: "China", share: "28.1%", activeOrgs: "980", growth: "+18.5%" },
+    { rank: 3, country: "Germany", share: "15.2%", activeOrgs: "450", growth: "+8.1%" },
+    { rank: 4, country: "Japan", share: "11.8%", activeOrgs: "380", growth: "+5.3%" },
+    { rank: 5, country: "S. Korea", share: "8.5%", activeOrgs: "210", growth: "+11.7%" },
   ];
 
   const topOrgsData = [
@@ -394,9 +393,9 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
                   <tr>
                     <th style={thStyle}>Rank</th>
                     <th style={thStyle}>Country</th>
-                    <th style={thStyle}>Innovations</th>
-                    <th style={thStyle}>Companies</th>
-                    <th style={thStyle}>Hot Tech</th>
+                    <th style={thStyle}>Global Share (%)</th>
+                    <th style={thStyle}>Active Organizations</th>
+                    <th style={thStyle}>YoY Growth (%)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -404,9 +403,13 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
                     <tr key={row.rank}>
                       <td style={tdStyle}>{row.rank}</td>
                       <td style={tdStyle}>{row.country}</td>
-                      <td style={tdStyle}>{row.patents}</td>
-                      <td style={tdStyle}>{row.topCompanies}</td>
-                      <td style={tdStyle}>{row.hotTech}</td>
+                      <td style={tdStyle}>{row.share}</td>
+                      <td style={tdStyle}>{row.activeOrgs}</td>
+                      <td style={tdStyle}>
+                        <span style={{ color: row.growth.startsWith('+') ? '#4da6ff' : '#ff4d4d' }}>
+                          {row.growth}
+                        </span>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
