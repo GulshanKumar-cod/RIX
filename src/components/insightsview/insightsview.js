@@ -30,7 +30,7 @@ ChartJS.register(
   Filler
 );
 
-// --- UPDATED TABLE STYLES (Tighter for Mobile/PDF) ---
+// --- UPDATED TABLE STYLES ---
 const thStyle = {
   textAlign: "left",
   padding: "8px 4px",
@@ -69,7 +69,6 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
   // --- MOCK DATA FOR NEW SECTIONS ---
   const mapData = [["US", 28450], ["CN", 25300], ["DE", 19800], ["JP", 16400], ["KR", 12200]];
 
-  // UPDATED: Country Data to match "Rank | Country | Global Share | Active Orgs | YoY Growth"
   const countryData = [
     { rank: 1, country: "USA", share: "32.4%", activeOrgs: "1,240", growth: "+14.2%" },
     { rank: 2, country: "China", share: "28.1%", activeOrgs: "980", growth: "+18.5%" },
@@ -78,12 +77,13 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
     { rank: 5, country: "S. Korea", share: "8.5%", activeOrgs: "210", growth: "+11.7%" },
   ];
 
+  // UPDATED: Leading Organizations Data with Growth
   const topOrgsData = [
-    { rank: 1, name: "Samsung Electronics", count: 14500 },
-    { rank: 2, name: "Huawei Technologies", count: 12300 },
-    { rank: 3, name: "IBM Corporation", count: 9800 },
-    { rank: 4, name: "Qualcomm", count: 8500 },
-    { rank: 5, name: "Canon", count: 7200 }
+    { rank: 1, name: "Samsung Electronics", count: 14500, growth: "+12.4%" },
+    { rank: 2, name: "Huawei Technologies", count: 12300, growth: "+18.1%" },
+    { rank: 3, name: "IBM Corporation", count: 9800, growth: "-2.5%" },
+    { rank: 4, name: "Qualcomm", count: 8500, growth: "+8.9%" },
+    { rank: 5, name: "Canon", count: 7200, growth: "+4.1%" }
   ];
 
   // --- API LOGIC ---
@@ -211,11 +211,10 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
       applications: feedItem.metrics?.innovations ?? feedItem.patents ?? feedItem.summary?.applications ?? 0,
       industries: feedItem.industriesCount ?? feedItem.summary?.industries ?? 0,
       technologies: feedItem.technologiesCount ?? feedItem.summary?.technologies ?? 0,
-      // Fallbacks for new stats
       totalCountries: 15,
       topCountry: "USA",
       growth: feedItem.trend?.percent || "+12%",
-      totalOrganizations: feedItem.metrics?.organizations ?? 120, // Fallback for stats
+      totalOrganizations: feedItem.metrics?.organizations ?? 120,
     },
     publication_trends: (feedItem.trendGraph?.labels ? (feedItem.trendGraph.labels || []).map((lab, i) => ({ year: lab, count: (feedItem.trendGraph.values && feedItem.trendGraph.values[i]) ?? 0 })) : null) || feedItem.publication_trends || [],
     top_industries: feedItem.top_industries || [],
@@ -249,7 +248,6 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
   if (loading && company?.name) return <p className={styles.loadingText}>Loading insights…</p>;
 
   // --- STATS CONFIGURATION ---
-  // Define stats based on Mode (Tech vs Company)
   const statsToRender = isTechMode 
     ? [
         ["Total Innovations", summary.applications?.toLocaleString() || "—"],
@@ -325,7 +323,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
           })()}
         </div>
 
-        {/* Stats Section (Dynamic based on mode) */}
+        {/* Stats Section */}
         <section className={styles.statsSection}>
           {statsToRender.map(([label, val], i) => (
             <div className={styles.statsCard} key={i}>
@@ -360,20 +358,17 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
           </div>
         </div>
 
-        {/* ================================================================================== */}
-        {/* NEW SECTIONS: ONLY SHOWN IF isTechMode IS TRUE                                     */}
-        {/* ================================================================================== */}
-        
+        {/* NEW SECTIONS: ONLY SHOWN IF isTechMode IS TRUE */}
         {isTechMode && (
           <div style={{ background: "transparent", marginTop: "5rem", marginBottom: "3rem" }}>
             <h3 className={styles.sectionTitle}>Global Reach & Markets</h3>
             
-            {/* 1. Header & Summary Boxes for Map */}
+            {/* Map Summary */}
             <p style={{ color: "#fff", marginBottom: "1.5rem" }} className={styles.summaryParagraph}>
               {feedItem?.description || "High innovation density observed in North American and Asian markets."}
             </p>
 
-            {/* 2. Interactive Map */}
+            {/* Interactive Map */}
             <div style={{ background: "transparent", borderRadius: "10px", marginBottom: "2rem", display: "flex", justifyContent: "center" }}>
               <SimpleMap
                 data={mapData}
@@ -384,10 +379,9 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
               />
             </div>
 
-            {/* 3. Global Rankings Table (Updated with tight styles) */}
+            {/* Global Rankings Table */}
             <div style={{ overflowX: "auto", marginBottom: "3rem"}}>
               <h3 className={styles.sectionTitle} style={{ marginBottom: "1rem", color:"#fff" }}>Global Rankings</h3>
-              {/* Removed minWidth to prevent forcing scroll on capture */}
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
                   <tr>
@@ -416,7 +410,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
               </table>
             </div>
 
-            {/* 4. Leading Organizations Table (5 Organizations) (Updated with tight styles) */}
+            {/* Leading Organizations Table (UPDATED COLUMNS) */}
             <div style={{ overflowX: "auto", marginBottom: "1.5rem"}}>
                <h3 className={styles.sectionTitle}>Leading Organizations</h3>
                <p className={styles.subtext} style={{marginBottom: "1rem"}}>Top 5 organizations driving innovation in this domain.</p>
@@ -424,9 +418,9 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
                 <thead>
                   <tr>
                     <th style={thStyle}>Rank</th>
-                    <th style={thStyle}>Organization</th>
-                    <th style={thStyle}>Count</th>
-                    <th style={thStyle}>Share</th>
+                    <th style={thStyle}>Name</th>
+                    <th style={thStyle}>Innovations</th>
+                    <th style={thStyle}>Growth (%)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -435,14 +429,14 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
                       <td style={tdStyle}>{org.rank}</td>
                       <td style={tdStyle}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                           {org.name}
+                            {org.name}
                         </div>
                       </td>
                       <td style={tdStyle}>{org.count.toLocaleString()}</td>
                       <td style={tdStyle}>
-                        <div style={{ width: '80px', height: '6px', background: '#333', borderRadius: '3px' }}>
-                           <div style={{ width: `${(org.count / 15000) * 100}%`, height: '100%', background: '#00bfff', borderRadius: '3px' }}></div>
-                        </div>
+                        <span style={{ color: org.growth.startsWith('+') ? '#4da6ff' : '#ff4d4d' }}>
+                           {org.growth}
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -451,12 +445,9 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
             </div>
           </div>
         )}
-        {/* ================================================================================== */}
-        {/* END NEW SECTIONS                                                                   */}
-        {/* ================================================================================== */}
 
         {/* Industry Distribution */}
-        <h3 className={styles.sectionTitle}>Industry Distribution</h3>
+        <h3 className={styles.sectionTitle}>Industries impacted by the technology</h3>
         <div className={styles.industrySection}>
           <div className={styles.pieChartWrapper}>
             <Pie
