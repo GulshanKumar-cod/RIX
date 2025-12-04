@@ -167,23 +167,31 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
     fetchInsights();
   }, [company, prefetchedData]);
 
- const handleShareInsights = async () => {
+const handleShareInsights = async () => {
   try {
-    const shareTargetName = company?.name || feedItem?.title || "Insights Report";
+    // ✅ Correct selection of technology vs company name
+    const shareTargetName = isTechMode 
+      ? (feedItem?.title || feedItem?.name || "Technology Report")
+      : (company?.name || "Company Insights");
 
-    //  NEW — technology mode uses tech-specific URL
+    // 🔥 Proper URL based on mode
     const shareUrl = isTechMode
       ? `${window.location.origin}/technology?insights=${encodeURIComponent(shareTargetName)}`
       : `${window.location.origin}/companylist?insights=${encodeURIComponent(shareTargetName)}`;
 
+    // 🔥 FIXED: Text now properly uses the real source name
     const textToShare = `Generated this Innovation Intelligence Report on RIX – Incubig. ${shareTargetName} 🚀`;
 
-    const shareData = { title: `Insights for ${shareTargetName}`, text: textToShare, url: shareUrl };
+    const shareData = {
+      title: `Insights for ${shareTargetName}`,
+      text: textToShare,
+      url: shareUrl
+    };
 
     if (navigator.share) {
       await navigator.share(shareData);
     } else {
-      await navigator.clipboard.writeText(`${textToShare}: ${shareUrl}`);
+      await navigator.clipboard.writeText(`${textToShare} ${shareUrl}`);
       alert("Insights link copied to clipboard 📋");
     }
   } catch (err) {
@@ -191,6 +199,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
     alert("Unable to share insights.");
   }
 };
+
 
 
   const handleDownloadReport = async () => {
