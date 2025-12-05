@@ -114,9 +114,7 @@ const technologyDataList = [
   title:
     "Adapted for proprietary or special purpose networking environments, e.g. medical networks, sensor networks, networks in a car or remote metering networks",
 
-  // ==========================
-  // REQUIRED FOR INSIGHTSVIEW
-  // ==========================
+  
   name:
     "Adapted for proprietary or special purpose networking environments",
   industry: "Networking Systems",
@@ -128,7 +126,7 @@ const technologyDataList = [
   inventors: 1184,
   change: "+12%",
   trend: "up",
-
+primary_cpc: "H04L 67/12",
   technologiesDeveloped: [
     {
       name: "Low-power sensor mesh networking",
@@ -207,7 +205,7 @@ const technologyDataList = [
   inventors: 284,
   change: "+7%",
   trend: "up",
-
+primary_cpc: "B60L 53/22",
   technologiesDeveloped: [
     {
       name: "High-efficiency GaN EV chargers",
@@ -283,7 +281,7 @@ const technologyDataList = [
   inventors: 502,
   change: "+9%",
   trend: "up",
-
+primary_cpc: "G01L 19/00",
   technologiesDeveloped: [
     {
       name: "Micro-electromechanical pressure sensors (MEMS)",

@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { Share2, Download, Globe, Users, Lightbulb } from "lucide-react";
+import { Share2, Download } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import styles from "./insightsview.module.css";
@@ -52,8 +54,11 @@ const tdStyle = {
 };
 
 const InsightsView = ({ company, prefetchedData, feedItem }) => {
-  const [apiData, setApiData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Data states
+  const [apiData, setApiData] = useState(null); // company API data
+  const [techApi, setTechApi] = useState(null); // technology API data
+  const [loading, setLoading] = useState(true); // company loading
+  const [loadingTech, setLoadingTech] = useState(false); // technology loading
   const [downloading, setDownloading] = useState(false);
   const [technologies, setTechnologies] = useState([]);
 
@@ -61,23 +66,43 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
   const colors = ["#4e79a7", "#f28e2b", "#e15759", "#76b7b2", "#59a14f"];
   const year = new Date().getFullYear();
 
+  // Hardcoded API key as requested
+  const API_KEY = "60PKCZgn3smuESHN9e8vbVHxiXVS/8H+vXeFC4ruW1d0YAc1UczQlTQ/C2JlnwlEOKjtnLB0N2I0oheAHJGZeB2bVURMQRC1GvM0k45kyrSmiK98bPPlJPu8q1N/TlK4";
+
   const toNum = (v, fallback = 0) => {
     const n = Number(v);
     return Number.isFinite(n) ? n : fallback;
   };
 
   // --- MOCK DATA FOR NEW SECTIONS ---
-  const mapData = [["US", 28450], ["CN", 25300], ["DE", 19800], ["JP", 16400], ["KR", 12200]];
+ // === MAP + COUNTRY TABLE — USE API DATA WHEN IN TECHNOLOGY MODE ===
+let mapData = [];
+let countryTableData = [];
 
-  const countryData = [
-    { rank: 1, country: "USA", share: "32.4%", activeOrgs: "1,240", growth: "+14.2%" },
-    { rank: 2, country: "China", share: "28.1%", activeOrgs: "980", growth: "+18.5%" },
-    { rank: 3, country: "Germany", share: "15.2%", activeOrgs: "450", growth: "+8.1%" },
-    { rank: 4, country: "Japan", share: "11.8%", activeOrgs: "380", growth: "+5.3%" },
-    { rank: 5, country: "S. Korea", share: "8.5%", activeOrgs: "210", growth: "+11.7%" },
-  ];
+if (isTechMode && techApi?.country_analysis?.top_countries) {
+  // Map data expects: [ [countryCode, count], ... ]
+  mapData = techApi.country_analysis.top_countries.map(c => [c.country, c.count]);
 
-  // UPDATED: Leading Organizations Data with Growth
+  // Convert API into table format with rank + share %
+  const total = techApi.country_analysis.top_countries
+    .reduce((sum, c) => sum + (c.count || 0), 0) || 1;
+
+  countryTableData = techApi.country_analysis.top_countries.map((c, idx) => {
+    const pct = ((c.count / total) * 100).toFixed(1) + "%";
+    return {
+      rank: idx + 1,
+      country: c.country,
+      share: pct,
+      count: c.count
+    };
+  });
+} else {
+  // fallback to avoid breakage (if API fails)
+  mapData = [["US", 0]];
+  countryTableData = [];
+}
+
+
   const topOrgsData = [
     { rank: 1, name: "Samsung Electronics", count: 14500, growth: "+12.4%" },
     { rank: 2, name: "Huawei Technologies", count: 12300, growth: "+18.1%" },
@@ -86,7 +111,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
     { rank: 5, name: "Canon", count: 7200, growth: "+4.1%" }
   ];
 
-  // --- API LOGIC ---
+  // --- HELPER: CPC definitions processor (company mode)
   const processCpcDefinitions = async (data) => {
     const topIndustries = data.top_industries?.filter((i) => i.cpc) || [];
     if (topIndustries.length === 0) {
@@ -96,7 +121,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
     try {
       const resp = await fetch("https://api.incubig.org/analytics/cpc-definition", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-api-key": "60PKCZgn3smuESHN9e8vbVHxiXVS/8H+vXeFC4ruW1d0YAc1UczQlTQ/C2JlnwlEOKjtnLB0N2I0oheAHJGZeB2bVURMQRC1GvM0k45kyrSmiK98bPPlJPu8q1N/TlK4" },
+        headers: { "Content-Type": "application/json", "x-api-key": API_KEY },
         body: JSON.stringify(topIndustries.map((i) => i.cpc)),
       });
       const cpcDefs = await resp.json();
@@ -116,7 +141,14 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
     }
   };
 
+  // --- EFFECT: fetch company insights (only when not tech mode) ---
   useEffect(() => {
+    // If we're in tech mode, skip company fetch here.
+    if (isTechMode) {
+      setLoading(false);
+      return;
+    }
+
     if (!company?.name) {
       setLoading(false);
       if (prefetchedData) {
@@ -125,6 +157,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
       }
       return;
     }
+
     const fetchInsights = async () => {
       setLoading(true);
       try {
@@ -137,7 +170,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
           `https://api.incubig.org/analytics/assignee?assignee=${encodeURIComponent(company.name)}`,
           {
             method: "GET",
-            headers: { "Content-Type": "application/json", "x-api-key": "60PKCZgn3smuESHN9e8vbVHxiXVS/8H+vXeFC4ruW1d0YAc1UczQlTQ/C2JlnwlEOKjtnLB0N2I0oheAHJGZeB2bVURMQRC1GvM0k45kyrSmiK98bPPlJPu8q1N/TlK4" },
+            headers: { "Content-Type": "application/json", "x-api-key": API_KEY },
           }
         );
         if (!response.ok) throw new Error(`API request failed: ${response.status}`);
@@ -147,66 +180,100 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
 
         const topIndustries = data.top_industries?.filter((i) => i.cpc) || [];
         if (topIndustries.length > 0) {
-            try {
-             const cpcResponse = await fetch("https://api.incubig.org/analytics/cpc-definition", {
-                 method: "POST",
-                 headers: { "Content-Type": "application/json", "x-api-key": "60PKCZgn3smuESHN9e8vbVHxiXVS/8H+vXeFC4ruW1d0YAc1UczQlTQ/C2JlnwlEOKjtnLB0N2I0oheAHJGZeB2bVURMQRC1GvM0k45kyrSmiK98bPPlJPu8q1N/TlK4" },
-                 body: JSON.stringify(topIndustries.map((i) => i.cpc)),
-             });
-             const cpcDefs = await cpcResponse.json();
-             const techMapped = topIndustries.map((ind) => {
-                 const def = cpcDefs.find((d) => d.cpc === ind.cpc);
-                 return { name: def?.definition || ind.cpc, patents: ind.count, trend: "up", change: "—", cpc: ind.cpc };
-             });
-             setTechnologies(techMapped);
-            } catch (err) { console.error("CPC definition fetch failed:", err); }
+          try {
+            const cpcResponse = await fetch("https://api.incubig.org/analytics/cpc-definition", {
+              method: "POST",
+              headers: { "Content-Type": "application/json", "x-api-key": API_KEY },
+              body: JSON.stringify(topIndustries.map((i) => i.cpc)),
+            });
+            const cpcDefs = await cpcResponse.json();
+            const techMapped = topIndustries.map((ind) => {
+              const def = cpcDefs.find((d) => d.cpc === ind.cpc);
+              return { name: def?.definition || ind.cpc, patents: ind.count, trend: "up", change: "—", cpc: ind.cpc };
+            });
+            setTechnologies(techMapped);
+          } catch (err) { console.error("CPC definition fetch failed:", err); }
         }
       } catch (error) { console.error("Error fetching insights data:", error); } 
       finally { setLoading(false); }
     };
     fetchInsights();
-  }, [company, prefetchedData]);
+  }, [company, prefetchedData, isTechMode]);
 
-const handleShareInsights = async () => {
-  try {
-    // ✅ Correct selection of technology vs company name
-    const shareTargetName = isTechMode 
-      ? (feedItem?.title || feedItem?.name || "Technology Report")
-      : (company?.name || "Company Insights");
+  // --- EFFECT: fetch technology insights when in tech mode ---
+  useEffect(() => {
+    if (!isTechMode) return;
 
-    // 🔥 Proper URL based on mode
-    const shareUrl = isTechMode
-      ? `${window.location.origin}/technology?insights=${encodeURIComponent(shareTargetName)}`
-      : `${window.location.origin}/companylist?insights=${encodeURIComponent(shareTargetName)}`;
+    // Primary CPC should be present on feedItem (you provided primary_cpc in technologyDataList)
+    const cpc = feedItem?.primary_cpc;
+    if (!cpc) {
+      // no cpc — we'll just rely on feedFallback (sample values)
+      setTechApi(null);
+      setLoadingTech(false);
+      return;
+    }
 
-    // 🔥 FIXED: Text now properly uses the real source name
-    const textToShare = `Generated this Innovation Intelligence Report on RIX – Incubig. ${shareTargetName} 🚀`;
+    const fetchTech = async () => {
+      setLoadingTech(true);
+      try {
+        const url = `https://api.incubig.org/analytics/technology-analysis?cpc=${encodeURIComponent(cpc)}`;
+        const resp = await fetch(url, {
+          headers: { "Content-Type": "application/json", "x-api-key": API_KEY },
+        });
 
-    const shareData = {
-      title: `Insights for ${shareTargetName}`,
-      text: textToShare,
-      url: shareUrl
+        if (!resp.ok) {
+          // preserve existing behavior but log
+          console.error("Technology API returned non-OK:", resp.status);
+          const text = await resp.text().catch(() => null);
+          console.error("Tech API response text:", text);
+          setTechApi(null);
+          setLoadingTech(false);
+          return;
+        }
+
+        const data = await resp.json();
+        // store technology API response
+        setTechApi(data);
+      } catch (err) {
+        console.error("TECH API ERROR:", err);
+        setTechApi(null);
+      } finally {
+        setLoadingTech(false);
+      }
     };
 
-    if (navigator.share) {
-      await navigator.share(shareData);
-    } else {
-      await navigator.clipboard.writeText(`${textToShare} ${shareUrl}`);
-      alert("Insights link copied to clipboard 📋");
+    fetchTech();
+  }, [isTechMode, feedItem?.primary_cpc]);
+
+  // --- Share handler (fixed for tech mode) ---
+  const handleShareInsights = async () => {
+    try {
+      const shareTargetName = isTechMode 
+        ? (feedItem?.title || feedItem?.name || "Technology Report")
+        : (company?.name || "Insights Report");
+      const shareUrl = isTechMode
+        ? `${window.location.origin}/technology?insights=${encodeURIComponent(shareTargetName)}`
+        : `${window.location.origin}/companylist?insights=${encodeURIComponent(shareTargetName)}`;
+      const textToShare = `Generated this Innovation Intelligence Report on RIX – Incubig. ${shareTargetName} 🚀`;
+      const shareData = { title: `Insights for ${shareTargetName}`, text: textToShare, url: shareUrl };
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(`${textToShare}: ${shareUrl}`);
+        alert("Insights link copied to clipboard 📋");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Unable to share insights.");
     }
-  } catch (err) {
-    console.error(err);
-    alert("Unable to share insights.");
-  }
-};
+  };
 
-
-
+  // --- Download handler (unchanged) ---
   const handleDownloadReport = async () => {
     if (downloading) return;
     const fileName = isTechMode
-  ? `${feedItem?.title || feedItem?.name || "technology"}_Technology_Report.pdf`
-  : `${company?.name || "insights"}_Report.pdf`;
+      ? `${(feedItem?.title || feedItem?.name || "technology").replace(/[^\w\- ]+/g, "")}_Technology_Report.pdf`
+      : `${(company?.name || "insights").replace(/[^\w\- ]+/g, "")}_Report.pdf`;
 
     setDownloading(true);
     await new Promise((resolve) => setTimeout(resolve, 0));
@@ -233,6 +300,7 @@ const handleShareInsights = async () => {
     finally { setDownloading(false); }
   };
 
+  // --- Feed fallback (same as before) ---
   const feedFallback = feedItem ? {
     summary: {
       applications: feedItem.metrics?.innovations ?? feedItem.patents ?? feedItem.summary?.applications ?? 0,
@@ -252,27 +320,66 @@ const handleShareInsights = async () => {
     technologies: feedItem.relatedTechnologies || feedItem.technologiesDeveloped || [],
   } : null;
 
-  const effectiveData = apiData || feedFallback || null;
+  // effectiveData should be the appropriate dataset
+  const effectiveData = isTechMode ? (techApi || feedFallback) : (apiData || feedFallback || null);
+
   if (!effectiveData && !company && !feedItem) { return null; }
 
-  const trends = (effectiveData?.publication_trends && Array.isArray(effectiveData.publication_trends) && effectiveData.publication_trends.map((t) => ({ year: t.year, count: toNum(t.count, 0) }))) || [];
+  // For tech mode, map techApi to fields expected by UI
+  const publication_trends = isTechMode
+    ? (techApi?.publication_trends || techApi?.application_trends || feedFallback?.publication_trends || [])
+    : (effectiveData?.publication_trends || []);
+
+  const trends = (publication_trends && Array.isArray(publication_trends) && publication_trends.map((t) => ({ year: t.year, count: toNum(t.count, 0) }))) || [];
   const lastFiveYears = trends.slice(-5);
   const maxCount = Math.max(...lastFiveYears.map((t) => t.count || 0), 1);
   const trendPoints = lastFiveYears.map((t, i) => ({ x: 60 + i * 60, y: 120 - ((t.count || 0) / maxCount) * 90, year: t.year, count: t.count || 0 }));
-  const industriesArr = effectiveData?.top_industries || [];
+
+  const industriesArr = isTechMode
+    ? (feedItem.top_industries || [])
+    : (effectiveData?.top_industries || []);
+
   let industryData = [];
-  if (apiData?.total_applications) {
-    const totalApps = toNum(apiData.total_applications, 1);
+  if (isTechMode && techApi?.total_applications) {
+    const totalApps = toNum(techApi.total_applications, 1);
     industryData = industriesArr.map((ind, idx) => ({ rank: idx + 1, name: ind.industry || ind.name || "Unknown", percentage: (((toNum(ind.count, 0) / totalApps) * 100) || 0).toFixed(1) }));
   } else {
     const sum = industriesArr.reduce((s, it) => s + toNum(it.count, 0), 0) || 1;
     industryData = industriesArr.map((ind, idx) => ({ rank: idx + 1, name: ind.industry || ind.name || "Unknown", percentage: ((toNum(ind.count, 0) / sum) * 100).toFixed(1) }));
   }
-  const techList = (technologies && technologies.length > 0) ? technologies : effectiveData?.technologies?.length > 0 ? effectiveData.technologies : feedItem ? [{ name: feedItem.title || feedItem.name, patents: feedItem.metrics?.innovations ?? 0, trend: "up", change: feedItem.trend?.percent ?? "—" }] : [];
-  const peopleList = (effectiveData?.inventor_analysis?.top_inventors || []).slice(0, 10).map((p) => ({ name: p.inventor || p.name || "Unknown", focus: p.focus || "Advanced Computing, AI Systems", patents: p.count || p.patents || 0 })) || [];
-  const summary = effectiveData?.summary || {};
+
+  const techList = (technologies && technologies.length > 0) ? technologies
+    : (isTechMode
+        ? [
+            {
+              name: feedItem?.title || feedItem?.name,
+              patents: techApi?.total_applications || feedItem.metrics?.innovations || 0,
+              trend: feedItem?.trend?.percent ? "up" : "—",
+              change: feedItem?.trend?.percent || "—",
+            },
+          ]
+        : (effectiveData?.technologies?.length > 0 ? effectiveData.technologies : (feedItem ? [{ name: feedItem.title || feedItem.name, patents: feedItem.metrics?.innovations ?? 0, trend: "up", change: feedItem.trend?.percent ?? "—" }] : []))
+      );
+
+  const peopleList = (isTechMode
+    ? (techApi?.inventor_analysis?.top_inventors || []).slice(0, 10).map((p) => ({ name: p.inventor || p.name || "Unknown", focus: p.focus || "Technology Research", patents: p.count || p.patents || 0 }))
+    : (effectiveData?.inventor_analysis?.top_inventors || []).slice(0, 10).map((p) => ({ name: p.inventor || p.name || "Unknown", focus: p.focus || "Advanced Computing, AI Systems", patents: p.count || p.patents || 0 }))
+  ) || [];
+
+  const summary = isTechMode
+    ? {
+        applications: techApi?.total_applications ?? feedFallback?.summary?.applications ?? 0,
+        industries: feedFallback?.summary?.industries ?? feedItem?.industries ?? 0, // sample
+        technologies: feedFallback?.summary?.technologies ?? feedItem?.technologies ?? 0, // sample
+        totalCountries: techApi?.country_analysis?.total_countries ?? techApi?.country_analysis?.top_countries?.length ?? feedFallback?.summary?.totalCountries ?? 0,
+        topCountry: feedItem?.topCountry || feedFallback?.summary?.topCountry || "—",
+        growth: feedItem?.trend?.percent || feedFallback?.summary?.growth || "+12%",
+        totalOrganizations: techApi?.assignee_analysis?.total_assignees ?? feedFallback?.summary?.totalOrganizations ?? 0
+      }
+    : (effectiveData?.summary || {});
 
   if (loading && company?.name) return <p className={styles.loadingText}>Loading insights…</p>;
+  if (isTechMode && loadingTech) return <p className={styles.loadingText}>Loading technology insights…</p>;
 
   // --- STATS CONFIGURATION ---
   const statsToRender = isTechMode 
@@ -281,7 +388,7 @@ const handleShareInsights = async () => {
         ["YoY Innovation Growth", summary.growth || "+12%"],
         ["Active Countries", summary.totalCountries || 15],
         ["Active Organizations", summary.totalOrganizations || 120],
-        ["Active Inventors", effectiveData?.inventor_analysis?.total_inventors?.toLocaleString() || "—"],
+        ["Active Inventors", (techApi?.inventor_analysis?.total_inventors?.toLocaleString() || "—")],
         ["Impacted Industries", summary.industries || "—"]
       ]
     : [
@@ -291,6 +398,9 @@ const handleShareInsights = async () => {
         ["Technologies", summary.technologies || "—"]
       ];
 
+  // ---------------------------------------------------------------------
+  // RENDER UI (kept structure and content from your original component)
+  // ---------------------------------------------------------------------
   return (
     <div id="insights-content">
       <div className={styles.insightsContainer}>
@@ -324,7 +434,7 @@ const handleShareInsights = async () => {
                 <strong>{summary.applications?.toLocaleString() || "—"}</strong>{" "}
                 innovations across <strong>{summary.industries || "—"}</strong>{" "}
                 industries. This technology shows active contribution from{" "}
-                <strong>{effectiveData?.inventor_analysis?.total_inventors?.toLocaleString() || "—"}</strong>{" "}
+                <strong>{(techApi?.inventor_analysis?.total_inventors?.toLocaleString() || "—")}</strong>{" "}
                 inventors globally.
               </>
             ) : (
@@ -415,22 +525,16 @@ const handleShareInsights = async () => {
                     <th style={thStyle}>Rank</th>
                     <th style={thStyle}>Country</th>
                     <th style={thStyle}>Global Share (%)</th>
-                    {/* <th style={thStyle}>Active Organizations</th> */}
-                    <th style={thStyle}>YoY Growth (%)</th>
+                        <th style={thStyle}>Innovations</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {countryData.map((row) => (
+                  {countryTableData.map((row) => (
                     <tr key={row.rank}>
                       <td style={tdStyle}>{row.rank}</td>
                       <td style={tdStyle}>{row.country}</td>
                       <td style={tdStyle}>{row.share}</td>
-                      {/* <td style={tdStyle}>{row.activeOrgs}</td> */}
-                      <td style={tdStyle}>
-                        <span style={{ color: row.growth.startsWith('+') ? '#4da6ff' : '#ff4d4d' }}>
-                          {row.growth}
-                        </span>
-                      </td>
+                       <td style={tdStyle}>{row.count.toLocaleString()}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -440,31 +544,31 @@ const handleShareInsights = async () => {
             {/* Leading Organizations Table (UPDATED COLUMNS) */}
             <div style={{ overflowX: "auto", marginBottom: "1.5rem"}}>
                <h3 className={styles.sectionTitle}>Leading Organizations</h3>
-               <p className={styles.subtext} style={{marginBottom: "1rem"}}>Top 5 organizations driving innovation in this domain.</p>
+               <p className={styles.subtext} style={{marginBottom: "1rem"}}>Top organizations driving innovation in this domain.</p>
                <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
                   <tr>
                     <th style={thStyle}>Rank</th>
                     <th style={thStyle}>Name</th>
                     <th style={thStyle}>Innovations</th>
-                    <th style={thStyle}>Growth (%)</th>
+                    {/* <th style={thStyle}>Growth (%)</th> */}
                   </tr>
                 </thead>
                 <tbody>
-                  {topOrgsData.map((org) => (
-                    <tr key={org.rank}>
-                      <td style={tdStyle}>{org.rank}</td>
+                  {(techApi?.assignee_analysis?.top_assignees || topOrgsData).slice(0,5).map((org, idx) => (
+                    <tr key={idx}>
+                      <td style={tdStyle}>{idx + 1}</td>
                       <td style={tdStyle}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            {org.name}
+                            {org.assignee || org.name}
                         </div>
                       </td>
-                      <td style={tdStyle}>{org.count.toLocaleString()}</td>
-                      <td style={tdStyle}>
-                        <span style={{ color: org.growth.startsWith('+') ? '#4da6ff' : '#ff4d4d' }}>
-                           {org.growth}
+                      <td style={tdStyle}>{(org.count || org.count === 0) ? (org.count).toLocaleString() : (org.count || org.count === 0)}</td>
+                      {/* <td style={tdStyle}>
+                        <span style={{ color: (org.growth && org.growth.startsWith('+')) ? '#4da6ff' : '#ff4d4d' }}>
+                           {org.growth || "—"}
                         </span>
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>
@@ -511,7 +615,33 @@ const handleShareInsights = async () => {
           </div>
         </div>
 
-        {/* Technologies Developed */}
+       
+
+        {/* People & Innovators */}
+        {peopleList.length > 0 && (
+          <>
+            <h3 className={styles.sectionTitle}>People & Innovators</h3>
+            <p className={styles.subtext}>{isTechMode ? "Inventors actively contributing to this technology." : "Top inventors and their activity trends."}</p>
+            <div className={styles.peopleSection}>
+              <table className={styles.peopleTable}>
+                <thead><tr><th style={{width: "60%"}}>Name</th>
+                {/* <th>Focus</th> */}
+                <th style={{width: "40%"}}>Innovations</th></tr></thead>
+                <tbody>
+                  {peopleList.map((p, i) => (
+                    <tr key={i}>
+                      <td className={styles.personName}>{p.name}</td>
+                      {/* <td className={styles.personFocus}>{p.focus}</td> */}
+                      <td className={styles.personPatents}>{p.patents}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+
+         {/* Technologies Developed */}
         {techList.length > 0 && (
           <>
             <h3 className={styles.sectionTitle}>{isTechMode ? "Related Technologies" : "Technologies Developed"}</h3>
@@ -528,28 +658,6 @@ const handleShareInsights = async () => {
                   <p className={styles.techPatents}>{(tech.patents || tech.count || 0).toLocaleString()} innovations</p>
                 </div>
               ))}
-            </div>
-          </>
-        )}
-
-        {/* People & Innovators */}
-        {peopleList.length > 0 && (
-          <>
-            <h3 className={styles.sectionTitle}>People & Innovators</h3>
-            <p className={styles.subtext}>{isTechMode ? "Inventors actively contributing to this technology." : "Top inventors and their activity trends."}</p>
-            <div className={styles.peopleSection}>
-              <table className={styles.peopleTable}>
-                <thead><tr><th>Name</th><th>Focus</th><th>Publications</th></tr></thead>
-                <tbody>
-                  {peopleList.map((p, i) => (
-                    <tr key={i}>
-                      <td className={styles.personName}>{p.name}</td>
-                      <td className={styles.personFocus}>{p.focus}</td>
-                      <td className={styles.personPatents}>{p.patents}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </div>
           </>
         )}
