@@ -339,7 +339,307 @@ primary_cpc: "G01L 19/00",
   metrics: { organizations: 258, innovations: 450 },
 
   company: { name: "Robert bosch gmbh" }
-}
+},
+
+  // ===== TECHNOLOGY 4 Heath Industry =====
+
+{
+  id: 4,
+  title: "Containers, covers, furniture or holders specially adapted for surgical or diagnostic appliances or instruments, e.g. sterile covers",
+  name: "Surgical instrument containers & holders",
+  industry: "Medical Devices",
+  country: "Global",
+  patents: 56,
+  industries: 6,
+  technologies: 12,
+  inventos: 163,
+  change: "+5%",
+  trend: "up",
+  primary_cpc: "A61B 50/00",
+   technologiesDeveloped: [
+    {
+      name: "Low-power sensor mesh networking",
+      patents: 648,
+      change: "+11%",
+      trend: "up"
+    },
+    {
+      name: "In-vehicle communication buses (CAN, LIN, FlexRay)",
+      patents: 442,
+      change: "+6%",
+      trend: "up"
+    },
+    {
+      name: "Medical telemetry communication systems",
+      patents: 380,
+      change: "-3%",
+      trend: "down"
+    }
+  ],
+  summary: {
+    applications: 56,
+    industries: 6,
+    technologies: 12
+  },
+
+   publication_trends: Array.from({ length: 12 }, (_, i) => ({
+    year: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][i],
+    count: [25, 35, 45, 55, 52, 58, 60, 64, 68, 72, 75, 78][i]
+  })),
+
+  // FIXED TREND OBJECT FOR GRAPH
+  trendGraph: {
+    labels: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+    values: [25, 35, 45, 55, 52, 58, 60, 64, 68, 72, 75, 78],
+    percent: "+12%"
+  },
+
+  top_industries: [
+    { industry: "Automotive Electronics", count: 612, cpc: "H04W" },
+    { industry: "Healthcare Monitoring", count: 502, cpc: "A61B" },
+    { industry: "Smart Metering & Utilities", count: 338, cpc: "G01D" }
+  ],
+
+   inventor_analysis: {
+    total_inventors: 1184,
+    top_inventors: [
+      { inventor: "Zhou Wei", count: 54 },
+      { inventor: "Martin Keller", count: 43 },
+      { inventor: "Satoshi Yamamoto", count: 41 },
+      { inventor: "Priya Nair", count: 38 }
+    ]
+  },
+
+    metrics: { organizations: 37, innovations: 56 },
+
+  company: { name: "Siemens healthcare gmbh" }
+
+},
+
+ // ===== TECHNOLOGY 5 Machine Learning/AI =====
+
+{
+  id: 5,
+  title: "Graphical or visual programming",
+  name: "Graphical & visual programming systems",
+  industry: "Machine Learning",
+  country: "Global",
+  patents: 654,
+  industries: 11,
+  technologies: 28,
+  inventors: 1660,
+   change: "+12%",
+  trend: "up",
+  primary_cpc: "	G06F 8/34",
+   technologiesDeveloped: [
+    {
+      name: "Low-power sensor mesh networking",
+      patents: 648,
+      change: "+11%",
+      trend: "up"
+    },
+    {
+      name: "In-vehicle communication buses (CAN, LIN, FlexRay)",
+      patents: 442,
+      change: "+6%",
+      trend: "up"
+    },
+    {
+      name: "Medical telemetry communication systems",
+      patents: 380,
+      change: "-3%",
+      trend: "down"
+    }
+  ],
+
+   summary: {
+    applications: 654,
+    industries: 11,
+    technologies: 28
+  },
+
+   publication_trends: Array.from({ length: 12 }, (_, i) => ({
+    year: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][i],
+    count: [25, 35, 45, 55, 52, 58, 60, 64, 68, 72, 75, 78][i]
+  })),
+
+  // FIXED TREND OBJECT FOR GRAPH
+  trendGraph: {
+    labels: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+    values: [25, 35, 45, 55, 52, 58, 60, 64, 68, 72, 75, 78],
+    percent: "+12%"
+  },
+
+  top_industries: [
+    { industry: "Automotive Electronics", count: 612, cpc: "H04W" },
+    { industry: "Healthcare Monitoring", count: 502, cpc: "A61B" },
+    { industry: "Smart Metering & Utilities", count: 338, cpc: "G01D" }
+  ],
+
+  inventor_analysis: {
+    total_inventors: 1184,
+    top_inventors: [
+      { inventor: "Zhou Wei", count: 54 },
+      { inventor: "Martin Keller", count: 43 },
+      { inventor: "Satoshi Yamamoto", count: 41 },
+      { inventor: "Priya Nair", count: 38 }
+    ]
+  },
+
+   metrics: { organizations: 260, innovations: 654 },
+
+  company: { name: "Palantir technologies inc." }
+
+},
+
+// ===== TECHNOLOGY 6 Drones =====
+
+{
+  id: 6,
+  title: "Traffic control systems for aircraft , e.g. air-traffic control",
+  name: "Aircraft traffic control systems",
+  industry: "Drones",
+  country: "Global",
+  patents: 2561,
+  industries: 18,
+  technologies: 47,
+  inventors: 4825,
+  change: "+15%",
+  trend: "up",
+  primary_cpc: "G08G 5/00",
+   technologiesDeveloped: [
+    {
+      name: "Low-power sensor mesh networking",
+      patents: 648,
+      change: "+11%",
+      trend: "up"
+    },
+    {
+      name: "In-vehicle communication buses (CAN, LIN, FlexRay)",
+      patents: 442,
+      change: "+6%",
+      trend: "up"
+    },
+    {
+      name: "Medical telemetry communication systems",
+      patents: 380,
+      change: "-3%",
+      trend: "down"
+    }
+  ],
+   summary: {
+    applications: 2561,
+    industries: 18,
+    technologies: 47
+  },
+
+   publication_trends: Array.from({ length: 12 }, (_, i) => ({
+    year: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][i],
+    count: [25, 35, 45, 55, 52, 58, 60, 64, 68, 72, 75, 78][i]
+  })),
+
+  // FIXED TREND OBJECT FOR GRAPH
+  trendGraph: {
+    labels: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+    values: [25, 35, 45, 55, 52, 58, 60, 64, 68, 72, 75, 78],
+    percent: "+12%"
+  },
+
+  top_industries: [
+    { industry: "Automotive Electronics", count: 612, cpc: "H04W" },
+    { industry: "Healthcare Monitoring", count: 502, cpc: "A61B" },
+    { industry: "Smart Metering & Utilities", count: 338, cpc: "G01D" }
+  ],
+
+  inventor_analysis: {
+    total_inventors: 1184,
+    top_inventors: [
+      { inventor: "Zhou Wei", count: 54 },
+      { inventor: "Martin Keller", count: 43 },
+      { inventor: "Satoshi Yamamoto", count: 41 },
+      { inventor: "Priya Nair", count: 38 }
+    ]
+  },
+
+   metrics: { organizations: 596, innovations: 2561 },
+
+  company: { name: "Ideaforge technology pvt. ltd." }
+},
+
+ // ===== TECHNOLOGY 7 Gpu/cpu =====
+
+ {
+  id: 7,
+  title: "Manufacture or treatment of semiconductor devices or of parts thereof",
+  name: "Semiconductor device manufacturing & treatment",
+  industry: "Semiconductors",
+  country: "Global",
+  patents: 12012,
+  industries: 25,
+  technologies: 78,
+  inventors: 17801,
+  change: "+8%",
+  trend: "up",
+  primary_cpc: "H01L 21/00",
+    technologiesDeveloped: [
+    {
+      name: "Low-power sensor mesh networking",
+      patents: 648,
+      change: "+11%",
+      trend: "up"
+    },
+    {
+      name: "In-vehicle communication buses (CAN, LIN, FlexRay)",
+      patents: 442,
+      change: "+6%",
+      trend: "up"
+    },
+    {
+      name: "Medical telemetry communication systems",
+      patents: 380,
+      change: "-3%",
+      trend: "down"
+    }
+  ],
+
+  summary: {
+    applications: 12012,
+    industries: 25,
+    technologies: 78
+  },
+
+  publication_trends: Array.from({ length: 12 }, (_, i) => ({
+    year: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][i],
+    count: [25, 35, 45, 55, 52, 58, 60, 64, 68, 72, 75, 78][i]
+  })),
+
+  // FIXED TREND OBJECT FOR GRAPH
+  trendGraph: {
+    labels: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+    values: [25, 35, 45, 55, 52, 58, 60, 64, 68, 72, 75, 78],
+    percent: "+12%"
+  },
+
+  top_industries: [
+    { industry: "Automotive Electronics", count: 612, cpc: "H04W" },
+    { industry: "Healthcare Monitoring", count: 502, cpc: "A61B" },
+    { industry: "Smart Metering & Utilities", count: 338, cpc: "G01D" }
+  ],
+
+  inventor_analysis: {
+    total_inventors: 1184,
+    top_inventors: [
+      { inventor: "Zhou Wei", count: 54 },
+      { inventor: "Martin Keller", count: 43 },
+      { inventor: "Satoshi Yamamoto", count: 41 },
+      { inventor: "Priya Nair", count: 38 }
+    ]
+  },
+
+   metrics: { organizations: 1087, innovations: 12012 },
+
+  company: { name: "Taiwan semiconductor manufacturing company, ltd." }
+ },
 
 ];
 
