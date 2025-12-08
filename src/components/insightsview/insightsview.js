@@ -257,25 +257,45 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
   }, [isTechMode, feedItem?.primary_cpc]);
 
   // --- Share handler ---
-  const handleShareInsights = async () => {
-    try {
-      const shareTargetName = isTechMode ? feedItem?.title || feedItem?.name : company?.name || "Insights Report";
-      const shareUrl = isTechMode
-        ? `${window.location.origin}/technology?insights=${encodeURIComponent(shareTargetName)}`
-        : `${window.location.origin}/companylist?insights=${encodeURIComponent(shareTargetName)}`;
-      const textToShare = `Generated this Innovation Intelligence Report on RIX – Incubig. ${shareTargetName} 🚀`;
-      const shareData = { title: `Insights for ${shareTargetName}`, text: textToShare, url: shareUrl };
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else {
-        await navigator.clipboard.writeText(`${textToShare}: ${shareUrl}`);
-        alert("Insights link copied to clipboard 📋");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Unable to share insights.");
+ const handleShareInsights = async () => {
+  try {
+    const isTech = isTechMode;
+
+    // ---- Name ----
+    const shareTargetName = isTech
+      ? feedItem?.title || feedItem?.name || "Technology Insights"
+      : company?.name || "Company Insights";
+
+    // ---- URL (use # if your server gives 404 on refresh) ----
+   const shareUrl = isTech
+  ? `${window.location.origin}/#/technology?insights=${encodeURIComponent(shareTargetName)}`
+  : `${window.location.origin}/#/companylist?insights=${encodeURIComponent(shareTargetName)}`;
+
+
+    // ---- Different Text ----
+    const textToShare = isTech
+      ? `Generated this Technology Intelligence Report on RIX – Incubig: ${shareTargetName} 🚀`
+      : `Generated this Company Innovation Report on RIX – Incubig: ${shareTargetName} 🚀`;
+
+    const shareData = {
+      title: `Insights for ${shareTargetName}`,
+      text: textToShare,
+      url: shareUrl
+    };
+
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else {
+      await navigator.clipboard.writeText(`${textToShare}\n${shareUrl}`);
+      alert("Insights link copied to clipboard 📋");
     }
-  };
+
+  } catch (err) {
+    console.error(err);
+    alert("Unable to share insights.");
+  }
+};
+
 
   // --- Download handler (unchanged) ---
   const handleDownloadReport = async () => {
