@@ -257,36 +257,29 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
   }, [isTechMode, feedItem?.primary_cpc]);
 
   // --- Share handler ---
- const handleShareInsights = async () => {
+const handleShareInsights = async () => {
   try {
-    const isTech = isTechMode;
+    // 100% accurate URL of current insights page
+    const currentUrl = window.location.href;
 
-    // ---- Name ----
-    const shareTargetName = isTech
+    const shareTargetName = isTechMode
       ? feedItem?.title || feedItem?.name || "Technology Insights"
       : company?.name || "Company Insights";
 
-    // ---- URL (use # if your server gives 404 on refresh) ----
-   const shareUrl = isTech
-  ? `${window.location.origin}/#/technology?insights=${encodeURIComponent(shareTargetName)}`
-  : `${window.location.origin}/#/companylist?insights=${encodeURIComponent(shareTargetName)}`;
-
-
-    // ---- Different Text ----
-    const textToShare = isTech
+    const textToShare = isTechMode
       ? `Generated this Technology Intelligence Report on RIX – Incubig: ${shareTargetName} 🚀`
       : `Generated this Company Innovation Report on RIX – Incubig: ${shareTargetName} 🚀`;
 
     const shareData = {
       title: `Insights for ${shareTargetName}`,
       text: textToShare,
-      url: shareUrl
+      url: currentUrl
     };
 
     if (navigator.share) {
       await navigator.share(shareData);
     } else {
-      await navigator.clipboard.writeText(`${textToShare}\n${shareUrl}`);
+      await navigator.clipboard.writeText(`${textToShare}\n${currentUrl}`);
       alert("Insights link copied to clipboard 📋");
     }
 
@@ -295,6 +288,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
     alert("Unable to share insights.");
   }
 };
+
 
 
   // --- Download handler (unchanged) ---
@@ -739,70 +733,76 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
         )}
 
         {/* Industry Distribution / Company pie header difference */}
-        <h3 className={styles.sectionTitle}>
-          {isTechMode ? "Industries impacted by the technology" : "Industry Distribution"}
-        </h3>
+       {!isTechMode && (
+  <>
+    <h3 className={styles.sectionTitle}>Industry Distribution</h3>
 
-        <div className={styles.industrySection}>
-          <div className={styles.pieChartWrapper}>
-            <Pie
-              data={{
-                labels: industryData.map((item) => item.name),
-                datasets: [
-                  {
-                    label: "Industry Distribution",
-                    data: industryData.map((item) => parseFloat(item.percentage)),
-                    backgroundColor: colors,
-                    borderColor: "#000",
-                    borderWidth: 0,
-                  },
-                ],
-              }}
-              options={{
-                responsive: true,
-                plugins: {
-                  legend: { display: false },
-                  tooltip: {
-                    enabled: true,
-                    callbacks: { label: (context) => `${context.label}: ${context.formattedValue}%` },
-                  },
-                },
-              }}
-            />
+    <div className={styles.industrySection}>
+      {/* PIE CHART */}
+      <div className={styles.pieChartWrapper}>
+        <Pie
+          data={{
+            labels: industryData.map((item) => item.name),
+            datasets: [
+              {
+                label: "Industry Distribution",
+                data: industryData.map((item) => parseFloat(item.percentage)),
+                backgroundColor: colors,
+                borderColor: "#000",
+                borderWidth: 0,
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                enabled: true,
+                callbacks: { label: (context) => `${context.label}: ${context.formattedValue}%` },
+              },
+            },
+          }}
+        />
+      </div>
+
+      {/* LEGEND */}
+      <div className={styles.legendWrapper}>
+        {industryData.map((item, i) => (
+          <div key={i} className={styles.legendItem}>
+            <span className={styles.legendColor} style={{ backgroundColor: colors[i % colors.length] }} />
+            <span className={styles.legendText}>
+              {item.name} — {item.percentage}%
+            </span>
           </div>
+        ))}
+      </div>
 
-          <div className={styles.legendWrapper}>
-            {industryData.map((item, i) => (
-              <div key={i} className={styles.legendItem}>
-                <span className={styles.legendColor} style={{ backgroundColor: colors[i % colors.length] }} />
-                <span className={styles.legendText}>
-                  {item.name} — {item.percentage}%
-                </span>
-              </div>
+      {/* TABLE */}
+      <div className={styles.industryTableWrapper}>
+        <table className={styles.industryTable}>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Industry</th>
+              <th>Innovation Share (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {industryData.map((item, idx) => (
+              <tr key={idx}>
+                <td>{item.rank}</td>
+                <td>{item.name}</td>
+                <td>{item.percentage}%</td>
+              </tr>
             ))}
-          </div>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </>
+)}
 
-          <div className={styles.industryTableWrapper}>
-            <table className={styles.industryTable}>
-              <thead>
-                <tr>
-                  <th>Rank</th>
-                  <th>Industry</th>
-                  <th>Innovation Share (%)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {industryData.map((item, idx) => (
-                  <tr key={idx}>
-                    <td>{item.rank}</td>
-                    <td>{item.name}</td>
-                    <td>{item.percentage}%</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
 
         {/* Company-specific paragraph after pie chart */}
         {!isTechMode && renderCompanyPieFollowup()}
@@ -834,25 +834,26 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
         )}
 
         {/* Technologies Developed / Related Technologies */}
-        {techList.length > 0 && (
-          <>
-            <h3 className={styles.sectionTitle}>{isTechMode ? "Related Technologies" : "Technologies Developed"}</h3>
-            <div className={styles.techSection}>
-              {techList.map((tech, i) => (
-                <div key={i} className={styles.techCard}>
-                  <div className={styles.techHeader}>
-                    <h4 className={styles.techTitle}>{tech.name}</h4>
-                    <span className={`${styles.techChange} ${tech.trend === "up" ? styles.trendUp : styles.trendDown}`}>
-                      {tech.trend === "up" ? "↑" : "↓"} {tech.change || "—"}
-                    </span>
-                  </div>
-                  {tech.description && <p className={styles.techDescription}>{tech.description}</p>}
-                  <p className={styles.techPatents}>{(tech.patents || tech.count || 0).toLocaleString()} innovations</p>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
+        {!isTechMode && techList.length > 0 && (
+  <>
+    <h3 className={styles.sectionTitle}>Technologies Developed</h3>
+    <div className={styles.techSection}>
+      {techList.map((tech, i) => (
+        <div key={i} className={styles.techCard}>
+          <div className={styles.techHeader}>
+            <h4 className={styles.techTitle}>{tech.name}</h4>
+            <span className={`${styles.techChange} ${tech.trend === "up" ? styles.trendUp : styles.trendDown}`}>
+              {tech.trend === "up" ? "↑" : "↓"} {tech.change || "—"}
+            </span>
+          </div>
+          {tech.description && <p className={styles.techDescription}>{tech.description}</p>}
+          <p className={styles.techPatents}>{(tech.patents || tech.count || 0).toLocaleString()} innovations</p>
+        </div>
+      ))}
+    </div>
+  </>
+)}
+
 
         {/* Company-only technology followup paragraph */}
         {!isTechMode && techList.length > 0 && renderCompanyTechnologyFollowup()}
