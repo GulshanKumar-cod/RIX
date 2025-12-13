@@ -256,30 +256,28 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
     };
   }, [isTechMode, feedItem?.primary_cpc]);
 
-  // --- Share handler ---
-const handleShareInsights = async () => {
+ const handleShareInsights = async () => {
   try {
-    // 100% accurate URL of current insights page
-    const currentUrl = window.location.href;
+    const params = new URLSearchParams();
+    params.set("insights", encodeURIComponent(JSON.stringify(dataToShare)));
+    params.set("mode", isTechMode ? "technology" : "company");
 
-    const shareTargetName = isTechMode
-      ? feedItem?.title || feedItem?.name || "Technology Insights"
-      : company?.name || "Company Insights";
+    const shareUrl = `${window.location.origin}/#/portfolio?${params.toString()}`;
 
-    const textToShare = isTechMode
-      ? `Generated this Technology Intelligence Report on RIX – Incubig: ${shareTargetName} 🚀`
-      : `Generated this Company Innovation Report on RIX – Incubig: ${shareTargetName} 🚀`;
+    const shareText = isTechMode
+      ? `Generated this Technology Intelligence Report on RIX – Incubig 🚀`
+      : `Generated this Company Innovation Report on RIX – Incubig 🚀`;
 
     const shareData = {
-      title: `Insights for ${shareTargetName}`,
-      text: textToShare,
-      url: currentUrl
+      title: shareText,
+      text: shareText,
+      url: shareUrl
     };
 
     if (navigator.share) {
       await navigator.share(shareData);
     } else {
-      await navigator.clipboard.writeText(`${textToShare}\n${currentUrl}`);
+      await navigator.clipboard.writeText(shareUrl);
       alert("Insights link copied to clipboard 📋");
     }
 
@@ -288,6 +286,7 @@ const handleShareInsights = async () => {
     alert("Unable to share insights.");
   }
 };
+
 
 
 

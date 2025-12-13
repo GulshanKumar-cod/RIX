@@ -19,7 +19,6 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
   const [selectedView, setSelectedView] = useState("ForYou");
   const [expanded, setExpanded] = useState({});
 
-  // ADDED FOR 1-CLICK INSIGHTS
   const [showInsights, setShowInsights] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -27,14 +26,62 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
     "Fetching innovation activity data..."
   );
   const [currentCompany, setCurrentCompany] = useState(null);
-  const [prefetchedInsights, setPrefetchedInsights] = useState(null);
   const [currentFeedItem, setCurrentFeedItem] = useState(null);
+  const [prefetchedInsights, setPrefetchedInsights] = useState(null);
 
-  const toggleExpand = (id) => {
+  const toggleExpand = (id) =>
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
 
-  // FETCH INSIGHTS API
+  /*  
+  ===============================================================
+   🔥 1) DEEP-LINK HANDLER — AUTO LOAD ON PAGE LANDING
+  ===============================================================
+  */
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const insights = params.get("insights");
+    const mode = params.get("mode");
+
+    if (!insights || mode !== "technology") return;
+
+    const decoded = JSON.parse(decodeURIComponent(insights));
+
+    const index = technologyDataList.findIndex(
+      (t) => t.title === decoded.techTitle || t.id === decoded.id
+    );
+
+    if (index !== -1) {
+      const tech = technologyDataList[index];
+      const company = tech.company;
+
+      setCurrentCompany(company);
+      setCurrentFeedItem(tech);
+      setShowInsights(true);
+      setIsLoading(true);
+      setProgress(0);
+
+      // Auto-scroll to correct card
+      setTimeout(() => {
+        document
+          .getElementById(`tech-${index}`)
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 200);
+
+      // Fetch insights
+      (async () => {
+        const result = await fetchCompanyInsights(company.name);
+        setPrefetchedInsights(result);
+        setIsLoading(false);
+        setProgress(100);
+      })();
+    }
+  }, []);
+
+  /*  
+  ===============================================================
+   API CALL
+  ===============================================================
+  */
   const fetchCompanyInsights = async (companyName) => {
     try {
       const response = await fetch(
@@ -49,7 +96,6 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
           },
         }
       );
-
       if (!response.ok) throw new Error("API Error");
       return await response.json();
     } catch (err) {
@@ -58,7 +104,11 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
     }
   };
 
-  //  PROGRESS MESSAGE UPDATE
+  /*  
+  ===============================================================
+   PROGRESS MESSAGE STATE UPDATE
+  ===============================================================
+  */
   const updateMessage = (value) => {
     if (value < 25)
       setProgressMessage("Fetching innovation activity data...");
@@ -69,10 +119,14 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
     else setProgressMessage("Generating intelligence report...");
   };
 
-  //  1-CLICK INSIGHTS HANDLER
+  /*  
+  ===============================================================
+   🔥 2) ONE-CLICK INSIGHTS HANDLER
+  ===============================================================
+  */
   const handleOneClickInsights = async (company, feedItem) => {
     setCurrentCompany(company);
-     setCurrentFeedItem(feedItem);
+    setCurrentFeedItem(feedItem);
     setShowInsights(true);
     setIsLoading(true);
     setProgress(0);
@@ -82,7 +136,7 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
 
     const dataPromise = fetchCompanyInsights(company.name);
 
-    // API Watcher
+    // Watch API request
     (async () => {
       const result = await dataPromise;
       setPrefetchedInsights(result);
@@ -91,11 +145,8 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
 
     // Progress animation
     const interval = setInterval(() => {
-      if (progressValue < 90) {
-        progressValue += 1.2;
-      } else if (fetchDone) {
-        progressValue += 2;
-      }
+      if (progressValue < 90) progressValue += 1.2;
+      else if (fetchDone) progressValue += 2;
 
       updateMessage(progressValue);
       setProgress(Math.round(progressValue));
@@ -679,172 +730,198 @@ primary_cpc: "G01L 19/00",
         </select>
       </div>
 
-      {/* CARD LIST */}
+      {/* ====================== FEED LIST ====================== */}
       <div className={styles.featuredContainer}>
-      {technologyDataList.map((item) => {
-  const truncated =
-    item.title.split(" ").slice(0, 8).join(" ") + "...";
+        {technologyDataList.map((item, index) => {
+          // Short title for “Read More”
+          const truncated = item.title.split(" ").slice(0, 8).join(" ") + "...";
+          const showFull = expanded[item.id];
 
-  const showFull = expanded[item.id];
+          const graphSource = item.trendGraph || {};
+          const chartLabels = graphSource.labels || [];
+          const chartValues = graphSource.values || [];
+          const chartPercent =
+            graphSource.percent || item.change || "+0%";
 
-  // 🟡 FIX: Define the data source securely
-  // We check if 'trendGraph' exists (where your labels/values are), otherwise try 'trend'
-  const graphSource = item.trendGraph || item.trend || {};
-  
-  // Safely extract arrays (default to empty if missing to prevent crash)
-  const chartLabels = graphSource.labels || [];
-  const chartValues = graphSource.values || [];
-  const chartPercent = graphSource.percent || item.change || "+0%";
+          const trendData = {
+            labels: chartLabels,
+            datasets: [
+              {
+                label: "Monthly Growth",
+                data: chartValues,
+                backgroundColor: (ctx) => {
+                  const chart = ctx.chart;
+                  const { ctx: c, chartArea } = chart;
+                  if (!chartArea) return "#007bff";
+                  const g = c.createLinearGradient(
+                    chartArea.left,
+                    0,
+                    chartArea.right,
+                    0
+                  );
+                  g.addColorStop(0, "rgb(0,123,255)");
+                  g.addColorStop(1, "rgb(0,191,255)");
+                  return g;
+                },
+                borderRadius: 6,
+                barPercentage: 0.5,
+              },
+            ],
+          };
 
-  const trendData = {
-    labels: chartLabels, // Use safe variable
-    datasets: [
-      {
-        label: "Monthly Growth",
-        data: chartValues, // Use safe variable
-        backgroundColor: (ctx) => {
-          const chart = ctx.chart;
-          const { ctx: c, chartArea } = chart;
-          if (!chartArea) return "#007bff";
-          const g = c.createLinearGradient(
-            chartArea.left,
-            0,
-            chartArea.right,
-            0
+          return (
+            <div
+              id={`tech-${index}`}
+              key={item.id}
+              style={{
+                background: "transparent",
+                color: "#fff",
+                borderRadius: "16px",
+                padding: "1rem",
+                width: "100%",
+                maxWidth: "420px",
+                border: "1px solid rgba(255,255,255,0.08)",
+                marginBottom: "2rem",
+              }}
+            >
+              {/* TITLE */}
+              <h4 style={{ fontSize: "18px", fontWeight: 600 }}>
+                {showFull ? item.title : truncated}{" "}
+                <span
+                  onClick={() => toggleExpand(item.id)}
+                  style={{
+                    color: "#00bfff",
+                    cursor: "pointer",
+                    fontSize: "0.8rem",
+                  }}
+                >
+                  {showFull ? "Read less" : "Read more"}
+                </span>
+              </h4>
+
+              <hr style={{ borderColor: "rgba(255,255,255,0.08)" }} />
+
+              {/* METRICS */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  textAlign: "center",
+                  marginBottom: "2rem",
+                }}
+              >
+                <p style={{ fontSize: "0.8rem", color: "#4da6ff" }}>
+                  Organizations: {item.metrics?.organizations}
+                </p>
+                <p style={{ fontSize: "0.8rem", color: "#4da6ff" }}>
+                  Innovations: {item.metrics?.innovations}
+                </p>
+              </div>
+
+              {/* TREND GRAPH */}
+              <div style={{ marginBottom: "1.5rem" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginBottom: "0.6rem",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    <BarChart3 size={14} color="#00bfff" />
+                    <span style={{ fontSize: "0.8rem", color: "#a5b0d0" }}>
+                      12-Month Trend
+                    </span>
+                  </div>
+
+                  <span style={{ color: "#00bfff", fontSize: "0.8rem" }}>
+                    ↑ {chartPercent}
+                  </span>
+                </div>
+
+                <div style={{ height: "90px" }}>
+                  {chartValues.length > 0 ? (
+                    <Bar
+                      data={trendData}
+                      options={{
+                        responsive: true,
+                        maintainAspectRatio: false,
+                      }}
+                    />
+                  ) : (
+                    <p
+                      style={{
+                        fontSize: "0.7rem",
+                        color: "#555",
+                        textAlign: "center",
+                        marginTop: "30px",
+                      }}
+                    >
+                      No trend data available
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* ACTION BUTTONS */}
+              <div
+                className={styles.cardAction}
+                style={{ marginBottom: "1.5rem" }}
+              >
+                <button
+                  className={styles.viewButton}
+                  onClick={() =>
+                    goToCompanyPage(item.company?.name || "")
+                  }
+                >
+                  Deep Dive
+                </button>
+
+                <button
+                  className={styles.addPortfolio}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddCompany(item.company);
+                  }}
+                >
+                  + Add
+                </button>
+              </div>
+
+              {/* 1-CLICK INSIGHTS */}
+              <button
+                onClick={() =>
+                  handleOneClickInsights(item.company, item)
+                }
+                style={{
+                  background: "linear-gradient(90deg, #007bff, #00bfff)",
+                  color: "#fff",
+                  border: "none",
+                  padding: "0.5rem 1.25rem",
+                  borderRadius: "8px",
+                  fontSize: "0.8rem",
+                  width: "100%",
+                  maxWidth: "200px",
+                  margin: "0 auto",
+                  display: "block",
+                }}
+              >
+                1-Click Insights
+              </button>
+            </div>
           );
-          g.addColorStop(0, "rgb(0,123,255)");
-          g.addColorStop(1, "rgb(0,191,255)");
-          return g;
-        },
-        borderRadius: 6,
-        barPercentage: 0.5,
-      },
-    ],
-  };
-
-  return (
-    <div
-      key={item.id}
-      style={{
-        background: "transparent",
-        color: "#fff",
-        borderRadius: "16px",
-        padding: "1rem",
-        width: "100%",
-        maxWidth: "420px",
-        border: "1px solid rgba(255,255,255,0.08)",
-        marginBottom: "2rem",
-      }}
-    >
-      {/* TITLE */}
-      <h4 style={{ fontSize: "18px", fontWeight: 600 }}>
-        {showFull ? item.title : truncated}{" "}
-        <span
-          onClick={() => toggleExpand(item.id)}
-          style={{
-            color: "#00bfff",
-            cursor: "pointer",
-            fontSize: "0.8rem",
-          }}
-        >
-          {showFull ? "Read less" : "Read more"}
-        </span>
-      </h4>
-
-      <hr style={{ borderColor: "rgba(255,255,255,0.08)" }} />
-
-      {/* METRICS */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          textAlign: "center",
-          marginBottom: "2rem",
-        }}
-      >
-        <p style={{ fontSize: "0.8rem", color: "#4da6ff" }}>
-          Organizations: {item.metrics?.organizations || 0}
-        </p>
-        <p style={{ fontSize: "0.8rem", color: "#4da6ff" }}>
-          Innovations: {item.metrics?.innovations || 0}
-        </p>
+        })}
       </div>
 
-      {/* TREND */}
-      <div style={{ marginBottom: "1.5rem" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "0.6rem",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <BarChart3 size={14} color="#00bfff" />
-            <span style={{ fontSize: "0.8rem", color: "#a5b0d0" }}>
-              12-Month Trend
-            </span>
-          </div>
-
-          <span style={{ color: "#00bfff", fontSize: "0.8rem" }}>
-            ↑ {chartPercent}
-          </span>
-        </div>
-
-        <div style={{ height: "90px" }}>
-           {/* Only render chart if we actually have data */}
-           {chartValues.length > 0 ? (
-             <Bar data={trendData} options={{ responsive: true, maintainAspectRatio: false }} />
-           ) : (
-             <p style={{fontSize: "0.7rem", color: "#555", textAlign: "center", marginTop: "30px"}}>No trend data available</p>
-           )}
-        </div>
-      </div>
-
-      {/* ACTION BUTTONS */}
-      <div className={styles.cardAction} style={{ marginBottom: "1.5rem" }}>
-        <button
-          className={styles.viewButton}
-          onClick={() => goToCompanyPage(item.company?.name || "")}
-        >
-          Deep Dive
-        </button>
-
-        <button
-          className={styles.addPortfolio}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleAddCompany(item.company);
-          }}
-        >
-          + Add
-        </button>
-      </div>
-
-      {/* 1-CLICK INSIGHTS BUTTON */}
-      <button
-        onClick={() => handleOneClickInsights(item.company, item)}
-        style={{
-          background: "linear-gradient(90deg, #007bff, #00bfff)",
-          color: "#fff",
-          border: "none",
-          padding: "0.5rem 1.25rem",
-          borderRadius: "8px",
-          fontSize: "0.8rem",
-          width: "100%",
-          maxWidth: "200px",
-          margin: "0 auto",
-          display: "block",
-        }}
-      >
-        1-Click Insights
-      </button>
-    </div>
-  );
-})}
-      </div>
-
+      {/* ======================================================== */}
       {/* INSIGHTS MODAL */}
+      {/* ======================================================== */}
       {showInsights && (
         <div
           style={{
@@ -870,24 +947,29 @@ primary_cpc: "G01L 19/00",
               position: "relative",
             }}
           >
-            {/* CLOSE */}
             <button
               onClick={() => setShowInsights(false)}
               style={{
                 position: "absolute",
                 top: "10px",
                 right: "15px",
-                color: "#4da6ff",
                 background: "none",
                 border: "none",
                 fontSize: "1.2rem",
                 cursor: "pointer",
+                color: "#4da6ff",
               }}
             >
               ×
             </button>
 
-            <div style={{ marginTop: "40px", textAlign: "center", fontSize: "0.8rem" }}>
+            <div
+              style={{
+                marginTop: "40px",
+                textAlign: "center",
+                fontSize: "0.8rem",
+              }}
+            >
               {isLoading ? (
                 <div>
                   <p style={{ marginBottom: "10px" }}>{progressMessage}</p>
@@ -902,12 +984,13 @@ primary_cpc: "G01L 19/00",
                   >
                     <div
                       style={{
-                        height: "100%",
                         width: `${progress}%`,
-                        background: "linear-gradient(90deg, #007bff, #00bfff)",
-                        transition: "width 0.2s",
+                        height: "100%",
+                        background:
+                          "linear-gradient(90deg, #007bff, #00bfff)",
+                        transition: "width 0.2s ease",
                       }}
-                    />
+                    ></div>
                   </div>
 
                   <p style={{ marginTop: "5px", color: "#4da6ff" }}>
@@ -918,7 +1001,7 @@ primary_cpc: "G01L 19/00",
                 <InsightsView
                   company={currentCompany}
                   prefetchedData={prefetchedInsights}
-                   feedItem={currentFeedItem}
+                  feedItem={currentFeedItem}
                 />
               )}
             </div>

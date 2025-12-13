@@ -10,13 +10,20 @@ const PortfolioWeekly = () => {
   const [activeTab, setActiveTab] = useState('industry');
   const [selectedIndustry, setSelectedIndustry] = useState(null);
 
-  useEffect(() => {
+ useEffect(() => {
   const params = new URLSearchParams(window.location.search);
-  const sharedCompany = params.get("insights");
-  if (sharedCompany) {
-    setActiveTab("company"); 
+  const hasInsights = params.get("insights");
+  const mode = params.get("mode"); 
+
+  if (hasInsights && mode === "company") {
+    setActiveTab("company");
+  }
+
+  if (hasInsights && mode === "technology") {
+    setActiveTab("technologies");
   }
 }, []);
+
 
   const renderTabContent = () => {
     switch (activeTab) {

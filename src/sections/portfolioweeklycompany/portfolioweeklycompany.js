@@ -110,7 +110,6 @@ const suggestedCompanies = [
       },
     ],
   },
-
   {
     name: "Ford global technologies, llc",
     industry: "Vehicles",
@@ -278,69 +277,6 @@ const suggestedCompanies = [
   },
 ];
 
-const sampleData = [
-  {
-    name: "Tesla",
-    country: "USA",
-    industry1: "EV & Battery Tech",
-    industry2: "Autonomous Vehicles",
-    technologiesCount: 120,
-    topInventor: "Elon Musk",
-    totalDevelopments: 1231,
-    innovations: 53,
-  },
-  {
-    name: "Samsung",
-    country: "South Korea",
-    industry1: "Semiconductors",
-    industry2: "Consumer Electronics",
-    technologiesCount: 95,
-    topInventor: "Kim Min-Soo",
-    totalDevelopments: 2345,
-    innovations: 45,
-  },
-  {
-    name: "Siemens",
-    country: "Germany",
-    industry1: "Industrial Automation",
-    industry2: "Energy Tech",
-    technologiesCount: 80,
-    topInventor: "Johann Bauer",
-    totalDevelopments: 131,
-    innovations: 33,
-  },
-  {
-    name: "Sony",
-    country: "Japan",
-    industry1: "Electronics",
-    industry2: "Entertainment",
-    technologiesCount: 65,
-    topInventor: "Hiroshi Tanaka",
-    totalDevelopments: 4051,
-    innovations: 531,
-  },
-  {
-    name: "Nvidia",
-    country: "USA",
-    industry1: "AI & GPUs",
-    industry2: "Autonomous Driving",
-    technologiesCount: 110,
-    topInventor: "Jensen Huang",
-    totalDevelopments: 11231,
-    innovations: 331,
-  },
-  {
-    name: "Ola Electric",
-    country: "India",
-    industry1: "EV Manufacturing",
-    industry2: "Mobility Solutions",
-    technologiesCount: 40,
-    topInventor: "Bhavish Aggarwal",
-    totalDevelopments: 115,
-    innovations: 23,
-  },
-];
-
 const PortfolioWeeklyCompany = () => {
   const [selectedView, setSelectedView] = useState("ForYou");
   const [showInsights, setShowInsights] = useState(false);
@@ -352,7 +288,46 @@ const PortfolioWeeklyCompany = () => {
   );
   const [prefetchedInsights, setPrefetchedInsights] = useState(null);
 
-  // Simulate progress bar before showing insights
+  /*  
+  -----------------------------------------------
+  🔥 DEEP LINK HANDLER — AUTO-LOAD & AUTO-SCROLL  
+  -----------------------------------------------
+  */
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const insights = params.get("insights");
+    const mode = params.get("mode");
+
+    if (!insights || mode !== "company") return;
+
+    const decoded = JSON.parse(decodeURIComponent(insights));
+
+    const index = suggestedCompanies.findIndex(
+      (c) => c.name === decoded.companyName
+    );
+
+    if (index !== -1) {
+      const targetCompany = suggestedCompanies[index];
+
+      setCurrentCompany(targetCompany);
+      setShowInsights(true);
+      setIsLoading(true);
+      setProgress(0);
+
+      // Auto scroll
+      setTimeout(() => {
+        document
+          .getElementById(`company-${index}`)
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 200);
+    }
+  }, []);
+
+  /*  
+  ------------------------------------------------------------
+  LOADING SIMULATION WHEN FETCHING INSIGHTS (STAYS AS IS)
+  ------------------------------------------------------------
+  */
   useEffect(() => {
     if (isLoading) {
       let progressInterval = setInterval(() => {
@@ -364,7 +339,6 @@ const PortfolioWeeklyCompany = () => {
             next = 100;
           }
 
-          // Update message based on progress stage
           if (next < 25) {
             setProgressMessage("Fetching innovation activity data...");
           } else if (next < 50) {
@@ -385,45 +359,11 @@ const PortfolioWeeklyCompany = () => {
     }
   }, [isLoading]);
 
-  useEffect(() => {
-    if (suggestedCompanies && suggestedCompanies.length > 0) {
-      const params = new URLSearchParams(window.location.search);
-      const companyName = params.get("insights");
-      if (companyName) {
-        const match = suggestedCompanies.find(
-          (c) => c.name.toLowerCase() === companyName.toLowerCase()
-        );
-        if (match) {
-          setCurrentCompany(match);
-          setShowInsights(true);
-          setIsLoading(true);
-          setProgress(0);
-
-          window.history.replaceState({}, document.title, "/companylist");
-        }
-      }
-    }
-  }, [suggestedCompanies]);
-
-  // Add company to portfolio
-  const handleAddCompany = (company) => {
-    try {
-      const existing =
-        JSON.parse(localStorage.getItem("portfolioStartups")) || [];
-      const isDuplicate = existing.some((c) => c.name === company.name);
-
-      if (!isDuplicate) {
-        const updated = [...existing, company];
-        localStorage.setItem("portfolioStartups", JSON.stringify(updated));
-        alert(`${company.name} added to portfolio.`);
-      } else {
-        alert(`${company.name} is already in your portfolio.`);
-      }
-    } catch (error) {
-      console.error("Error adding company:", error);
-    }
-  };
-
+  /*  
+  ---------------------------------------
+  🔥 FETCH INSIGHTS (KEPT AS YOU WROTE)  
+  ---------------------------------------
+  */
   const fetchCompanyInsights = async (companyName) => {
     try {
       const response = await fetch(
@@ -452,226 +392,8 @@ const PortfolioWeeklyCompany = () => {
     <div>
       <hr className="mb-4" />
 
-      {/* Suggested Companies */}
-      <div style={{ marginBottom: "3rem" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "0rem",
-            flexWrap: "wrap",
-            gap: "0.5rem",
-          }}
-        >
-          <h3 className={styles.headingH3}>Companies Feed</h3>
-          <select
-            id="dataToggle"
-            value={selectedView}
-            onChange={(e) => setSelectedView(e.target.value)}
-            style={{
-              padding: "6px 12px",
-              borderRadius: "6px",
-              border: "1px solid rgba(255, 255, 255, 0.2)",
-              backgroundColor: "#000",
-              color: "#fff",
-              cursor: "pointer",
-              fontSize: "0.8rem",
-            }}
-          >
-            <option value="ForYou">For You</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-          </select>
-        </div>
-
-        <div className={styles.featuredContainer}>
-          {suggestedCompanies.map((company, i) => (
-            <div
-              key={`${company.name}-${i}`}
-              className={styles.industryCardCompany}
-            >
-              <div>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <h4
-                    style={{
-                      margin: "0.5rem 0",
-                      fontSize: "18px",
-                      fontFamily: "DM Sans, sans-serif",
-                    }}
-                  >
-                    {company.name}
-                  </h4>
-                  <span
-                    style={{
-                      color: company.change.startsWith("+")
-                        ? "#00ff88"
-                        : "#ff4d4d",
-                      margin: "0.5rem 0",
-                      fontSize: "18px",
-                    }}
-                  >
-                    {company.change}
-                  </span>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "0.5rem",
-                    flexWrap: "wrap",
-                    margin: "0.8rem 0",
-                  }}
-                >
-                  <span
-                    style={{
-                      background: "#2c3e50",
-                      padding: "2px 8px",
-                      borderRadius: "6px",
-                      fontSize: "0.8rem",
-                      color: "#fff",
-                    }}
-                  >
-                    {company.country || "N/A"}
-                  </span>
-                  <span
-                    style={{
-                      background: "#1e2a3a",
-                      padding: "2px 8px",
-                      borderRadius: "6px",
-                      fontSize: "0.8rem",
-                      color: "#fff",
-                    }}
-                  >
-                    {company.industry}
-                  </span>
-                </div>
-
-                <p
-                  style={{
-                    fontSize: "0.8rem",
-                    color: "#4da6ff",
-                    textShadow: "0 0 3px #4da6ff",
-                  }}
-                >
-                  {company.patents.toLocaleString()} innovations
-                </p>
-              </div>
-
-              {/* Buttons Row */}
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  gap: "20px",
-                }}
-              >
-                <button
-                  onClick={() =>
-                    window.open(
-                      `https://dyr.incubig.org/company-page/${encodeURIComponent(
-                        company.name
-                      )}/overview`,
-                      "_blank"
-                    )
-                  }
-                  style={{
-                    color: "#fff",
-                    cursor: "pointer",
-                    background: "linear-gradient(90deg, #007bff, #00bfff)",
-                    border: "none",
-                    borderRadius: "20px",
-                    padding: "6px 12px",
-                    fontSize: ".8rem",
-                    marginTop: "10px",
-                  }}
-                >
-                  View
-                </button>
-                <button
-                  onClick={() => handleAddCompany(company)}
-                  style={{
-                    color: "#fff",
-                    cursor: "pointer",
-                    background: "linear-gradient(90deg, #007bff, #00bfff)",
-                    border: "none",
-                    borderRadius: "20px",
-                    padding: "6px 12px",
-                    fontSize: ".8rem",
-                    marginTop: "10px",
-                  }}
-                >
-                  + Add
-                </button>
-              </div>
-
-              {/* 1-Click Insights Button */}
-              <div style={{ marginTop: "15px", textAlign: "center" }}>
-                <button
-                  onClick={async () => {
-                    setCurrentCompany(company);
-                    setShowInsights(true);
-                    setIsLoading(true);
-                    setProgress(0);
-
-                    // Start fetching immediately
-                    const dataPromise = fetchCompanyInsights(company.name);
-
-                    let progressValue = 0;
-                    let fetchDone = false;
-
-                    // Track when API finishes
-                    const fetchWatcher = (async () => {
-                      try {
-                        const insightsData = await dataPromise;
-                        setPrefetchedInsights(insightsData);
-                        fetchDone = true;
-                      } catch (err) {
-                        console.error("Error fetching insights:", err);
-                        fetchDone = true;
-                      }
-                    })();
-
-                    // Progress animation
-                    const progressInterval = setInterval(() => {
-                      if (progressValue < 90) {
-                        progressValue += 1.2;
-                        setProgress(Math.round(progressValue));
-                      } else if (fetchDone) {
-                        progressValue += 2;
-                        setProgress(Math.round(progressValue));
-                        if (progressValue >= 100) {
-                          clearInterval(progressInterval);
-                          setIsLoading(false);
-                        }
-                      }
-                    }, 80);
-
-                    // Wait for both animation + fetch to end
-                    await fetchWatcher;
-                  }}
-                  style={{
-                    color: "#fff",
-                    cursor: "pointer",
-                    background: "linear-gradient(90deg, #007bff, #00bfff)",
-                    border: "none",
-                    borderRadius: "8px",
-                    padding: "8px 16px",
-                    fontSize: ".8rem",
-                  }}
-                >
-                  1-Click Insights
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Toggle Dropdown */}
-      {/* <div
+      {/* FEED HEADER */}
+      <div
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -701,14 +423,208 @@ const PortfolioWeeklyCompany = () => {
           <option value="weekly">Weekly</option>
           <option value="monthly">Monthly</option>
         </select>
-      </div> */}
+      </div>
 
-      {/* Main Weekly Companies Carousel
-      <div style={{ marginTop: "0rem", marginBottom: "3rem" }}>
-        <PortfolioSuggestions data={sampleData} showHeading={false} />
-      </div> */}
+      {/* FEED LIST */}
+      <div className={styles.featuredContainer}>
+        {suggestedCompanies.map((company, i) => (
+          <div
+            id={`company-${i}`}
+            key={`${company.name}-${i}`}
+            className={styles.industryCardCompany}
+          >
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <h4
+                  style={{
+                    margin: "0.5rem 0",
+                    fontSize: "18px",
+                    fontFamily: "DM Sans, sans-serif",
+                  }}
+                >
+                  {company.name}
+                </h4>
+                <span
+                  style={{
+                    color: company.change.startsWith("+")
+                      ? "#00ff88"
+                      : "#ff4d4d",
+                    margin: "0.5rem 0",
+                    fontSize: "18px",
+                  }}
+                >
+                  {company.change}
+                </span>
+              </div>
 
-      {/* Insights Popup Modal  */}
+              <div
+                style={{
+                  display: "flex",
+                  gap: "0.5rem",
+                  flexWrap: "wrap",
+                  margin: "0.8rem 0",
+                }}
+              >
+                <span
+                  style={{
+                    background: "#2c3e50",
+                    padding: "2px 8px",
+                    borderRadius: "6px",
+                    fontSize: "0.8rem",
+                    color: "#fff",
+                  }}
+                >
+                  {company.country}
+                </span>
+
+                <span
+                  style={{
+                    background: "#1e2a3a",
+                    padding: "2px 8px",
+                    borderRadius: "6px",
+                    fontSize: "0.8rem",
+                    color: "#fff",
+                  }}
+                >
+                  {company.industry}
+                </span>
+              </div>
+
+              <p
+                style={{
+                  fontSize: "0.8rem",
+                  color: "#4da6ff",
+                  textShadow: "0 0 3px #4da6ff",
+                }}
+              >
+                {company.patents.toLocaleString()} innovations
+              </p>
+            </div>
+
+            {/* Actions */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                gap: "20px",
+              }}
+            >
+              <button
+                onClick={() =>
+                  window.open(
+                    `https://dyr.incubig.org/company-page/${encodeURIComponent(
+                      company.name
+                    )}/overview`,
+                    "_blank"
+                  )
+                }
+                style={{
+                  color: "#fff",
+                  cursor: "pointer",
+                  background: "linear-gradient(90deg, #007bff, #00bfff)",
+                  border: "none",
+                  borderRadius: "20px",
+                  padding: "6px 12px",
+                  fontSize: ".8rem",
+                  marginTop: "10px",
+                }}
+              >
+                View
+              </button>
+
+              <button
+                onClick={() => {
+                  const existing =
+                    JSON.parse(localStorage.getItem("portfolioStartups")) || [];
+                  const isDuplicate = existing.some(
+                    (c) => c.name === company.name
+                  );
+
+                  if (!isDuplicate) {
+                    localStorage.setItem(
+                      "portfolioStartups",
+                      JSON.stringify([...existing, company])
+                    );
+                    alert(`${company.name} added to portfolio.`);
+                  } else {
+                    alert(`${company.name} is already in your portfolio.`);
+                  }
+                }}
+                style={{
+                  color: "#fff",
+                  cursor: "pointer",
+                  background: "linear-gradient(90deg, #007bff, #00bfff)",
+                  border: "none",
+                  borderRadius: "20px",
+                  padding: "6px 12px",
+                  fontSize: ".8rem",
+                  marginTop: "10px",
+                }}
+              >
+                + Add
+              </button>
+            </div>
+
+            {/* 1-Click Insights */}
+            <div style={{ marginTop: "15px", textAlign: "center" }}>
+              <button
+                onClick={async () => {
+                  setCurrentCompany(company);
+                  setShowInsights(true);
+                  setIsLoading(true);
+                  setProgress(0);
+
+                  const dataPromise = fetchCompanyInsights(company.name);
+
+                  let progressValue = 0;
+                  let fetchDone = false;
+
+                  const fetchWatcher = (async () => {
+                    try {
+                      const insightsData = await dataPromise;
+                      setPrefetchedInsights(insightsData);
+                      fetchDone = true;
+                    } catch (err) {
+                      console.error("Error fetching insights:", err);
+                      fetchDone = true;
+                    }
+                  })();
+
+                  const progressInterval = setInterval(() => {
+                    if (progressValue < 90) {
+                      progressValue += 1.2;
+                      setProgress(Math.round(progressValue));
+                    } else if (fetchDone) {
+                      progressValue += 2;
+                      setProgress(Math.round(progressValue));
+                      if (progressValue >= 100) {
+                        clearInterval(progressInterval);
+                        setIsLoading(false);
+                      }
+                    }
+                  }, 80);
+
+                  await fetchWatcher;
+                }}
+                style={{
+                  color: "#fff",
+                  cursor: "pointer",
+                  background: "linear-gradient(90deg, #007bff, #00bfff)",
+                  border: "none",
+                  borderRadius: "8px",
+                  padding: "8px 16px",
+                  fontSize: ".8rem",
+                }}
+              >
+                1-Click Insights
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* INSIGHTS MODAL */}
       {showInsights && currentCompany && (
         <div
           style={{
@@ -731,7 +647,6 @@ const PortfolioWeeklyCompany = () => {
               border: "1px solid #4da6ff",
               boxShadow: "0 0 12px rgba(77, 166, 255, .3)",
               borderRadius: "10px",
-              // padding: "20px",
               width: "90%",
               maxWidth: "900px",
               height: "80vh",
@@ -756,7 +671,7 @@ const PortfolioWeeklyCompany = () => {
               ×
             </button>
 
-            {/* Loading / Insights */}
+            {/* Loader or Actual Insights */}
             <div
               style={{
                 marginTop: "40px",
@@ -775,6 +690,7 @@ const PortfolioWeeklyCompany = () => {
                   >
                     {progressMessage}
                   </p>
+
                   <div
                     style={{
                       height: "10px",
@@ -793,6 +709,7 @@ const PortfolioWeeklyCompany = () => {
                       }}
                     ></div>
                   </div>
+
                   <p
                     style={{
                       marginTop: "5px",
@@ -810,47 +727,6 @@ const PortfolioWeeklyCompany = () => {
                 />
               )}
             </div>
-
-            {/* Actions */}
-            {/* {!isLoading && (
-              <div
-                style={{
-                  marginTop: "2rem",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  gap: "20px",
-                }}
-              >
-                <button
-                  onClick={handleShareInsights}
-                  style={{
-                    background: "linear-gradient(90deg, #007bff, #00bfff)",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "0.375rem",
-                    padding: "6px 12px",
-                    cursor: "pointer",
-                    fontSize: ".8rem",
-                  }}
-                >
-                  Share
-                </button>
-                <button
-                  onClick={handleDownloadReport}
-                  style={{
-                    background: "linear-gradient(90deg, #007bff, #00bfff)",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "0.375rem",
-                    fontSize: ".8rem",
-                    padding: "6px 12px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Download
-                </button>
-              </div>
-            )} */}
           </div>
         </div>
       )}
