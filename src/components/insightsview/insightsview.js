@@ -256,8 +256,23 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
     };
   }, [isTechMode, feedItem?.primary_cpc]);
 
- const handleShareInsights = async () => {
+const handleShareInsights = async () => {
   try {
+    // 🔑 BUILD SHARE PAYLOAD (THIS WAS MISSING)
+    const dataToShare = isTechMode
+      ? {
+          technologyName: feedItem?.title || feedItem?.name,
+          primary_cpc: feedItem?.primary_cpc,
+          companyName: feedItem?.company?.name || null,
+        }
+      : {
+          companyName: company?.name,
+        };
+
+    if (!dataToShare || (!dataToShare.companyName && !dataToShare.technologyName)) {
+      throw new Error("Missing share payload");
+    }
+
     const params = new URLSearchParams();
     params.set("insights", encodeURIComponent(JSON.stringify(dataToShare)));
     params.set("mode", isTechMode ? "technology" : "company");
@@ -269,23 +284,25 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
       : `Generated this Company Innovation Report on RIX – Incubig 🚀`;
 
     const shareData = {
-      title: shareText,
+      title: "Incubig RIX Insights",
       text: shareText,
-      url: shareUrl
+      url: shareUrl,
     };
 
+    // ✅ Native share (mobile & supported browsers)
     if (navigator.share) {
       await navigator.share(shareData);
     } else {
+      // ✅ Fallback (desktop)
       await navigator.clipboard.writeText(shareUrl);
       alert("Insights link copied to clipboard 📋");
     }
-
   } catch (err) {
-    console.error(err);
+    console.error("SHARE ERROR:", err);
     alert("Unable to share insights.");
   }
 };
+
 
 
 
