@@ -260,58 +260,58 @@ const handleShareInsights = async () => {
   try {
     const isTech = isTechMode;
     
-    // ---- Name ----
+    // Get the name to share
     const shareTargetName = isTech
       ? feedItem?.title || feedItem?.name || "Technology Insights"
       : company?.name || "Company Insights";
 
-    // ---- Build share payload ----
-    const dataToShare = isTech
-      ? {
-          technologyName: feedItem?.title || feedItem?.name,
-          primary_cpc: feedItem?.primary_cpc,
-          companyName: feedItem?.company?.name || null,
-          mode: "technology"
-        }
-      : {
-          companyName: company?.name,
-          mode: "company"
-        };
+    // Get current page URL (for context)
+    const currentPageUrl = window.location.href;
 
-    if (!dataToShare || (!dataToShare.companyName && !dataToShare.technologyName)) {
-      throw new Error("Missing share payload");
-    }
-
-    // Encode the data as URL parameters
-    const params = new URLSearchParams();
-    params.set("insights", encodeURIComponent(JSON.stringify(dataToShare)));
-    params.set("mode", isTech ? "technology" : "company");
-
-    // IMPORTANT: The URL should point to your actual page route
-    // Based on your code, you're on the portfolio page with tabs
-   const shareUrl = `${window.location.origin}/portfolio?${params.toString()}`;
-
+    // SIMPLE TEXT TO SHARE (includes what you're sharing + your website URL)
     const shareText = isTech
-      ? `Generated this Technology Intelligence Report on RIX – Incubig 🚀`
-      : `Generated this Company Innovation Report on RIX – Incubig 🚀`;
+      ? `Check out ${shareTargetName} Technology Intelligence Report on RIX – Incubig 🚀\n\nView more insights at: ${window.location.origin}`
+      : `Check out ${shareTargetName} Company Innovation Report on RIX – Incubig 🚀\n\nView more insights at: ${window.location.origin}`;
 
     const shareData = {
-      title: "Incubig RIX Insights",
+      title: `Insights for ${shareTargetName}`,
       text: shareText,
-      url: shareUrl,
+      url: window.location.origin, // Just share the homepage
     };
 
-    //  Native share (mobile & supported browsers)
+    // ✅ Native share (mobile & supported browsers)
     if (navigator.share) {
-      await navigator.share(shareData);
-    } else {
-      //  Fallback (desktop)
-      await navigator.clipboard.writeText(shareUrl);
-      alert("Insights link copied to clipboard 📋");
+      try {
+        await navigator.share(shareData);
+        return; // Exit if successful
+      } catch (shareError) {
+        console.log("Native share failed, trying clipboard...", shareError);
+        // Continue to clipboard fallback
+      }
     }
+
+    // ✅ Fallback for desktop browsers
+    try {
+      await navigator.clipboard.writeText(shareText);
+      
+      // Show a nice success message
+      alert("✅ Insights link copied to clipboard! 📋\n\nShare this text to let others know about these insights.");
+    } catch (clipboardError) {
+      console.error("Clipboard error:", clipboardError);
+      
+      // Ultimate fallback - show text in alert
+      alert(`📋 Copy this to share:\n\n${shareText}`);
+    }
+
   } catch (err) {
-    console.error("SHARE ERROR:", err);
-    alert("Unable to share insights.");
+    console.error("Share error:", err);
+    
+    // Final fallback
+    const fallbackText = isTech
+      ? `Technology Insights: ${feedItem?.title || feedItem?.name} - ${window.location.origin}`
+      : `Company Insights: ${company?.name} - ${window.location.origin}`;
+    
+    alert(`Share these insights:\n\n${fallbackText}`);
   }
 };
 
