@@ -277,7 +277,7 @@ const handleShareInsights = async () => {
     params.set("insights", encodeURIComponent(JSON.stringify(dataToShare)));
     params.set("mode", isTechMode ? "technology" : "company");
 
-    const shareUrl = `${window.location.origin}/portfolio?${params.toString()}`;
+    const shareUrl = `${window.location.origin}/#/portfolio?${params.toString()}`;
 
     const shareText = isTechMode
       ? `Generated this Technology Intelligence Report on RIX – Incubig 🚀`
