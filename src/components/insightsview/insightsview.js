@@ -277,7 +277,7 @@ const handleShareInsights = async () => {
     params.set("insights", encodeURIComponent(JSON.stringify(dataToShare)));
     params.set("mode", isTechMode ? "technology" : "company");
 
-    const shareUrl = `${window.location.origin}/#/portfolio?${params.toString()}`;
+    const shareUrl = `${window.location.origin}/portfolio?${params.toString()}`;
 
     const shareText = isTechMode
       ? `Generated this Technology Intelligence Report on RIX – Incubig 🚀`
@@ -289,11 +289,11 @@ const handleShareInsights = async () => {
       url: shareUrl,
     };
 
-    // ✅ Native share (mobile & supported browsers)
+    //  Native share (mobile & supported browsers)
     if (navigator.share) {
       await navigator.share(shareData);
     } else {
-      // ✅ Fallback (desktop)
+      // Fallback (desktop)
       await navigator.clipboard.writeText(shareUrl);
       alert("Insights link copied to clipboard 📋");
     }
