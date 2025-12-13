@@ -37,45 +37,59 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
    🔥 1) DEEP-LINK HANDLER — AUTO LOAD ON PAGE LANDING
   ===============================================================
   */
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const insights = params.get("insights");
-    const mode = params.get("mode");
+useEffect(() => {
+  const hash = window.location.hash;
+  const params = new URLSearchParams(window.location.search);
+  const insights = params.get("insights");
+  const mode = params.get("mode");
 
-    if (!insights || mode !== "technology") return;
+  // Check if we're on the portfolio page and have technology insights
+  if ((hash.includes('/portfolio') || hash === '') && insights && mode === "technology") {
+    try {
+      const decoded = JSON.parse(decodeURIComponent(insights));
+      console.log("Deep link detected for technology:", decoded.technologyName);
 
-    const decoded = JSON.parse(decodeURIComponent(insights));
+      const index = technologyDataList.findIndex(
+        (t) => 
+          t.title?.toLowerCase() === decoded.technologyName?.toLowerCase() ||
+          t.name?.toLowerCase() === decoded.technologyName?.toLowerCase()
+      );
 
-    const index = technologyDataList.findIndex(
-      (t) => t.title === decoded.techTitle || t.id === decoded.id
-    );
+      if (index !== -1) {
+        const tech = technologyDataList[index];
+        const company = tech.company;
 
-    if (index !== -1) {
-      const tech = technologyDataList[index];
-      const company = tech.company;
+        setCurrentCompany(company);
+        setCurrentFeedItem(tech);
+        setShowInsights(true);
+        setIsLoading(true);
+        setProgress(0);
 
-      setCurrentCompany(company);
-      setCurrentFeedItem(tech);
-      setShowInsights(true);
-      setIsLoading(true);
-      setProgress(0);
+        // Auto-scroll to correct tech card
+        setTimeout(() => {
+          const element = document.getElementById(`tech-${index}`);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        }, 300);
 
-      // Auto-scroll to correct card
-      setTimeout(() => {
-        document
-          .getElementById(`tech-${index}`)
-          ?.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 200);
-
-      // Fetch insights
-      (async () => {
-        const result = await fetchCompanyInsights(company.name);
-        setPrefetchedInsights(result);
-        setIsLoading(false);
-        setProgress(100);
-      })();
+        // Fetch insights
+        const fetchData = async () => {
+          const result = await fetchCompanyInsights(company.name);
+          setPrefetchedInsights(result);
+          setIsLoading(false);
+          setProgress(100);
+        };
+        
+        fetchData();
+      } else {
+        console.warn("Technology not found:", decoded.technologyName);
+      }
+    } catch (error) {
+      console.error("Error parsing insights data:", error);
     }
-  }, []);
+  }
+}, []);
 
   /*  
   ===============================================================

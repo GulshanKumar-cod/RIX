@@ -258,28 +258,40 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
 
 const handleShareInsights = async () => {
   try {
-    // 🔑 BUILD SHARE PAYLOAD (THIS WAS MISSING)
-    const dataToShare = isTechMode
+    const isTech = isTechMode;
+    
+    // ---- Name ----
+    const shareTargetName = isTech
+      ? feedItem?.title || feedItem?.name || "Technology Insights"
+      : company?.name || "Company Insights";
+
+    // ---- Build share payload ----
+    const dataToShare = isTech
       ? {
           technologyName: feedItem?.title || feedItem?.name,
           primary_cpc: feedItem?.primary_cpc,
           companyName: feedItem?.company?.name || null,
+          mode: "technology"
         }
       : {
           companyName: company?.name,
+          mode: "company"
         };
 
     if (!dataToShare || (!dataToShare.companyName && !dataToShare.technologyName)) {
       throw new Error("Missing share payload");
     }
 
+    // Encode the data as URL parameters
     const params = new URLSearchParams();
     params.set("insights", encodeURIComponent(JSON.stringify(dataToShare)));
-    params.set("mode", isTechMode ? "technology" : "company");
+    params.set("mode", isTech ? "technology" : "company");
 
-    const shareUrl = `${window.location.origin}/#/portfolio?${params.toString()}`;
+    // IMPORTANT: The URL should point to your actual page route
+    // Based on your code, you're on the portfolio page with tabs
+   const shareUrl = `${window.location.origin}/portfolio?${params.toString()}`;
 
-    const shareText = isTechMode
+    const shareText = isTech
       ? `Generated this Technology Intelligence Report on RIX – Incubig 🚀`
       : `Generated this Company Innovation Report on RIX – Incubig 🚀`;
 
@@ -293,7 +305,7 @@ const handleShareInsights = async () => {
     if (navigator.share) {
       await navigator.share(shareData);
     } else {
-      // Fallback (desktop)
+      //  Fallback (desktop)
       await navigator.clipboard.writeText(shareUrl);
       alert("Insights link copied to clipboard 📋");
     }

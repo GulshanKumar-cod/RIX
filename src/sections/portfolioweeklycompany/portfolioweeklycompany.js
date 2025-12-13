@@ -293,35 +293,55 @@ const PortfolioWeeklyCompany = () => {
   🔥 DEEP LINK HANDLER — AUTO-LOAD & AUTO-SCROLL  
   -----------------------------------------------
   */
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const insights = params.get("insights");
-    const mode = params.get("mode");
+ useEffect(() => {
+  const hash = window.location.hash;
+  const params = new URLSearchParams(window.location.search);
+  const insights = params.get("insights");
+  const mode = params.get("mode");
 
-    if (!insights || mode !== "company") return;
+  // Check if we're on the portfolio page and have company insights
+  if ((hash.includes('/portfolio') || hash === '') && insights && mode === "company") {
+    try {
+      const decoded = JSON.parse(decodeURIComponent(insights));
+      console.log("Deep link detected for company:", decoded.companyName);
 
-    const decoded = JSON.parse(decodeURIComponent(insights));
+      const index = suggestedCompanies.findIndex(
+        (c) => c.name.toLowerCase() === decoded.companyName?.toLowerCase()
+      );
 
-    const index = suggestedCompanies.findIndex(
-      (c) => c.name === decoded.companyName
-    );
+      if (index !== -1) {
+        const targetCompany = suggestedCompanies[index];
 
-    if (index !== -1) {
-      const targetCompany = suggestedCompanies[index];
+        setCurrentCompany(targetCompany);
+        setShowInsights(true);
+        setIsLoading(true);
+        setProgress(0);
 
-      setCurrentCompany(targetCompany);
-      setShowInsights(true);
-      setIsLoading(true);
-      setProgress(0);
+        // Auto scroll to the company card
+        setTimeout(() => {
+          const element = document.getElementById(`company-${index}`);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        }, 300);
 
-      // Auto scroll
-      setTimeout(() => {
-        document
-          .getElementById(`company-${index}`)
-          ?.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 200);
+        // Fetch insights data
+        const fetchData = async () => {
+          const result = await fetchCompanyInsights(targetCompany.name);
+          setPrefetchedInsights(result);
+          setIsLoading(false);
+          setProgress(100);
+        };
+        
+        fetchData();
+      } else {
+        console.warn("Company not found:", decoded.companyName);
+      }
+    } catch (error) {
+      console.error("Error parsing insights data:", error);
     }
-  }, []);
+  }
+}, []);
 
   /*  
   ------------------------------------------------------------

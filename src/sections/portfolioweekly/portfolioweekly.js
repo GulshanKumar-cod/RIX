@@ -10,17 +10,23 @@ const PortfolioWeekly = () => {
   const [activeTab, setActiveTab] = useState('industry');
   const [selectedIndustry, setSelectedIndustry] = useState(null);
 
- useEffect(() => {
+useEffect(() => {
+  const hash = window.location.hash;
   const params = new URLSearchParams(window.location.search);
   const hasInsights = params.get("insights");
   const mode = params.get("mode"); 
 
-  if (hasInsights && mode === "company") {
-    setActiveTab("company");
-  }
+  // Check if we're on the portfolio page (via hash or query params)
+  const isOnPortfolioPage = hash.includes('/portfolio') || 
+                           window.location.pathname.includes('/portfolio') ||
+                           document.querySelector('.portfolio-page-class'); 
 
-  if (hasInsights && mode === "technology") {
-    setActiveTab("technologies");
+  if (isOnPortfolioPage && hasInsights) {
+    if (mode === "company") {
+      setActiveTab("company");
+    } else if (mode === "technology") {
+      setActiveTab("technologies");
+    }
   }
 }, []);
 
