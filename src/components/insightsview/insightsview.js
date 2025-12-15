@@ -256,64 +256,61 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
     };
   }, [isTechMode, feedItem?.primary_cpc]);
 
-const handleShareInsights = async () => {
-  try {
-    const isTech = isTechMode;
-    
-    // ---- Name ----
-    const shareTargetName = isTech
-      ? feedItem?.title || feedItem?.name || "Technology Insights"
-      : company?.name || "Company Insights";
+  // --- SHARE HANDLER (FIXED FOR DUPLICATE URL) ---
+  const handleShareInsights = async () => {
+    try {
+      const isTech = isTechMode;
+      
+      // ---- Name ----
+      const shareTargetName = isTech
+        ? feedItem?.title || feedItem?.name || "Technology Insights"
+        : company?.name || "Company Insights";
 
-    // ---- Build clean URL parameters ----
-    const params = new URLSearchParams();
-    
-    if (isTech) {
-      // Technology mode
-      params.set('tab', 'weekly'); // Go to AI Discovery tab
-      params.set('techId', feedItem?.id?.toString() || '');
-      if (feedItem?.primary_cpc) {
-        params.set('cpc', feedItem.primary_cpc);
+      // ---- Build clean URL parameters ----
+      const params = new URLSearchParams();
+      
+      if (isTech) {
+        // Technology mode
+        params.set('tab', 'weekly');
+        params.set('techId', feedItem?.id?.toString() || '');
+        if (feedItem?.primary_cpc) {
+          params.set('cpc', feedItem.primary_cpc);
+        }
+      } else {
+        // Company mode
+        params.set('tab', 'weekly');
+        params.set('company', company?.name?.replace(/\s+/g, '-').toLowerCase() || '');
       }
-    } else {
-      // Company mode
-      params.set('tab', 'weekly'); // Go to AI Discovery tab
-      params.set('company', company?.name?.replace(/\s+/g, '-').toLowerCase() || '');
+
+      // Add timestamp
+      params.set('share', Date.now().toString().slice(-6));
+
+      // IMPORTANT: Use your actual route - /companylist
+      const shareUrl = `${window.location.origin}/companylist?${params.toString()}`;
+
+      // ---- Build TEXT without URL for Native Share ----
+      const baseText = isTech
+        ? `Generated this Technology Intelligence Report on RIX – Incubig: ${shareTargetName} 🚀`
+        : `Generated this Company Innovation Report on RIX – Incubig: ${shareTargetName} 🚀`;
+
+      // ✅ Native share
+      if (navigator.share) {
+        await navigator.share({
+          title: `RIX Insights - ${shareTargetName}`,
+          text: baseText, // Only text here, browser appends URL
+          url: shareUrl   // URL passed explicitly
+        });
+      } else {
+        // ✅ Fallback (desktop): Manually combine Text + URL
+        await navigator.clipboard.writeText(`${baseText} ${shareUrl}`);
+        alert("✅ Insights link copied to clipboard! 📋");
+      }
+
+    } catch (err) {
+      console.error("Share error:", err);
+      alert("Unable to share insights.");
     }
-
-    // Add timestamp
-    params.set('share', Date.now().toString().slice(-6));
-
-    // IMPORTANT: Use your actual route - /companylist
-    const shareUrl = `${window.location.origin}/companylist?${params.toString()}`;
-
-    // ---- Clean text format ----
-    const shareText = isTech
-      ? `Generated this Technology Intelligence Report on RIX – Incubig: ${shareTargetName} 🚀 ${shareUrl}`
-      : `Generated this Company Innovation Report on RIX – Incubig: ${shareTargetName} 🚀 ${shareUrl}`;
-
-    // ✅ Native share
-    if (navigator.share) {
-      await navigator.share({
-        title: `RIX Insights - ${shareTargetName}`,
-        text: shareText,
-        url: shareUrl
-      });
-    } else {
-      // ✅ Fallback (desktop)
-      await navigator.clipboard.writeText(shareText);
-      alert("✅ Insights link copied to clipboard! 📋");
-    }
-
-  } catch (err) {
-    console.error("Share error:", err);
-    alert("Unable to share insights.");
-  }
-};
-
-
-
-
+  };
 
   // --- Download handler (unchanged) ---
   const handleDownloadReport = async () => {
@@ -610,6 +607,26 @@ const handleShareInsights = async () => {
                 <strong>{summary.industries || "—"}</strong> industries. This technology shows active contribution from{" "}
                 <strong>{techApi?.inventor_analysis?.total_inventors?.toLocaleString() || "—"}</strong> inventors globally.
               </p>
+              
+              {/* NEW TECHNOLOGY SPECIFIC PARAGRAPH (Added in previous request) */}
+              {(() => {
+                const techAssignees = techApi?.assignee_analysis?.top_assignees || [];
+                const techCountries = techApi?.country_analysis?.top_countries || [];
+
+                const top3Comp = techAssignees.slice(0,3).map(a => a.assignee || a.name).join(", ");
+                const top3Count = techCountries.slice(0,3).map(c => c.country).join(", ");
+                const countComp = techApi?.assignee_analysis?.total_assignees || techAssignees.length || 0;
+                const countCount = techApi?.country_analysis?.total_countries || techCountries.length || 0;
+
+                return (
+                  <p className={styles.summaryParagraph} style={{ marginTop: '0.8rem' }}>
+                     Development is driven by <strong>{countComp.toLocaleString()}</strong> companies, 
+                     with leading contributions from <strong>{top3Comp || "key market players"}</strong>. 
+                     The technology footprint spans <strong>{countCount}</strong> countries, 
+                     dominated by activity in <strong>{top3Count || "various regions"}</strong>.
+                  </p>
+                );
+              })()}
             </>
           ) : (
             <>
@@ -831,7 +848,7 @@ const handleShareInsights = async () => {
         {/* Company-specific paragraph after pie chart */}
         {!isTechMode && renderCompanyPieFollowup()}
 
-        {/* People & Innovators */}
+        {/* People & Innovators (UPDATED WITH RANK COLUMN) */}
         {peopleList.length > 0 && (
           <>
             <h3 className={styles.sectionTitle}>People & Innovators</h3>
@@ -840,13 +857,15 @@ const handleShareInsights = async () => {
               <table className={styles.peopleTable}>
                 <thead>
                   <tr>
+                    <th style={{ width: "10%", color: "#a5b0d0", fontWeight: "600", fontSize: "0.8rem", textAlign: "left" }}>Rank</th>
                     <th style={{ width: "60%" }}>Name</th>
-                    <th style={{ width: "40%" }}>Innovations</th>
+                    <th style={{ width: "30%" }}>Innovations</th>
                   </tr>
                 </thead>
                 <tbody>
                   {peopleList.map((p, i) => (
                     <tr key={i}>
+                      <td style={{ color: "#a5b0d0", fontSize: "0.8rem", fontWeight: "600", paddingLeft: "4px" }}>{i + 1}</td>
                       <td className={styles.personName}>{p.name}</td>
                       <td className={styles.personPatents}>{p.patents}</td>
                     </tr>
