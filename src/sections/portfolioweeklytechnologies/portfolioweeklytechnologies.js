@@ -38,58 +38,96 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
   ===============================================================
   */
 useEffect(() => {
-  const hash = window.location.hash;
   const params = new URLSearchParams(window.location.search);
   const insights = params.get("insights");
   const mode = params.get("mode");
+  const action = params.get("action");
+  const cpc = params.get("cpc");
+  const id = params.get("id");
 
-  // Check if we're on the portfolio page and have technology insights
-  if ((hash.includes('/portfolio') || hash === '') && insights && mode === "technology") {
+  // Check if we should auto-show insights
+  if (insights && mode === "technology" && action === "showInsights") {
     try {
-      const decoded = JSON.parse(decodeURIComponent(insights));
-      console.log("Deep link detected for technology:", decoded.technologyName);
+      const decodedInsights = decodeURIComponent(insights);
+      console.log("Auto-loading technology insights for:", decodedInsights);
 
-      const index = technologyDataList.findIndex(
-        (t) => 
-          t.title?.toLowerCase() === decoded.technologyName?.toLowerCase() ||
-          t.name?.toLowerCase() === decoded.technologyName?.toLowerCase()
-      );
+      // Find the technology in the list (by ID if available, otherwise by title/name)
+      let index = -1;
+      
+      if (id) {
+        // Try to find by ID first
+        index = technologyDataList.findIndex(t => t.id?.toString() === id);
+      }
+      
+      if (index === -1) {
+        // Fallback to title/name matching
+        index = technologyDataList.findIndex(
+          t => t.title?.toLowerCase() === decodedInsights.toLowerCase() ||
+               t.name?.toLowerCase() === decodedInsights.toLowerCase()
+        );
+      }
 
       if (index !== -1) {
         const tech = technologyDataList[index];
         const company = tech.company;
 
-        setCurrentCompany(company);
-        setCurrentFeedItem(tech);
-        setShowInsights(true);
-        setIsLoading(true);
-        setProgress(0);
-
-        // Auto-scroll to correct tech card
+        // Auto-scroll to the tech card first
         setTimeout(() => {
           const element = document.getElementById(`tech-${index}`);
           if (element) {
             element.scrollIntoView({ behavior: "smooth", block: "center" });
           }
-        }, 300);
+        }, 500);
 
-        // Fetch insights
-        const fetchData = async () => {
-          const result = await fetchCompanyInsights(company.name);
-          setPrefetchedInsights(result);
-          setIsLoading(false);
-          setProgress(100);
-        };
-        
-        fetchData();
+        // Then simulate clicking the "1-Click Insights" button after a delay
+        setTimeout(async () => {
+          console.log("Auto-clicking insights button for:", tech.title);
+          
+          // Set the data and show insights
+          setCurrentCompany(company);
+          setCurrentFeedItem(tech);
+          setShowInsights(true);
+          setIsLoading(true);
+          setProgress(0);
+
+          // Fetch the data
+          const data = await fetchCompanyInsights(company.name);
+          setPrefetchedInsights(data);
+          
+          // Complete loading
+          setTimeout(() => {
+            setIsLoading(false);
+            setProgress(100);
+          }, 500);
+        }, 1000);
       } else {
-        console.warn("Technology not found:", decoded.technologyName);
+        console.warn("Technology not found in list:", decodedInsights);
       }
     } catch (error) {
-      console.error("Error parsing insights data:", error);
+      console.error("Error auto-loading technology insights:", error);
     }
   }
 }, []);
+
+// Helper to clean URL after loading
+useEffect(() => {
+  if (showInsights) {
+    // Remove the auto-trigger parameters from URL without refreshing
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('action') === 'showInsights') {
+      params.delete('action');
+      params.delete('insights');
+      params.delete('mode');
+      params.delete('cpc');
+      params.delete('id');
+      params.delete('company');
+      
+      // Update URL without page refresh
+      const newUrl = `${window.location.pathname}${params.toString() ? '?' + params.toString() : ''}${window.location.hash}`;
+      window.history.replaceState({}, '', newUrl);
+    }
+  }
+}, [showInsights]);
 
   /*  
   ===============================================================

@@ -260,58 +260,71 @@ const handleShareInsights = async () => {
   try {
     const isTech = isTechMode;
     
-    // Get the name to share
+    // ---- Name ----
     const shareTargetName = isTech
       ? feedItem?.title || feedItem?.name || "Technology Insights"
       : company?.name || "Company Insights";
 
-    // Get current page URL (for context)
-    const currentPageUrl = window.location.href;
+    // ---- Build URL with proper parameters ----
+    const params = new URLSearchParams();
+    
+    if (isTech) {
+      // Technology mode
+      params.set('mode', 'technology');
+      params.set('action', 'showInsights'); // Trigger to show insights
+      
+      // Store all necessary data
+      if (feedItem?.primary_cpc) {
+        params.set('cpc', encodeURIComponent(feedItem.primary_cpc));
+      }
+      if (shareTargetName) {
+        params.set('insights', encodeURIComponent(shareTargetName));
+      }
+      if (feedItem?.id) {
+        params.set('id', feedItem.id.toString());
+      }
+    } else {
+      // Company mode
+      params.set('mode', 'company');
+      params.set('action', 'showInsights'); // Trigger to show insights
+      
+      if (shareTargetName) {
+        params.set('insights', encodeURIComponent(shareTargetName));
+      }
+      if (company?.name) {
+        params.set('company', encodeURIComponent(company.name));
+      }
+    }
 
-    // SIMPLE TEXT TO SHARE (includes what you're sharing + your website URL)
+    // Add timestamp to prevent caching
+    params.set('t', Date.now().toString());
+
+    // Create the share URL - goes to portfolio page
+    const shareUrl = `${window.location.origin}/#/portfolio?${params.toString()}`;
+
+    // ---- Exact text format you requested ----
     const shareText = isTech
-      ? `Check out ${shareTargetName} Technology Intelligence Report on RIX – Incubig 🚀\n\nView more insights at: ${window.location.origin}`
-      : `Check out ${shareTargetName} Company Innovation Report on RIX – Incubig 🚀\n\nView more insights at: ${window.location.origin}`;
+      ? `Generated this Technology Intelligence Report on RIX – Incubig: ${shareTargetName} 🚀 ${shareUrl}`
+      : `Generated this Company Innovation Report on RIX – Incubig: ${shareTargetName} 🚀 ${shareUrl}`;
 
     const shareData = {
       title: `Insights for ${shareTargetName}`,
       text: shareText,
-      url: window.location.origin, // Just share the homepage
+      url: shareUrl
     };
 
-    // ✅ Native share (mobile & supported browsers)
+    // ✅ Native share (mobile)
     if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-        return; // Exit if successful
-      } catch (shareError) {
-        console.log("Native share failed, trying clipboard...", shareError);
-        // Continue to clipboard fallback
-      }
-    }
-
-    // ✅ Fallback for desktop browsers
-    try {
+      await navigator.share(shareData);
+    } else {
+      // ✅ Fallback (desktop)
       await navigator.clipboard.writeText(shareText);
-      
-      // Show a nice success message
-      alert("✅ Insights link copied to clipboard! 📋\n\nShare this text to let others know about these insights.");
-    } catch (clipboardError) {
-      console.error("Clipboard error:", clipboardError);
-      
-      // Ultimate fallback - show text in alert
-      alert(`📋 Copy this to share:\n\n${shareText}`);
+      alert("Insights link copied to clipboard 📋\n\nShare this link to show the exact same insights!");
     }
 
   } catch (err) {
     console.error("Share error:", err);
-    
-    // Final fallback
-    const fallbackText = isTech
-      ? `Technology Insights: ${feedItem?.title || feedItem?.name} - ${window.location.origin}`
-      : `Company Insights: ${company?.name} - ${window.location.origin}`;
-    
-    alert(`Share these insights:\n\n${fallbackText}`);
+    alert("Unable to share insights.");
   }
 };
 
