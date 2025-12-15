@@ -257,7 +257,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
   }, [isTechMode, feedItem?.primary_cpc]);
 
   // --- SHARE HANDLER (FIXED FOR DUPLICATE URL) ---
-  const handleShareInsights = async () => {
+const handleShareInsights = async () => {
     try {
       const isTech = isTechMode;
       
@@ -288,20 +288,22 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
       // IMPORTANT: Use your actual route - /companylist
       const shareUrl = `${window.location.origin}/companylist?${params.toString()}`;
 
-      // ---- Build TEXT without URL for Native Share ----
+      // ---- Build TEXT without URL ----
       const baseText = isTech
         ? `Generated this Technology Intelligence Report on RIX – Incubig: ${shareTargetName} 🚀`
         : `Generated this Company Innovation Report on RIX – Incubig: ${shareTargetName} 🚀`;
 
-      // ✅ Native share
+      // ✅ NATIVE SHARE (Mobile)
+      // We pass text and url separately. The OS handles combining them neatly.
       if (navigator.share) {
         await navigator.share({
           title: `RIX Insights - ${shareTargetName}`,
-          text: baseText, // Only text here, browser appends URL
-          url: shareUrl   // URL passed explicitly
+          text: baseText, 
+          url: shareUrl   
         });
       } else {
-        // ✅ Fallback (desktop): Manually combine Text + URL
+        // ✅ CLIPBOARD FALLBACK (Desktop/Web)
+        // We manually combine Text + Space + URL so it looks like the mobile version when pasted.
         await navigator.clipboard.writeText(`${baseText} ${shareUrl}`);
         alert("✅ Insights link copied to clipboard! 📋");
       }
