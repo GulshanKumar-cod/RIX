@@ -12,12 +12,18 @@ const PortfolioWeekly = () => {
 
 useEffect(() => {
   const params = new URLSearchParams(window.location.search);
-  const mode = params.get('m'); 
-  
-  if (mode === 'c') { 
-    setActiveTab("company");
-  } else if (mode === 't') { 
-    setActiveTab("technologies");
+  const tab = params.get('tab');
+  const techId = params.get('techId');
+  const companySlug = params.get('company');
+  const share = params.get('share');
+
+  // If share parameter exists, we need to auto-load
+  if (share) {
+    if (techId) {
+      setActiveTab("technologies");
+    } else if (companySlug) {
+      setActiveTab("company");
+    }
   }
 }, []);
 

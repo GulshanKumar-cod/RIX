@@ -295,16 +295,16 @@ const PortfolioWeeklyCompany = () => {
   */
 useEffect(() => {
   const params = new URLSearchParams(window.location.search);
-  const mode = params.get('m');
-  const companySlug = params.get('c'); // Using 'c' for company slug
-  const timestamp = params.get('_');
+  const companySlug = params.get('company');
+  const share = params.get('share');
+  const tab = params.get('tab');
 
   // Check if we should auto-show company insights
-  if (mode === 'c' && companySlug) {
+  if (tab === 'weekly' && share && companySlug) {
     try {
-      console.log("Auto-loading company from slug:", companySlug);
+      console.log("Auto-loading company from shared link:", companySlug);
       
-      // Find company by matching slug (lowercase, hyphenated)
+      // Find company by matching slug
       const index = suggestedCompanies.findIndex(
         (c) => c.name.toLowerCase().replace(/\s+/g, '-') === companySlug.toLowerCase()
       );
@@ -312,19 +312,14 @@ useEffect(() => {
       if (index !== -1) {
         const targetCompany = suggestedCompanies[index];
         
-        console.log("Found company:", targetCompany.name);
-        
-        // First switch to company tab (handled by parent)
-        // Then auto-scroll and load
+        // Auto-scroll and load
         setTimeout(() => {
           const element = document.getElementById(`company-${index}`);
           if (element) {
             element.scrollIntoView({ behavior: "smooth", block: "center" });
             
-            // Simulate button click
+            // Auto-click the 1-Click Insights button
             setTimeout(async () => {
-              console.log("Auto-clicking insights for:", targetCompany.name);
-              
               setCurrentCompany(targetCompany);
               setShowInsights(true);
               setIsLoading(true);
@@ -333,27 +328,25 @@ useEffect(() => {
               const data = await fetchCompanyInsights(targetCompany.name);
               setPrefetchedInsights(data);
               
-              // Complete loading animation
+              // Loading animation
               const interval = setInterval(() => {
                 setProgress(prev => {
                   if (prev >= 95) {
                     clearInterval(interval);
                     setIsLoading(false);
+                    
+                    // Clean URL after loading
+                    const newParams = new URLSearchParams(window.location.search);
+                    newParams.delete('share');
+                    newParams.delete('company');
+                    const newUrl = `${window.location.pathname}?${newParams.toString()}`;
+                    window.history.replaceState({}, '', newUrl);
+                    
                     return 100;
                   }
                   return prev + 5;
                 });
               }, 50);
-              
-              // Clean URL after loading
-              setTimeout(() => {
-                const newParams = new URLSearchParams(window.location.search);
-                newParams.delete('m');
-                newParams.delete('c');
-                newParams.delete('_');
-                const newUrl = `${window.location.pathname}${newParams.toString() ? '?' + newParams.toString() : ''}${window.location.hash}`;
-                window.history.replaceState({}, '', newUrl);
-              }, 1000);
               
             }, 300);
           }

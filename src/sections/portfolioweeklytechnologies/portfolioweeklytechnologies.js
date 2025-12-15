@@ -39,19 +39,17 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
   */
 useEffect(() => {
   const params = new URLSearchParams(window.location.search);
-  const mode = params.get('m');
-  const techId = params.get('id');
+  const techId = params.get('techId');
   const cpc = params.get('cpc');
-  const timestamp = params.get('_');
+  const share = params.get('share');
+  const tab = params.get('tab');
 
   // Check if we should auto-show technology insights
-  if (mode === 't') {
+  if (tab === 'weekly' && share) {
     try {
-      console.log("Auto-loading technology, ID:", techId, "CPC:", cpc);
-      
       let index = -1;
       
-      // Try to find by ID first (most reliable)
+      // Try to find by ID first
       if (techId) {
         index = technologyDataList.findIndex(t => t.id?.toString() === techId);
       }
@@ -65,18 +63,14 @@ useEffect(() => {
         const tech = technologyDataList[index];
         const company = tech.company;
         
-        console.log("Found technology:", tech.title);
-        
         // Auto-scroll and load
         setTimeout(() => {
           const element = document.getElementById(`tech-${index}`);
           if (element) {
             element.scrollIntoView({ behavior: "smooth", block: "center" });
             
-            // Simulate button click
+            // Auto-click the 1-Click Insights button
             setTimeout(async () => {
-              console.log("Auto-clicking insights for:", tech.title);
-              
               setCurrentCompany(company);
               setCurrentFeedItem(tech);
               setShowInsights(true);
@@ -86,28 +80,26 @@ useEffect(() => {
               const data = await fetchCompanyInsights(company.name);
               setPrefetchedInsights(data);
               
-              // Complete loading animation
+              // Loading animation
               const interval = setInterval(() => {
                 setProgress(prev => {
                   if (prev >= 95) {
                     clearInterval(interval);
                     setIsLoading(false);
+                    
+                    // Clean URL after loading
+                    const newParams = new URLSearchParams(window.location.search);
+                    newParams.delete('share');
+                    newParams.delete('techId');
+                    newParams.delete('cpc');
+                    const newUrl = `${window.location.pathname}?${newParams.toString()}`;
+                    window.history.replaceState({}, '', newUrl);
+                    
                     return 100;
                   }
                   return prev + 5;
                 });
               }, 50);
-              
-              // Clean URL after loading
-              setTimeout(() => {
-                const newParams = new URLSearchParams(window.location.search);
-                newParams.delete('m');
-                newParams.delete('id');
-                newParams.delete('cpc');
-                newParams.delete('_');
-                const newUrl = `${window.location.pathname}${newParams.toString() ? '?' + newParams.toString() : ''}${window.location.hash}`;
-                window.history.replaceState({}, '', newUrl);
-              }, 1000);
               
             }, 300);
           }

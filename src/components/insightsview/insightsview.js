@@ -269,33 +269,30 @@ const handleShareInsights = async () => {
     const params = new URLSearchParams();
     
     if (isTech) {
-      // Technology mode - minimal parameters
-      params.set('m', 't'); // m=mode, t=technology
-      if (feedItem?.id) {
-        params.set('id', feedItem.id.toString()); // Use ID for exact matching
-      } else if (feedItem?.primary_cpc) {
-        params.set('cpc', feedItem.primary_cpc); // No encodeURIComponent here
+      // Technology mode
+      params.set('tab', 'weekly'); // Go to AI Discovery tab
+      params.set('techId', feedItem?.id?.toString() || '');
+      if (feedItem?.primary_cpc) {
+        params.set('cpc', feedItem.primary_cpc);
       }
     } else {
-      // Company mode - minimal parameters
-      params.set('m', 'c'); // m=mode, c=company
-      if (company?.name) {
-        params.set('c', company.name.replace(/\s+/g, '-').toLowerCase()); // Clean company name as slug
-      }
+      // Company mode
+      params.set('tab', 'weekly'); // Go to AI Discovery tab
+      params.set('company', company?.name?.replace(/\s+/g, '-').toLowerCase() || '');
     }
 
-    // Add simple timestamp
-    params.set('_', Date.now().toString().slice(-6));
+    // Add timestamp
+    params.set('share', Date.now().toString().slice(-6));
 
-    // Create clean share URL
-    const shareUrl = `${window.location.origin}#/portfolio?${params.toString()}`;
+    // IMPORTANT: Use your actual route - /companylist
+    const shareUrl = `${window.location.origin}/companylist?${params.toString()}`;
 
     // ---- Clean text format ----
     const shareText = isTech
       ? `Generated this Technology Intelligence Report on RIX – Incubig: ${shareTargetName} 🚀 ${shareUrl}`
       : `Generated this Company Innovation Report on RIX – Incubig: ${shareTargetName} 🚀 ${shareUrl}`;
 
-    // ✅ Native share (mobile)
+    // ✅ Native share
     if (navigator.share) {
       await navigator.share({
         title: `RIX Insights - ${shareTargetName}`,
@@ -303,21 +300,14 @@ const handleShareInsights = async () => {
         url: shareUrl
       });
     } else {
-      // ✅ Fallback (desktop) - copy ONLY the text, not extra object
+      // ✅ Fallback (desktop)
       await navigator.clipboard.writeText(shareText);
       alert("✅ Insights link copied to clipboard! 📋");
     }
 
   } catch (err) {
     console.error("Share error:", err);
-    
-    // Simple fallback
-    const fallbackText = isTech
-      ? `Technology Insights: ${feedItem?.title || feedItem?.name}`
-      : `Company Insights: ${company?.name}`;
-    
-    await navigator.clipboard.writeText(fallbackText);
-    alert("Link copied to clipboard!");
+    alert("Unable to share insights.");
   }
 };
 
