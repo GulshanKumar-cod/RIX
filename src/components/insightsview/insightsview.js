@@ -726,6 +726,9 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
               <h3 className={styles.sectionTitle} style={{ marginBottom: "1rem", color: "#fff" }}>
                 Global Rankings
               </h3>
+               <p className={styles.subtext} style={{ marginBottom: "1rem" }}>
+                Global Leaders in this technology.
+              </p>
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
                   <tr>
