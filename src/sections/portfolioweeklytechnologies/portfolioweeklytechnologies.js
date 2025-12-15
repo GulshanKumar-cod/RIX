@@ -39,29 +39,23 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
   */
 useEffect(() => {
   const params = new URLSearchParams(window.location.search);
-  const techId = params.get('techId');
-  const cpc = params.get('cpc');
-  const share = params.get('share');
+  const techId = params.get('tid'); // tid = tech ID
+  const share = params.get('s');
   const tab = params.get('tab');
 
   // Check if we should auto-show technology insights
-  if (tab === 'weekly' && share) {
+  if (tab === 'weekly' && share && techId) {
     try {
-      let index = -1;
+      console.log("Auto-loading technology from shared link, ID:", techId);
       
-      // Try to find by ID first
-      if (techId) {
-        index = technologyDataList.findIndex(t => t.id?.toString() === techId);
-      }
-      
-      // If not found by ID, try CPC
-      if (index === -1 && cpc) {
-        index = technologyDataList.findIndex(t => t.primary_cpc === cpc);
-      }
+      // Find by ID
+      const index = technologyDataList.findIndex(t => t.id?.toString() === techId);
 
       if (index !== -1) {
         const tech = technologyDataList[index];
         const company = tech.company;
+        
+        console.log("Found technology:", tech.title);
         
         // Auto-scroll and load
         setTimeout(() => {
@@ -71,6 +65,8 @@ useEffect(() => {
             
             // Auto-click the 1-Click Insights button
             setTimeout(async () => {
+              console.log("Auto-clicking insights for:", tech.title);
+              
               setCurrentCompany(company);
               setCurrentFeedItem(tech);
               setShowInsights(true);
@@ -89,10 +85,9 @@ useEffect(() => {
                     
                     // Clean URL after loading
                     const newParams = new URLSearchParams(window.location.search);
-                    newParams.delete('share');
-                    newParams.delete('techId');
-                    newParams.delete('cpc');
-                    const newUrl = `${window.location.pathname}?${newParams.toString()}`;
+                    newParams.delete('s');
+                    newParams.delete('tid');
+                    const newUrl = `${window.location.pathname}${newParams.toString() ? '?' + newParams.toString() : ''}`;
                     window.history.replaceState({}, '', newUrl);
                     
                     return 100;
@@ -104,6 +99,8 @@ useEffect(() => {
             }, 300);
           }
         }, 500);
+      } else {
+        console.warn("Technology not found with ID:", techId);
       }
     } catch (error) {
       console.error("Error auto-loading technology:", error);
