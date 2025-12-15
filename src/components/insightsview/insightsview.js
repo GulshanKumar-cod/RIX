@@ -256,8 +256,8 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
     };
   }, [isTechMode, feedItem?.primary_cpc]);
 
-  // --- SHARE HANDLER (FIXED FOR DUPLICATE URL) ---
-const handleShareInsights = async () => {
+  // --- SHARE HANDLER (Force Clipboard on Desktop to preserve Text format) ---
+  const handleShareInsights = async () => {
     try {
       const isTech = isTechMode;
       
@@ -288,14 +288,17 @@ const handleShareInsights = async () => {
       // IMPORTANT: Use your actual route - /companylist
       const shareUrl = `${window.location.origin}/companylist?${params.toString()}`;
 
-      // ---- Build TEXT without URL ----
+      // ---- Build TEXT ----
       const baseText = isTech
         ? `Generated this Technology Intelligence Report on RIX – Incubig: ${shareTargetName} 🚀`
         : `Generated this Company Innovation Report on RIX – Incubig: ${shareTargetName} 🚀`;
 
-      // ✅ NATIVE SHARE (Mobile)
-      // We pass text and url separately. The OS handles combining them neatly.
-      if (navigator.share) {
+      // Detect if strictly mobile
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+      // ✅ Use Native Share ONLY on Mobile
+      // (Desktop share hubs often strip text, so we force clipboard on desktop)
+      if (isMobile && navigator.share) {
         await navigator.share({
           title: `RIX Insights - ${shareTargetName}`,
           text: baseText, 
@@ -303,7 +306,7 @@ const handleShareInsights = async () => {
         });
       } else {
         // ✅ CLIPBOARD FALLBACK (Desktop/Web)
-        // We manually combine Text + Space + URL so it looks like the mobile version when pasted.
+        // Manually combine Text + URL for consistent formatting
         await navigator.clipboard.writeText(`${baseText} ${shareUrl}`);
         alert("✅ Insights link copied to clipboard! 📋");
       }
@@ -610,7 +613,7 @@ const handleShareInsights = async () => {
                 <strong>{techApi?.inventor_analysis?.total_inventors?.toLocaleString() || "—"}</strong> inventors globally.
               </p>
               
-              {/* NEW TECHNOLOGY SPECIFIC PARAGRAPH (Added in previous request) */}
+              {/* NEW TECHNOLOGY SPECIFIC PARAGRAPH */}
               {(() => {
                 const techAssignees = techApi?.assignee_analysis?.top_assignees || [];
                 const techCountries = techApi?.country_analysis?.top_countries || [];
@@ -718,6 +721,7 @@ const handleShareInsights = async () => {
               <SimpleMap data={mapData} color="#4a90e2" backgroundColor="transparent" borderColor="#ccc" label="Global Innovation Map" />
             </div>
 
+            {/* UPDATED: Global Rankings Table (Rank | Country | Global Share) */}
             <div style={{ overflowX: "auto", marginBottom: "3rem" }}>
               <h3 className={styles.sectionTitle} style={{ marginBottom: "1rem", color: "#fff" }}>
                 Global Rankings
@@ -728,7 +732,6 @@ const handleShareInsights = async () => {
                     <th style={thStyle}>Rank</th>
                     <th style={thStyle}>Country</th>
                     <th style={thStyle}>Global Share (%)</th>
-                    <th style={thStyle}>Innovations</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -737,13 +740,13 @@ const handleShareInsights = async () => {
                       <td style={tdStyle}>{row.rank}</td>
                       <td style={tdStyle}>{row.country}</td>
                       <td style={tdStyle}>{row.share}</td>
-                      <td style={tdStyle}>{row.count.toLocaleString()}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
+            {/* UPDATED: Leading Organizations Table (Rank | Name | Share) */}
             <div style={{ overflowX: "auto", marginBottom: "1.5rem" }}>
               <h3 className={styles.sectionTitle}>Leading Organizations</h3>
               <p className={styles.subtext} style={{ marginBottom: "1rem" }}>
@@ -754,21 +757,28 @@ const handleShareInsights = async () => {
                   <tr>
                     <th style={thStyle}>Rank</th>
                     <th style={thStyle}>Name</th>
-                    <th style={thStyle}>Innovations</th>
+                    <th style={thStyle}>Share</th>
                   </tr>
                 </thead>
                 <tbody>
                   {(techApi?.assignee_analysis?.top_assignees || topOrgsData)
                     .slice(0, 5)
-                    .map((org, idx) => (
-                      <tr key={idx}>
-                        <td style={tdStyle}>{idx + 1}</td>
-                        <td style={tdStyle}>
-                          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>{org.assignee || org.name}</div>
-                        </td>
-                        <td style={tdStyle}>{(org.count || org.count === 0) ? (org.count).toLocaleString() : "—"}</td>
-                      </tr>
-                    ))}
+                    .map((org, idx) => {
+                       // Calculate share if we have total_applications
+                       const totalApps = techApi?.total_applications || 1;
+                       const orgCount = org.count || 0;
+                       const shareVal = totalApps > 0 ? ((orgCount / totalApps) * 100).toFixed(1) + "%" : "—";
+                       
+                       return (
+                        <tr key={idx}>
+                          <td style={tdStyle}>{idx + 1}</td>
+                          <td style={tdStyle}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>{org.assignee || org.name}</div>
+                          </td>
+                          <td style={tdStyle}>{shareVal}</td>
+                        </tr>
+                      );
+                    })}
                 </tbody>
               </table>
             </div>
@@ -850,7 +860,7 @@ const handleShareInsights = async () => {
         {/* Company-specific paragraph after pie chart */}
         {!isTechMode && renderCompanyPieFollowup()}
 
-        {/* People & Innovators (UPDATED WITH RANK COLUMN) */}
+        {/* People & Innovators (With Rank Column) */}
         {peopleList.length > 0 && (
           <>
             <h3 className={styles.sectionTitle}>People & Innovators</h3>
