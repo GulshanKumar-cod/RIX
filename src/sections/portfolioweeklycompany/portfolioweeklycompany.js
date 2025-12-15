@@ -295,58 +295,72 @@ const PortfolioWeeklyCompany = () => {
   */
 useEffect(() => {
   const params = new URLSearchParams(window.location.search);
-  const insights = params.get("insights");
-  const mode = params.get("mode");
-  const action = params.get("action");
-  const companyNameParam = params.get("company");
+  const mode = params.get('m');
+  const companySlug = params.get('c'); // Using 'c' for company slug
+  const timestamp = params.get('_');
 
-  // Check if we should auto-show insights
-  if (insights && mode === "company" && action === "showInsights") {
+  // Check if we should auto-show company insights
+  if (mode === 'c' && companySlug) {
     try {
-      const decodedCompanyName = decodeURIComponent(companyNameParam || insights);
-      console.log("Auto-loading company insights for:", decodedCompanyName);
-
-      // Find the company in the list
+      console.log("Auto-loading company from slug:", companySlug);
+      
+      // Find company by matching slug (lowercase, hyphenated)
       const index = suggestedCompanies.findIndex(
-        (c) => c.name.toLowerCase() === decodedCompanyName.toLowerCase()
+        (c) => c.name.toLowerCase().replace(/\s+/g, '-') === companySlug.toLowerCase()
       );
 
       if (index !== -1) {
         const targetCompany = suggestedCompanies[index];
-
-        // Auto-scroll to the company card first
+        
+        console.log("Found company:", targetCompany.name);
+        
+        // First switch to company tab (handled by parent)
+        // Then auto-scroll and load
         setTimeout(() => {
           const element = document.getElementById(`company-${index}`);
           if (element) {
             element.scrollIntoView({ behavior: "smooth", block: "center" });
+            
+            // Simulate button click
+            setTimeout(async () => {
+              console.log("Auto-clicking insights for:", targetCompany.name);
+              
+              setCurrentCompany(targetCompany);
+              setShowInsights(true);
+              setIsLoading(true);
+              setProgress(0);
+
+              const data = await fetchCompanyInsights(targetCompany.name);
+              setPrefetchedInsights(data);
+              
+              // Complete loading animation
+              const interval = setInterval(() => {
+                setProgress(prev => {
+                  if (prev >= 95) {
+                    clearInterval(interval);
+                    setIsLoading(false);
+                    return 100;
+                  }
+                  return prev + 5;
+                });
+              }, 50);
+              
+              // Clean URL after loading
+              setTimeout(() => {
+                const newParams = new URLSearchParams(window.location.search);
+                newParams.delete('m');
+                newParams.delete('c');
+                newParams.delete('_');
+                const newUrl = `${window.location.pathname}${newParams.toString() ? '?' + newParams.toString() : ''}${window.location.hash}`;
+                window.history.replaceState({}, '', newUrl);
+              }, 1000);
+              
+            }, 300);
           }
         }, 500);
-
-        // Then simulate clicking the "1-Click Insights" button after a delay
-        setTimeout(async () => {
-          console.log("Auto-clicking insights button for:", targetCompany.name);
-          
-          // Set the company and show insights
-          setCurrentCompany(targetCompany);
-          setShowInsights(true);
-          setIsLoading(true);
-          setProgress(0);
-
-          // Fetch the data
-          const data = await fetchCompanyInsights(targetCompany.name);
-          setPrefetchedInsights(data);
-          
-          // Complete loading
-          setTimeout(() => {
-            setIsLoading(false);
-            setProgress(100);
-          }, 500);
-        }, 1000);
-      } else {
-        console.warn("Company not found in list:", decodedCompanyName);
       }
     } catch (error) {
-      console.error("Error auto-loading company insights:", error);
+      console.error("Error auto-loading company:", error);
     }
   }
 }, []);

@@ -39,72 +39,82 @@ const PortfolioWeeklyTechnologies = ({ goToCompanyPage, handleAddCompany }) => {
   */
 useEffect(() => {
   const params = new URLSearchParams(window.location.search);
-  const insights = params.get("insights");
-  const mode = params.get("mode");
-  const action = params.get("action");
-  const cpc = params.get("cpc");
-  const id = params.get("id");
+  const mode = params.get('m');
+  const techId = params.get('id');
+  const cpc = params.get('cpc');
+  const timestamp = params.get('_');
 
-  // Check if we should auto-show insights
-  if (insights && mode === "technology" && action === "showInsights") {
+  // Check if we should auto-show technology insights
+  if (mode === 't') {
     try {
-      const decodedInsights = decodeURIComponent(insights);
-      console.log("Auto-loading technology insights for:", decodedInsights);
-
-      // Find the technology in the list (by ID if available, otherwise by title/name)
+      console.log("Auto-loading technology, ID:", techId, "CPC:", cpc);
+      
       let index = -1;
       
-      if (id) {
-        // Try to find by ID first
-        index = technologyDataList.findIndex(t => t.id?.toString() === id);
+      // Try to find by ID first (most reliable)
+      if (techId) {
+        index = technologyDataList.findIndex(t => t.id?.toString() === techId);
       }
       
-      if (index === -1) {
-        // Fallback to title/name matching
-        index = technologyDataList.findIndex(
-          t => t.title?.toLowerCase() === decodedInsights.toLowerCase() ||
-               t.name?.toLowerCase() === decodedInsights.toLowerCase()
-        );
+      // If not found by ID, try CPC
+      if (index === -1 && cpc) {
+        index = technologyDataList.findIndex(t => t.primary_cpc === cpc);
       }
 
       if (index !== -1) {
         const tech = technologyDataList[index];
         const company = tech.company;
-
-        // Auto-scroll to the tech card first
+        
+        console.log("Found technology:", tech.title);
+        
+        // Auto-scroll and load
         setTimeout(() => {
           const element = document.getElementById(`tech-${index}`);
           if (element) {
             element.scrollIntoView({ behavior: "smooth", block: "center" });
+            
+            // Simulate button click
+            setTimeout(async () => {
+              console.log("Auto-clicking insights for:", tech.title);
+              
+              setCurrentCompany(company);
+              setCurrentFeedItem(tech);
+              setShowInsights(true);
+              setIsLoading(true);
+              setProgress(0);
+
+              const data = await fetchCompanyInsights(company.name);
+              setPrefetchedInsights(data);
+              
+              // Complete loading animation
+              const interval = setInterval(() => {
+                setProgress(prev => {
+                  if (prev >= 95) {
+                    clearInterval(interval);
+                    setIsLoading(false);
+                    return 100;
+                  }
+                  return prev + 5;
+                });
+              }, 50);
+              
+              // Clean URL after loading
+              setTimeout(() => {
+                const newParams = new URLSearchParams(window.location.search);
+                newParams.delete('m');
+                newParams.delete('id');
+                newParams.delete('cpc');
+                newParams.delete('_');
+                const newUrl = `${window.location.pathname}${newParams.toString() ? '?' + newParams.toString() : ''}${window.location.hash}`;
+                window.history.replaceState({}, '', newUrl);
+              }, 1000);
+              
+            }, 300);
           }
         }, 500);
-
-        // Then simulate clicking the "1-Click Insights" button after a delay
-        setTimeout(async () => {
-          console.log("Auto-clicking insights button for:", tech.title);
-          
-          // Set the data and show insights
-          setCurrentCompany(company);
-          setCurrentFeedItem(tech);
-          setShowInsights(true);
-          setIsLoading(true);
-          setProgress(0);
-
-          // Fetch the data
-          const data = await fetchCompanyInsights(company.name);
-          setPrefetchedInsights(data);
-          
-          // Complete loading
-          setTimeout(() => {
-            setIsLoading(false);
-            setProgress(100);
-          }, 500);
-        }, 1000);
-      } else {
-        console.warn("Technology not found in list:", decodedInsights);
       }
     } catch (error) {
-      console.error("Error auto-loading technology insights:", error);
+      console.error("Error auto-loading technology:", error);
     }
   }
 }, []);

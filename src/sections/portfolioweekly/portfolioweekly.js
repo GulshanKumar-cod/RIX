@@ -12,16 +12,12 @@ const PortfolioWeekly = () => {
 
 useEffect(() => {
   const params = new URLSearchParams(window.location.search);
-  const hasInsights = params.get("insights");
-  const mode = params.get("mode");
-  const action = params.get("action");
-
-  if (hasInsights && mode && action === 'showInsights') {
-    if (mode === "company") {
-      setActiveTab("company");
-    } else if (mode === "technology") {
-      setActiveTab("technologies");
-    }
+  const mode = params.get('m'); 
+  
+  if (mode === 'c') { 
+    setActiveTab("company");
+  } else if (mode === 't') { 
+    setActiveTab("technologies");
   }
 }, []);
 

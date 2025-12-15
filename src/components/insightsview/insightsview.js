@@ -265,66 +265,59 @@ const handleShareInsights = async () => {
       ? feedItem?.title || feedItem?.name || "Technology Insights"
       : company?.name || "Company Insights";
 
-    // ---- Build URL with proper parameters ----
+    // ---- Build clean URL parameters ----
     const params = new URLSearchParams();
     
     if (isTech) {
-      // Technology mode
-      params.set('mode', 'technology');
-      params.set('action', 'showInsights'); // Trigger to show insights
-      
-      // Store all necessary data
-      if (feedItem?.primary_cpc) {
-        params.set('cpc', encodeURIComponent(feedItem.primary_cpc));
-      }
-      if (shareTargetName) {
-        params.set('insights', encodeURIComponent(shareTargetName));
-      }
+      // Technology mode - minimal parameters
+      params.set('m', 't'); // m=mode, t=technology
       if (feedItem?.id) {
-        params.set('id', feedItem.id.toString());
+        params.set('id', feedItem.id.toString()); // Use ID for exact matching
+      } else if (feedItem?.primary_cpc) {
+        params.set('cpc', feedItem.primary_cpc); // No encodeURIComponent here
       }
     } else {
-      // Company mode
-      params.set('mode', 'company');
-      params.set('action', 'showInsights'); // Trigger to show insights
-      
-      if (shareTargetName) {
-        params.set('insights', encodeURIComponent(shareTargetName));
-      }
+      // Company mode - minimal parameters
+      params.set('m', 'c'); // m=mode, c=company
       if (company?.name) {
-        params.set('company', encodeURIComponent(company.name));
+        params.set('c', company.name.replace(/\s+/g, '-').toLowerCase()); // Clean company name as slug
       }
     }
 
-    // Add timestamp to prevent caching
-    params.set('t', Date.now().toString());
+    // Add simple timestamp
+    params.set('_', Date.now().toString().slice(-6));
 
-    // Create the share URL - goes to portfolio page
-    const shareUrl = `${window.location.origin}/#/portfolio?${params.toString()}`;
+    // Create clean share URL
+    const shareUrl = `${window.location.origin}#/portfolio?${params.toString()}`;
 
-    // ---- Exact text format you requested ----
+    // ---- Clean text format ----
     const shareText = isTech
       ? `Generated this Technology Intelligence Report on RIX – Incubig: ${shareTargetName} 🚀 ${shareUrl}`
       : `Generated this Company Innovation Report on RIX – Incubig: ${shareTargetName} 🚀 ${shareUrl}`;
 
-    const shareData = {
-      title: `Insights for ${shareTargetName}`,
-      text: shareText,
-      url: shareUrl
-    };
-
     // ✅ Native share (mobile)
     if (navigator.share) {
-      await navigator.share(shareData);
+      await navigator.share({
+        title: `RIX Insights - ${shareTargetName}`,
+        text: shareText,
+        url: shareUrl
+      });
     } else {
-      // ✅ Fallback (desktop)
+      // ✅ Fallback (desktop) - copy ONLY the text, not extra object
       await navigator.clipboard.writeText(shareText);
-      alert("Insights link copied to clipboard 📋\n\nShare this link to show the exact same insights!");
+      alert("✅ Insights link copied to clipboard! 📋");
     }
 
   } catch (err) {
     console.error("Share error:", err);
-    alert("Unable to share insights.");
+    
+    // Simple fallback
+    const fallbackText = isTech
+      ? `Technology Insights: ${feedItem?.title || feedItem?.name}`
+      : `Company Insights: ${company?.name}`;
+    
+    await navigator.clipboard.writeText(fallbackText);
+    alert("Link copied to clipboard!");
   }
 };
 
