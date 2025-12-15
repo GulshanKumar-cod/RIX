@@ -731,7 +731,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
                   <tr>
                     <th style={thStyle}>Rank</th>
                     <th style={thStyle}>Country</th>
-                    <th style={thStyle}>Global Share (%)</th>
+                    <th style={thStyle}>Global Share</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -757,7 +757,7 @@ const InsightsView = ({ company, prefetchedData, feedItem }) => {
                   <tr>
                     <th style={thStyle}>Rank</th>
                     <th style={thStyle}>Name</th>
-                    <th style={thStyle}>Share (%)</th>
+                    <th style={thStyle}>Share</th>
                   </tr>
                 </thead>
                 <tbody>
