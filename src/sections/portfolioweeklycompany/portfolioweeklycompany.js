@@ -295,34 +295,22 @@ const PortfolioWeeklyCompany = () => {
   */
 useEffect(() => {
   const params = new URLSearchParams(window.location.search);
-  const companyId = params.get('cid'); // cid = company ID (slug)
-  const share = params.get('s');
+  const companySlug = params.get('company');
+  const share = params.get('share');
   const tab = params.get('tab');
 
   // Check if we should auto-show company insights
-  if (tab === 'weekly' && share && companyId) {
+  if (tab === 'weekly' && share && companySlug) {
     try {
-      console.log("Auto-loading company from shared link:", companyId);
+      console.log("Auto-loading company from shared link:", companySlug);
       
-      // Clean the companyId for comparison
-      const cleanId = companyId.toLowerCase().replace(/[^a-z0-9-]/g, '');
-      
-      // Find company by matching cleaned slug
+      // Find company by matching slug
       const index = suggestedCompanies.findIndex(
-        (c) => {
-          const cleanName = c.name
-            .toLowerCase()
-            .replace(/[.,]/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/[^a-z0-9-]/g, '');
-          return cleanName === cleanId;
-        }
+        (c) => c.name.toLowerCase().replace(/\s+/g, '-') === companySlug.toLowerCase()
       );
 
       if (index !== -1) {
         const targetCompany = suggestedCompanies[index];
-        
-        console.log("Found company:", targetCompany.name);
         
         // Auto-scroll and load
         setTimeout(() => {
@@ -332,8 +320,6 @@ useEffect(() => {
             
             // Auto-click the 1-Click Insights button
             setTimeout(async () => {
-              console.log("Auto-clicking insights for:", targetCompany.name);
-              
               setCurrentCompany(targetCompany);
               setShowInsights(true);
               setIsLoading(true);
@@ -349,11 +335,11 @@ useEffect(() => {
                     clearInterval(interval);
                     setIsLoading(false);
                     
-                    // Clean URL after loading (remove share params)
+                    // Clean URL after loading
                     const newParams = new URLSearchParams(window.location.search);
-                    newParams.delete('s');
-                    newParams.delete('cid');
-                    const newUrl = `${window.location.pathname}${newParams.toString() ? '?' + newParams.toString() : ''}`;
+                    newParams.delete('share');
+                    newParams.delete('company');
+                    const newUrl = `${window.location.pathname}?${newParams.toString()}`;
                     window.history.replaceState({}, '', newUrl);
                     
                     return 100;
@@ -365,8 +351,6 @@ useEffect(() => {
             }, 300);
           }
         }, 500);
-      } else {
-        console.warn("Company not found with ID:", companyId);
       }
     } catch (error) {
       console.error("Error auto-loading company:", error);

@@ -270,29 +270,21 @@ const handleShareInsights = async () => {
     
     if (isTech) {
       // Technology mode
-      params.set('tab', 'weekly');
-      if (feedItem?.id) {
-        params.set('tid', feedItem.id.toString()); // tid = tech ID
+      params.set('tab', 'weekly'); // Go to AI Discovery tab
+      params.set('techId', feedItem?.id?.toString() || '');
+      if (feedItem?.primary_cpc) {
+        params.set('cpc', feedItem.primary_cpc);
       }
-      // Don't include cpc if we have ID - makes URL shorter
     } else {
-      // Company mode - create clean slug
-      const cleanCompanyName = company?.name
-        ?.toLowerCase()
-        .replace(/[.,]/g, '') // Remove commas and periods
-        .replace(/\s+/g, '-') // Replace spaces with hyphens
-        .replace(/[^a-z0-9-]/g, ''); // Remove special characters
-      
-      if (cleanCompanyName) {
-        params.set('cid', cleanCompanyName); // cid = company ID
-      }
+      // Company mode
+      params.set('tab', 'weekly'); // Go to AI Discovery tab
+      params.set('company', company?.name?.replace(/\s+/g, '-').toLowerCase() || '');
     }
 
     // Add timestamp
-    const timestamp = Date.now().toString().slice(-6);
-    params.set('s', timestamp); // s = share timestamp
+    params.set('share', Date.now().toString().slice(-6));
 
-    // Create clean share URL
+    // IMPORTANT: Use your actual route - /companylist
     const shareUrl = `${window.location.origin}/companylist?${params.toString()}`;
 
     // ---- Clean text format ----
@@ -300,10 +292,10 @@ const handleShareInsights = async () => {
       ? `Generated this Technology Intelligence Report on RIX – Incubig: ${shareTargetName} 🚀 ${shareUrl}`
       : `Generated this Company Innovation Report on RIX – Incubig: ${shareTargetName} 🚀 ${shareUrl}`;
 
-    // ✅ Native share (mobile)
+    // ✅ Native share
     if (navigator.share) {
       await navigator.share({
-        title: `RIX Insights - ${shareTargetName.slice(0, 30)}${shareTargetName.length > 30 ? '...' : ''}`,
+        title: `RIX Insights - ${shareTargetName}`,
         text: shareText,
         url: shareUrl
       });
@@ -315,15 +307,7 @@ const handleShareInsights = async () => {
 
   } catch (err) {
     console.error("Share error:", err);
-    
-    // Simple fallback
-    const fallbackUrl = `${window.location.origin}/companylist?tab=weekly`;
-    const fallbackText = isTech
-      ? `Technology Insights: ${feedItem?.title || feedItem?.name} - ${fallbackUrl}`
-      : `Company Insights: ${company?.name} - ${fallbackUrl}`;
-    
-    await navigator.clipboard.writeText(fallbackText);
-    alert("Link copied to clipboard!");
+    alert("Unable to share insights.");
   }
 };
 
