@@ -7,7 +7,7 @@ import styles from "../companylist/companylist.module.css";
 import PortfolioWeeklyCompany from '../portfolioweeklycompany/portfolioweeklycompany';
 
 const PortfolioWeekly = () => {
-  const [activeTab, setActiveTab] = useState('industry');
+  const [activeTab, setActiveTab] = useState('company');
   const [selectedIndustry, setSelectedIndustry] = useState(null);
 
 useEffect(() => {
@@ -30,17 +30,18 @@ useEffect(() => {
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'industry':
+     
+      case 'company':
+        return <PortfolioWeeklyCompany />;
+      case 'technologies':
+        return <PortfolioWeeklyTechnologies />;
+         case 'industry':
         return (
           <PortfolioWeeklyIndustry
             selectedIndustry={selectedIndustry}
             setSelectedIndustry={setSelectedIndustry}
           />
         );
-      case 'company':
-        return <PortfolioWeeklyCompany />;
-      case 'technologies':
-        return <PortfolioWeeklyTechnologies />;
       default:
         return null;
     }
@@ -68,12 +69,7 @@ useEffect(() => {
           {/* Tabs */}
        {!selectedIndustry && (
             <div className={styles.tabButtonContainer}>
-              <button
-                onClick={() => setActiveTab('industry')}
-                className={`tab-button ${activeTab === 'industry' ? 'active-tab active-tab-second' : ''}`}
-              >
-                Industry
-              </button>
+              
               <button
                 onClick={() => setActiveTab('company')}
                 className={`tab-button ${activeTab === 'company' ? 'active-tab active-tab-second' : ''}`}
@@ -85,6 +81,12 @@ useEffect(() => {
                 className={`tab-button ${activeTab === 'technologies' ? 'active-tab active-tab-second' : ''}`}
               >
                 Technologies
+              </button>
+              <button
+                onClick={() => setActiveTab('industry')}
+                className={`tab-button ${activeTab === 'industry' ? 'active-tab active-tab-second' : ''}`}
+              >
+                Industry
               </button>
             </div>
           )}
